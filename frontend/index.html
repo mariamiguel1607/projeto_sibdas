@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,82 +10,107 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome (local) -->
     <link rel="stylesheet" href="assets/fontawesome/all.min.css">
     <link rel="stylesheet" href="assets/css/estilos.css">
-   
+
 </head>
+
 <body>
-    <!-- Header -->
-    <header>
+
+    <!-- Barra de Navegação -->
+    <nav class="bng-navbar">
+
+        <!-- Logo e Nome -->
+        <div>
+            <img src="assets/images/imagem_logo1.png" alt="Logo TechMed Solutions">
+        </div>
+
+        <!-- Links centrais -->
+        <div class="container-navegacao">
+            <a href="#inicio">Início</a>
+            <a href="#serviços">Serviços</a>
+            <a href="#sobre-nos">Sobre Nós</a>
+            <a href="#contactos">Contacto</a>
+        </div>
+
+        <!-- Área Restrita -->
+        <div class="nav-cliente">
+            <a href="login.html">Área Restrita</a>
+        </div>
+
+    </nav>
+
+    <!-- Seção "Conteudo da pagina - inicio -->
+    <section id="inicio" class="home-section">
         <div class="container">
-            <div class="logo">
-                <a href="#"><img src="assets/images/imagem_logo1.png" alt="TechMed Solutions Logo"></a>
+
+            <div class="home-content">
+
+                <h1>Welcome to TechMed Solutions</h1>
+
+                <p>Your trusted partner in healthcare technology.</p>
+
+                <a href="#serviços" class="btn">
+                    Explore Our Services
+                </a>
+
             </div>
-            <nav>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Home Section -->
-        <section id="home" class="home-section">
-             <div class="container">
-
-        <div class="home-content">
-
-            <h1>Welcome to TechMed Solutions</h1>
-
-            <p>Your trusted partner in healthcare technology.</p>
-
-            <a href="#services" class="btn">
-                Explore Our Services
-            </a>
 
         </div>
+    </section>
 
-    </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="services-section">
-            <div class="container">
-                <h2>Our Services</h2>
-                <div class="service-item">
-                    <i class="fas fa-stethoscope"></i>
-                    <h3>Telemedicine Solutions</h3>
-                    <p>Connecting patients and healthcare providers through innovative telemedicine platforms.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-laptop-medical"></i>
-                    <h3>Electronic Health Records (EHR)</h3>
-                    <p>Streamlining patient data management with secure and user-friendly EHR systems.</p>
-                </div>
-                <div class="service-item">
-                    <i class="fas fa-robot"></i>
-                    <h3>AI-Powered Diagnostics</h3>
-                    <p>Enhancing diagnostic accuracy with cutting-edge AI technologies.</p>
-                </div>
+    <!-- Seção "Conteudo da pagina - serviços-->
+    <section id="serviços" class="services-section">
+        <div class="container">
+            <h2>Nossos Serviços</h2>
+            <div class="service-item">
+                <i class="fas fa-stethoscope"></i>
+                <h3>Telemedicine Solutions</h3>
+                <p>Connecting patients and healthcare providers through innovative telemedicine platforms.</p>
             </div>
-        </section>
-
-        <!-- About Us Section -->
-        <section id="about" class="about-section">
-            <div class="container">
-                <h2>About Us</h2>
-                <p>TechMed Solutions is a leading provider of healthcare technology solutions, dedicated to improving patient care and outcomes through innovative digital tools. Our team of experts is committed to delivering high-quality solutions that meet the evolving needs of the healthcare industry.</p>
+            <div class="service-item">
+                <i class="fas fa-laptop-medical"></i>
+                <h3>Electronic Health Records (EHR)</h3>
+                <p>Streamlining patient data management with secure and user-friendly EHR systems.</p>
             </div>
-        </section>
-    </main>
+            <div class="service-item">
+                <i class="fas fa-robot"></i>
+                <h3>AI-Powered Diagnostics</h3>
+                <p>Enhancing diagnostic accuracy with cutting-edge AI technologies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção "Conteudo da pagina - sobre-nos -->
+    <section id="sobre-nos" class="about-section">
+        <div class="container">
+            <h2>Sobre Nós</h2>
+            <p>TechMed Solutions is a leading provider of healthcare technology solutions, dedicated to improving
+                patient care and outcomes through innovative digital tools. Our team of experts is committed to
+                delivering high-quality solutions that meet the evolving needs of the healthcare industry.</p>
+        </div>
+    </section>
+
+    <!-- Seção "Conteudo da pagina - contactos -->
+    <section id="contactos" class="contact-section">
+        <h2>Contacto</h2>
+        <p>Entre em contacto conosco para obter mais informações sobre a plataforma TechMed Solutions.</p>
+        <form id="contactForm">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="mensagem">Mensagem:</label>
+            <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
+            <button type="submit">Enviar Mensagem</button>
+        </form>
+    </section>
+
+
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
