@@ -70,6 +70,13 @@ header {
     height: auto;
     display: block;
 }
+.nav-logo a {
+    display: inline-block;
+}
+
+.nav-logo img {
+    cursor: pointer;
+}
 
 /* LINKS CENTRAIS */
 
