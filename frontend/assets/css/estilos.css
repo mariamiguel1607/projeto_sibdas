@@ -10,6 +10,10 @@ body {
     background-color: #ffffff;
     color: #1E2A44;
 }
+html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 95px;
+}
 /* LINKS */
 a {
     text-decoration: none;
@@ -131,7 +135,6 @@ header {
 
     padding: 145px 60px 70px 60px;
 }
-
 .home-container{
     width: 100%;
     max-width: 1380px;
@@ -208,7 +211,6 @@ header {
 
     margin-bottom: 34px;
 }
-
 /* BOTÃO */
 
 .btn-home{
@@ -326,7 +328,6 @@ header {
 }
 /* Títulos principais das secções */
 .services-section h2,
-.about-section h2,
 .contact-section h2 {
     text-align: center;
     font-size: 2.6rem;
@@ -336,7 +337,6 @@ header {
 }
 /* Linha lilás por baixo dos títulos */
 .services-section h2::after,
-.about-section h2::after,
 .contact-section h2::after {
     content: "";
     display: block;
@@ -395,24 +395,138 @@ header {
     line-height: 1.6;
 }
 
-/* SECÇÃO SOBRE NÓS*/
-.about-section {
+/* SECÇÃO SOBRE NÓS */
+
+.about-section{
     background: linear-gradient(135deg, #f7f4ff, #ffffff);
+
+    padding: 50px 20px 80px 20px;
+
+    scroll-margin-top: 120px;
 }
-.about-section .container {
-    max-width: 950px;
+
+.about-container{
+    max-width: 1200px;
     margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.88);
-    padding: 55px 60px;
-    border-radius: 26px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 55px;
+
+    align-items: center;
+}
+
+/* BLOCO DE TEXTO */
+
+.about-text{
+    background-color: rgba(255, 255, 255, 0.9);
+
+    padding: 50px;
+    border-radius: 28px;
+
+    box-shadow: 0 14px 38px rgba(30, 42, 68, 0.08);
+    border: 1px solid rgba(142, 108, 241, 0.14);
+}
+
+.about-text h2{
+    text-align: left;
+
+    font-size: 2.6rem;
+    font-weight: 700;
+
+    color: #1E2A44;
+
+    margin-bottom: 25px;
+}
+
+.about-text h2::after{
+    content: "";
+    display: block;
+
+    width: 75px;
+    height: 4px;
+
+    background-color: #8E6CF1;
+    border-radius: 20px;
+
+    margin-top: 15px;
+}
+
+.about-text p{
+    font-size: 1.1rem;
+    line-height: 1.8;
+
+    color: #5f6675;
+
+    margin-bottom: 18px;
+}
+
+/* CARDS */
+
+.about-cards{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+}
+
+.about-card{
+    background-color: #ffffff;
+
+    padding: 28px 30px;
+    border-radius: 22px;
+
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    column-gap: 20px;
+
+    align-items: center;
+
     box-shadow: 0 12px 35px rgba(30, 42, 68, 0.08);
     border: 1px solid rgba(142, 108, 241, 0.12);
+
+    transition: 0.3s ease;
 }
-.about-section p {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    color: #5f6675;
-    text-align: center;
+
+.about-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13);
+    border-color: rgba(142, 108, 241, 0.35);
+}
+
+.about-card i{
+    grid-row: 1 / 3;
+
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(142, 108, 241, 0.12);
+    color: #8E6CF1;
+
+    border-radius: 16px;
+
+    font-size: 1.7rem;
+}
+
+.about-card h3{
+    font-size: 1.25rem;
+    font-weight: 700;
+
+    color: #1E2A44;
+
+    margin-bottom: 6px;
+}
+
+.about-card p{
+    font-size: 1rem;
+    line-height: 1.6;
+
+    color: #6c757d;
+
+    margin: 0;
 }
 /*SECÇÃO CONTACTOS*/
 .contact-section {
@@ -685,56 +799,164 @@ header {
         font-size: 1rem;
     }
 }
-/* RODAPÉ */
+/* =========================
+   FOOTER
+========================= */
 
-.footer-container {
-    background: linear-gradient(135deg, #1E2A44, #2b3658);
-    color: white;
+.footer-container{
+    background: linear-gradient(135deg, #1b2745, #24345d);
 
     display: grid;
     grid-template-columns: 1.2fr 1fr 1fr 1fr;
-    gap: 35px;
 
-    padding: 55px 70px;
+    gap: 50px;
 
-    border-top: 5px solid #8E6CF1;
+    padding: 65px 80px 50px 80px;
+
+    border-top: 4px solid #8E6CF1;
 }
 
-.footer-section h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 14px;
-    color: white;
+/* LOGO */
+
+.footer-logo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    max-width: 260px;
 }
 
-.footer-section strong {
-    display: block;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
-    color: #cdbfff;
-    margin-bottom: 14px;
+/* IMAGEM */
+
+.footer-logo img{
+    width: 220px;
+    height: auto;
+
+    object-fit: contain;
+
+    margin-bottom: 20px;
 }
 
-.footer-section p {
+/* TEXTO */
+
+.footer-logo p{
+    color: #cfd6ea;
+
     font-size: 1rem;
-    line-height: 1.7;
-    color: #e8e6f3;
-    margin-bottom: 6px;
+    line-height: 1.8;
+
+    width: 220px;
+}
+/* SECÇÕES */
+
+.footer-section h4{
+    color: white;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    margin-bottom: 22px;
 }
 
-/* RESPONSIVO DO RODAPÉ */
+.footer-section p{
+    color: #d7dcef;
 
-@media(max-width: 992px) {
-    .footer-container {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 45px 40px;
+    line-height: 1.9;
+    font-size: 1rem;
+
+    margin-bottom: 10px;
+}
+
+/* ÍCONES */
+
+.footer-section i{
+    color: #8E6CF1;
+    margin-right: 10px;
+}
+
+/* COPYRIGHT */
+
+.footer-bottom{
+    background-color: #18233f;
+
+    color: #c4cbe0;
+
+    text-align: center;
+
+    padding: 18px;
+
+    font-size: 0.95rem;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media(max-width: 992px){
+
+    .footer-container{
+        grid-template-columns: 1fr 1fr;
+        padding: 55px 40px;
     }
 }
 
-@media(max-width: 576px) {
-    .footer-container {
+@media(max-width: 576px){
+
+    .footer-container{
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+        gap: 35px;
+
+        padding: 45px 24px;
+    }
+
+    .footer-logo{
+        align-items: center;
+    }
+
+    .footer-logo p{
+        max-width: 100%;
+    }
+}
+@media(max-width: 992px){
+
+    .about-container{
+        grid-template-columns: 1fr;
+    }
+
+    .about-text h2{
+        text-align: center;
+    }
+
+    .about-text h2::after{
+        margin: 15px auto 0 auto;
+    }
+}
+
+@media(max-width: 576px){
+
+    .about-section{
+        padding: 80px 16px;
+    }
+
+    .about-text{
+        padding: 35px 25px;
+    }
+
+    .about-text h2{
+        font-size: 2.2rem;
+    }
+
+    .about-card{
         grid-template-columns: 1fr;
         text-align: center;
-        padding: 40px 24px;
+        justify-items: center;
+    }
+
+    .about-card i{
+        grid-row: auto;
+        margin-bottom: 15px;
     }
 }
