@@ -182,9 +182,7 @@ section {
     margin-left: 0;
 }
 
-/* =========================
-   SERVIÇOS
-========================= */
+/*SERVIÇOS*/
 
 .services-section {
     background-color: #ffffff;
@@ -211,9 +209,7 @@ section {
     line-height: 1.6;
 }
 
-/* =========================
-   SOBRE NÓS
-========================= */
+/*SOBRE NÓS*/
 
 .about-section {
     background: linear-gradient(135deg, #f7f4ff, #ffffff);
@@ -260,10 +256,48 @@ section {
     color: #6c757d;
     line-height: 1.6;
 }
+/*PERGUNTAS FREQUENTES*/
 
-/* =========================
-   CONTACTOS
-========================= */
+.faq-section {
+    background: linear-gradient(135deg, #fbfaff, #ffffff);
+}
+
+.faq-section .accordion {
+    max-width: 900px;
+}
+
+.faq-section .accordion-button {
+    color: #1E2A44;
+    background-color: #ffffff;
+
+    font-size: 1.05rem;
+
+    padding: 22px 26px;
+
+    box-shadow: none;
+}
+
+.faq-section .accordion-button:not(.collapsed) {
+    color: #8E6CF1;
+    background-color: #f7f4ff;
+    box-shadow: none;
+}
+
+.faq-section .accordion-button:focus {
+    box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
+    border-color: transparent;
+}
+
+.faq-section .accordion-body {
+    color: #6c757d;
+
+    font-size: 1rem;
+    line-height: 1.7;
+
+    padding: 22px 26px;
+}
+
+/*CONTACTOS*/
 
 .contact-section {
     background-color: #ffffff;
@@ -292,9 +326,7 @@ section {
     box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
 }
 
-/* =========================
-   FOOTER
-========================= */
+/*FOOTER*/
 
 .footer-container {
     background: linear-gradient(135deg, #1b2745, #24345d);
@@ -328,9 +360,7 @@ section {
     margin-bottom: 10px;
 }
 
-/* =========================
-   RESPONSIVO - TABLET
-========================= */
+/*RESPONSIVO - TABLET*/
 
 @media (max-width: 992px) {
 
@@ -403,9 +433,7 @@ section {
     }
 }
 
-/* =========================
-   RESPONSIVO - TELEMÓVEL
-========================= */
+/*RESPONSIVO - TELEMÓVEL*/
 
 @media (max-width: 576px) {
 
