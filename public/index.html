@@ -23,182 +23,285 @@
 <body>
 
     <!-- Barra de Navegação -->
-    <nav class="bng-navbar">
+    <nav class="bng-navbar navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+        <div class="container-fluid px-5">
 
-        <!-- Logo e Nome -->
-        <div>
-            <a href="#inicio">
+            <!-- Logo -->
+            <a class="navbar-brand" href="#inicio">
                 <img src="../assets/images/imagem_logo1.png" alt="Logo TechMed Solutions">
             </a>
-        </div>
 
-        <!-- Links centrais -->
-        <div class="container-navegacao">
-            <a href="#inicio">Início</a>
-            <a href="#serviços">Serviços</a>
-            <a href="#sobre-nos">Sobre Nós</a>
-            <a href="#contactos">Contacto</a>
-        </div>
+            <!-- Botão mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <!-- Área Restrita -->
-        <div class="nav-cliente">
-            <a href="login.html">Início de Sessão</a>
-        </div>
+            <!-- Menu -->
+            <div class="collapse navbar-collapse" id="menuPrincipal">
 
-    </nav>
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#inicio">Início</a>
+                    </li>
 
-    <!-- Seção "Conteudo da pagina - inicio -->
-    <section id="inicio" class="home-section">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#serviços">Serviços</a>
+                    </li>
 
-        <div class="home-container">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#sobre-nos">Sobre Nós</a>
+                    </li>
 
-            <div class="home-content">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" href="#contactos">Contacto</a>
+                    </li>
+                </ul>
 
-                <h1>
-                    Gestão eficiente de equipamentos médicos
-                </h1>
-
-                <p>
-                    A TechMed Solutions ajuda hospitais a gerir o inventário de equipamentos médicos de forma
-                    centralizada, segura e eficiente.
-                </p>
-
-                <a href="#serviços" class="btn">
-                    Conhecer Serviços
-                    <i class="fa-solid fa-arrow-right"></i>
+                <a href="login.html" class="btn-login">
+                    Início de Sessão
                 </a>
 
             </div>
-
-            <div class="home-visual">
-                <div class="circle-bg"></div>
-                <div class="dots-bg"></div>
-                <img src="../assets/images/imagem_inicio.png" alt="Dashboard de gestão hospitalar">
-            </div>
-
         </div>
+    </nav>
 
-    </section>
-
-    <!-- Seção "Conteudo da pagina - serviços-->
-    <section id="serviços" class="services-section">
+    <!-- Início -->
+    <section id="inicio" class="home-section d-flex align-items-center">
         <div class="container">
-            <h2> Os Nossos Serviços</h2>
-            <div class="service-item">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <h3>Gestão de Inventário</h3>
-                <p>Registo e organização de equipamentos médicos por categoria, estado, localização e criticidade.</p>
-            </div>
-            <div class="service-item">
-                <i class="fa-solid fa-folder-open"></i>
-                <h3>Gestão Documental</h3>
-                <p>Associação de manuais, certificados, contratos, relatórios técnicos e outros documentos aos
-                    equipamentos.</p>
-            </div>
-            <div class="service-item">
-                <i class="fa-solid fa-magnifying-glass-chart"></i>
-                <h3>Dashboard e Consulta</h3>
-                <p> Visualização de indicadores, pesquisa e filtragem de equipamentos para apoiar a gestão hospitalar.
-                </p>
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-5 text-center text-lg-start">
+                    <h1 class="display-4 fw-bold mb-4">
+                        Gestão eficiente de equipamentos médicos
+                    </h1>
+
+                    <p class="lead mb-4">
+                        A TechMed Solutions ajuda hospitais a gerir o inventário de equipamentos médicos de forma
+                        centralizada, segura e eficiente.
+                    </p>
+
+                    <a href="#serviços" class="btn btn-primary-custom">
+                        Conhecer Serviços
+                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+                <div class="col-lg-7 text-center">
+                    <div class="home-visual position-relative">
+                        <div class="circle-bg"></div>
+                        <div class="dots-bg"></div>
+
+                        <img src="../assets/images/imagem_inicio.png" class="img-fluid"
+                            alt="Dashboard de gestão hospitalar">
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Seção "Conteudo da pagina - sobre-nos -->
-    <section id="sobre-nos" class="about-section">
-        <div class="about-container">
+    <!-- Serviços -->
+    <section id="serviços" class="services-section py-5">
+        <div class="container">
 
-            <div class="about-text">
-                <h2>Sobre Nós</h2>
+            <h2 class="section-title text-center mb-5">
+                Os Nossos Serviços
+            </h2>
 
-                <p>
-                    A TechMed Solutions nasceu com o objetivo de apoiar instituições de saúde na organização e
-                    digitalização dos seus processos internos, promovendo uma gestão mais eficiente, segura e acessível
-                    da informação associada aos equipamentos médicos.
-                </p>
+            <div class="row g-4">
 
-                <p>
-                    Através de uma plataforma simples e intuitiva, procuramos reduzir a dependência de registos manuais,
-                    facilitar o trabalho dos profissionais responsáveis pela gestão hospitalar e contribuir para uma
-                    maior qualidade e segurança nos serviços de saúde.
-                </p>
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <i class="fa-solid fa-clipboard-list service-icon mb-4"></i>
+                            <h3 class="h4 fw-bold mb-3">Gestão de Inventário</h3>
+                            <p>
+                                Registo e organização de equipamentos médicos por categoria, estado, localização e
+                                criticidade.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <i class="fa-solid fa-folder-open service-icon mb-4"></i>
+                            <h3 class="h4 fw-bold mb-3">Gestão Documental</h3>
+                            <p>
+                                Associação de manuais, certificados, contratos, relatórios técnicos e outros documentos
+                                aos equipamentos.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card service-card h-100 text-center border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <i class="fa-solid fa-magnifying-glass-chart service-icon mb-4"></i>
+                            <h3 class="h4 fw-bold mb-3">Dashboard e Consulta</h3>
+                            <p>
+                                Visualização de indicadores, pesquisa e filtragem de equipamentos para apoiar a gestão
+                                hospitalar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="about-cards">
-
-                <div class="about-card">
-                    <i class="fas fa-bullseye"></i>
-                    <h3>Missão</h3>
-                    <p>Apoiar hospitais na transição para processos digitais mais organizados, seguros e eficientes.</p>
-                </div>
-
-                <div class="about-card">
-                    <i class="fas fa-lightbulb"></i>
-                    <h3>Inovação</h3>
-                    <p>Desenvolver soluções tecnológicas simples, intuitivas e adaptadas às necessidades do contexto
-                        hospitalar.</p>
-                </div>
-
-                <div class="about-card">
-                    <i class="fas fa-hand-holding-heart"></i>
-                    <h3>Impacto</h3>
-                    <p>Contribuir para uma gestão hospitalar mais eficaz e para melhores condições de apoio aos
-                        profissionais de saúde.</p>
-                </div>
-
-            </div>
-
         </div>
     </section>
 
-    <!-- Seção "Conteudo da pagina - contactos -->
-    <section id="contactos" class="contact-section">
-        <h2>Contacto</h2>
-        <p>Entre em contacto conosco para obter mais informações sobre a plataforma TechMed Solutions.</p>
-        <form id="contactForm">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="mensagem">Mensagem:</label>
-            <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
-            <button type="submit">Enviar Mensagem</button>
-        </form>
+    <!-- Sobre Nós -->
+    <section id="sobre-nos" class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+
+                <div class="col-lg-6">
+                    <div class="about-text bg-white shadow-sm rounded-4 p-5">
+                        <h2 class="section-title text-start mb-4">
+                            Sobre Nós
+                        </h2>
+
+                        <p>
+                            A TechMed Solutions nasceu com o objetivo de apoiar instituições de saúde na organização e
+                            digitalização dos seus processos internos, promovendo uma gestão mais eficiente, segura e
+                            acessível da informação associada aos equipamentos médicos.
+                        </p>
+
+                        <p>
+                            Através de uma plataforma simples e intuitiva, procuramos reduzir a dependência de registos
+                            manuais, facilitar o trabalho dos profissionais responsáveis pela gestão hospitalar e
+                            contribuir para uma maior qualidade e segurança nos serviços de saúde.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="card about-card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body d-flex gap-4 align-items-center p-4">
+                            <i class="fas fa-bullseye about-icon"></i>
+                            <div>
+                                <h3 class="h4 fw-bold mb-2">Missão</h3>
+                                <p class="mb-0">
+                                    Apoiar hospitais na transição para processos digitais mais organizados, seguros e
+                                    eficientes.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card about-card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body d-flex gap-4 align-items-center p-4">
+                            <i class="fas fa-lightbulb about-icon"></i>
+                            <div>
+                                <h3 class="h4 fw-bold mb-2">Inovação</h3>
+                                <p class="mb-0">
+                                    Desenvolver soluções tecnológicas simples, intuitivas e adaptadas às necessidades do
+                                    contexto hospitalar.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card about-card border-0 shadow-sm rounded-4">
+                        <div class="card-body d-flex gap-4 align-items-center p-4">
+                            <i class="fas fa-hand-holding-heart about-icon"></i>
+                            <div>
+                                <h3 class="h4 fw-bold mb-2">Impacto</h3>
+                                <p class="mb-0">
+                                    Contribuir para uma gestão hospitalar mais eficaz e para melhores condições de apoio
+                                    aos profissionais de saúde.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </section>
+
+    <!-- Contactos -->
+    <section id="contactos" class="contact-section py-5">
+        <div class="container">
+
+            <h2 class="section-title text-center mb-4">
+                Contacto
+            </h2>
+
+            <p class="text-center mx-auto mb-5 contact-intro">
+                Entre em contacto connosco para obter mais informações sobre a plataforma TechMed Solutions.
+            </p>
+
+            <form id="contactForm" class="mx-auto bg-light rounded-4 shadow-sm p-5">
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label fw-bold">Nome:</label>
+                    <input type="text" id="nome" name="nome" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-bold">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="mensagem" class="form-label fw-bold">Mensagem:</label>
+                    <textarea id="mensagem" name="mensagem" rows="4" class="form-control" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary-custom w-100">
+                    Enviar Mensagem
+                </button>
+
+            </form>
+        </div>
+    </section>
+
     <!-- Rodapé -->
     <footer class="footer-container">
+        <div class="container">
+            <div class="row gy-4 align-items-start">
 
-        <div class="footer-section footer-logo">
-            <img src="../assets/images/imagem_logo2.png" alt="Logo TechMed Solutions">
-            <p>
-                Soluções digitais para gestão eficiente
-                de equipamentos hospitalares.
-            </p>
+                <div class="col-lg-3 col-md-6">
+                    <img src="../assets/images/imagem_logo2.png" class="footer-logo-img mb-3"
+                        alt="Logo TechMed Solutions">
+                    <p>
+                        Soluções digitais para gestão eficiente de equipamentos hospitalares.
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4>LOCALIZAÇÃO</h4>
+                    <p>
+                        Rua Dr. António Bernardino de Almeida<br>
+                        4249-015 Porto<br>
+                        Portugal
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4>HORÁRIO</h4>
+                    <p>2ª a 6ª Feira: 9h — 18h</p>
+                    <p>Sábado: Encerrado</p>
+                    <p>Domingo: Encerrado</p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h4>CONTACTOS</h4>
+                    <p>Email: geral@techmedsolutions.pt</p>
+                    <p>Telefone: +351 917 654 321</p>
+                </div>
+
+            </div>
         </div>
-
-        <div class="footer-section">
-            <h4>LOCALIZAÇÃO</h4>
-            <p>
-                Rua Dr. António Bernardino de Almeida<br>
-                4249-015 Porto<br>
-                Portugal
-            </p>
-        </div>
-
-        <div class="footer-section">
-            <h4>HORÁRIO</h4>
-            <p>2ª a 6ª Feira: 9h — 18h</p>
-            <p>Sábado: Encerrado</p>
-            <p>Domingo: Encerrado</p>
-        </div>
-
-        <div class="footer-section">
-            <h4>CONTACTOS</h4>
-            <p>Email: geral@techmedsolutions.pt</p>
-            <p>Telefone: +351 917 654 321</p>
-        </div>
-
     </footer>
-
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
