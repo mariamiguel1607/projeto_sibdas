@@ -14,8 +14,8 @@ a {
 section {
     scroll-margin-top: 60px;
 }
-/*NAVBAR*/
 
+/*NAVBAR*/
 .bng-navbar {
     min-height: 95px;
     background-color: rgba(255, 255, 255, 0.96) !important;
@@ -46,13 +46,11 @@ section {
     border-radius: 20px;
     transition: width 0.3s ease;
 }
-
 .navbar-nav .nav-link:hover::after {
     width: 100%;
 }
 
 /* BOTÃO LOGIN */
-
 .btn-login {
     display: inline-block;
     background: linear-gradient(135deg, #8E6CF1, #6C3FE0);
@@ -63,7 +61,6 @@ section {
     box-shadow: 0 8px 20px rgba(142, 108, 241, 0.25);
     transition: 0.3s ease;
 }
-
 .btn-login:hover {
     color: white;
     transform: translateY(-2px);
@@ -71,7 +68,6 @@ section {
 }
 
 /*BOTÕES GERAIS*/
-
 .btn-primary-custom {
     display: inline-flex;
     align-items: center;
@@ -86,7 +82,6 @@ section {
     box-shadow: 0 14px 30px rgba(142, 108, 241, 0.30);
     transition: 0.3s ease;
 }
-
 .btn-primary-custom:hover {
     color: white;
     transform: translateY(-3px);
@@ -94,7 +89,6 @@ section {
 }
 
 /*HOME */
-
 .home-section {
     min-height: auto;
     background: linear-gradient(135deg, #fbfaff 0%, #ffffff 48%, #f4efff 100%);
@@ -102,19 +96,16 @@ section {
     padding-bottom: 70px;
     overflow: hidden;
 }
-
 .home-section h1 {
     color: #1E2A44;
     line-height: 1.14;
 }
-
 .home-section p {
     color: #626b7d;
     line-height: 1.65;
 }
 
 /* IMAGEM HOME */
-
 .home-visual {
     min-height: 500px;
     display: flex;
@@ -122,7 +113,6 @@ section {
     align-items: center;
     position: relative;
 }
-
 .home-visual img {
     position: relative;
     z-index: 3;
@@ -133,7 +123,6 @@ section {
 }
 
 /* DECORAÇÕES HOME */
-
 .circle-bg {
     position: absolute;
     width: 500px;
@@ -144,7 +133,6 @@ section {
     border-radius: 50%;
     z-index: 1;
 }
-
 .dots-bg {
     position: absolute;
     top: 10px;
@@ -156,277 +144,213 @@ section {
     opacity: 0.7;
     z-index: 1;
 }
-/*TÍTULOS DAS SECÇÕES*/
 
+/*TÍTULOS DAS SECÇÕES*/
 .section-title {
     font-size: 2.6rem;
     font-weight: 700;
     color: #1E2A44;
 }
-
 .section-title::after {
     content: "";
-
     display: block;
-
     width: 80px;
     height: 4px;
-
     background-color: #8E6CF1;
     border-radius: 20px;
-
     margin: 15px auto 0 auto;
 }
-
 .about-text .section-title::after {
     margin-left: 0;
 }
 
 /*SERVIÇOS*/
-
 .services-section {
     background-color: #ffffff;
 }
-
 .service-card {
     border: 1px solid rgba(142, 108, 241, 0.12) !important;
     transition: 0.3s ease;
 }
-
 .service-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13) !important;
     border-color: rgba(142, 108, 241, 0.35) !important;
 }
-
 .service-icon {
     font-size: 3rem;
     color: #8E6CF1;
 }
-
 .service-card p {
     color: #6c757d;
     line-height: 1.6;
 }
 
 /*SOBRE NÓS*/
-
 .about-section {
     background: linear-gradient(135deg, #f7f4ff, #ffffff);
 }
-
 .about-text {
     border: 1px solid rgba(142, 108, 241, 0.14);
 }
-
 .about-text p {
     color: #5f6675;
     font-size: 1.1rem;
     line-height: 1.8;
 }
-
 .about-card {
     border: 1px solid rgba(142, 108, 241, 0.12) !important;
     transition: 0.3s ease;
 }
-
 .about-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13) !important;
     border-color: rgba(142, 108, 241, 0.35) !important;
 }
-
 .about-icon {
     min-width: 58px;
     height: 58px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: rgba(142, 108, 241, 0.12);
     color: #8E6CF1;
-
     border-radius: 16px;
-
     font-size: 1.7rem;
 }
-
 .about-card p {
     color: #6c757d;
     line-height: 1.6;
 }
-/*PERGUNTAS FREQUENTES*/
 
+/*PERGUNTAS FREQUENTES*/
 .faq-section {
     background: linear-gradient(135deg, #fbfaff, #ffffff);
 }
-
 .faq-section .accordion {
     max-width: 900px;
 }
-
 .faq-section .accordion-button {
     color: #1E2A44;
     background-color: #ffffff;
-
     font-size: 1.05rem;
-
     padding: 22px 26px;
-
     box-shadow: none;
 }
-
 .faq-section .accordion-button:not(.collapsed) {
     color: #8E6CF1;
     background-color: #f7f4ff;
     box-shadow: none;
 }
-
 .faq-section .accordion-button:focus {
     box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
     border-color: transparent;
 }
-
 .faq-section .accordion-body {
     color: #6c757d;
-
     font-size: 1rem;
     line-height: 1.7;
-
     padding: 22px 26px;
 }
 
 /*CONTACTOS*/
-
 .contact-section {
     background-color: #ffffff;
 }
-
 .contact-intro {
     max-width: 700px;
     color: #6c757d;
     font-size: 1.15rem;
 }
-
 #contactForm {
     max-width: 700px;
     background-color: #f7f4ff !important;
 }
-
 #contactForm .form-control {
     padding: 14px 16px;
     border: 1px solid rgba(30, 42, 68, 0.15);
     border-radius: 12px;
     font-size: 1rem;
 }
-
 #contactForm .form-control:focus {
     border-color: #8E6CF1;
     box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
 }
 
 /*FOOTER*/
-
 .footer-container {
     background: linear-gradient(135deg, #1b2745, #24345d);
     color: #d7dcef;
-
     padding: 65px 0 50px 0;
-
     border-top: 4px solid #8E6CF1;
 }
-
 .footer-logo-img {
     width: 220px;
     height: auto;
 }
-
 .footer-container h4 {
     color: white;
-
     font-size: 1.2rem;
     font-weight: 700;
-
     margin-bottom: 22px;
 }
-
 .footer-container p {
     color: #d7dcef;
-
     line-height: 1.9;
     font-size: 1rem;
-
     margin-bottom: 10px;
 }
 
 /*RESPONSIVO - TABLET*/
-
 @media (max-width: 992px) {
-
     html {
         scroll-padding-top: 150px;
     }
-
     section {
         scroll-margin-top: 150px;
     }
-
     .bng-navbar {
         padding-top: 12px;
         padding-bottom: 12px;
     }
-
     .navbar-brand img {
         width: 120px;
     }
-
     .navbar-collapse {
         text-align: center;
         padding-top: 20px;
     }
-
     .navbar-nav .nav-link::after {
         display: none;
     }
-
     .btn-login {
         margin-top: 15px;
     }
-
     .home-section {
         min-height: auto;
         padding-top: 170px;
     }
-
     .home-visual {
         min-height: auto;
     }
-
     .home-visual img {
         max-width: 650px;
     }
-
     .circle-bg {
         width: 420px;
         height: 420px;
-
         right: 50%;
         transform: translateX(50%);
     }
-
     .dots-bg {
         display: none;
     }
-
     .section-title {
         font-size: 2.25rem;
     }
-
     .about-text .section-title {
         text-align: center !important;
     }
-
     .about-text .section-title::after {
         margin-left: auto;
         margin-right: auto;
@@ -434,79 +358,61 @@ section {
 }
 
 /*RESPONSIVO - TELEMÓVEL*/
-
 @media (max-width: 576px) {
-
     html {
         scroll-padding-top: 210px;
     }
-
     section {
         scroll-margin-top: 210px;
     }
-
     .navbar .container-fluid {
         padding-left: 18px !important;
         padding-right: 18px !important;
     }
-
     .navbar-brand img {
         width: 105px;
     }
-
     .home-section {
         padding-top: 135px;
         padding-bottom: 55px;
     }
-
     .home-section h1 {
         font-size: 2.25rem;
     }
-
     .home-section p {
         font-size: 1rem;
     }
-
     .btn-primary-custom {
         width: 100%;
         padding: 14px 24px;
     }
-
     .home-visual img {
         max-width: 100%;
         border-radius: 22px;
     }
-
     .circle-bg {
         width: 280px;
         height: 280px;
     }
-
     .section-title {
         font-size: 2rem;
     }
-
     .about-text {
         padding: 35px 25px !important;
     }
-
     .about-text p {
         font-size: 1rem;
     }
-
     .about-card .card-body {
         flex-direction: column;
         text-align: center;
     }
-
     .about-icon {
         margin-bottom: 10px;
     }
-
     #contactForm {
         padding: 32px 24px !important;
     }
-
     .footer-container {
         text-align: center;
         padding: 45px 0;
