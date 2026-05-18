@@ -285,9 +285,11 @@ section {
     border-top: 4px solid #8E6CF1;
 }
 .footer-logo-img {
-    width: 220px;
+     width: 200px;
     height: auto;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.18));
 }
+
 .footer-container h4 {
     color: white;
     font-size: 1.2rem;
@@ -443,14 +445,18 @@ section {
     width: 260px;
     min-width: 260px;
     min-height: 100vh;
-    background: linear-gradient(180deg, #1b2745, #24345d);
+    background: linear-gradient(180deg, #202c4d, #344675);
+}
+.sidebar-logo {
+    background-color: white;
+    border-radius: 20px;
+    padding: 14px;
+    margin: 15px;
 }
 
 .sidebar-logo img {
-    width: 150px;
-    background-color: white;
-    border-radius: 18px;
-    padding: 10px;
+    width: 185px;
+    height: auto;
 }
 
 .sidebar .nav-link {
