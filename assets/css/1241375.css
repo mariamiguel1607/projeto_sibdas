@@ -552,6 +552,14 @@ section {
     color: #8E6CF1;
     font-size: 1.4rem;
 }
+.stats-icon {
+    width: 55px;
+    height: 55px;
+    background-color: rgba(142, 108, 241, 0.12);
+    color: #8E6CF1;
+    border-radius: 16px;
+    font-size: 1.4rem;
+}
 
 /* RESPONSIVO */
 
