@@ -665,3 +665,40 @@ section {
         align-items: flex-start;
     }
 }
+/* TABS DA GESTÃO DE CONTEÚDOS */
+
+.conteudos-tabs {
+    background-color: #f6f4fb;
+    padding: 10px;
+    border-radius: 18px;
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.conteudos-tabs .nav-link {
+    color: #1E2A44;
+    font-weight: 700;
+    border-radius: 14px;
+    padding: 12px 18px;
+    transition: 0.3s ease;
+}
+
+.conteudos-tabs .nav-link i {
+    color: #8E6CF1;
+}
+
+.conteudos-tabs .nav-link:hover {
+    background-color: rgba(142, 108, 241, 0.12);
+    color: #6C3FE0;
+}
+
+.conteudos-tabs .nav-link.active {
+    background: linear-gradient(135deg, #8E6CF1, #6C3FE0);
+    color: white;
+    box-shadow: 0 8px 20px rgba(142, 108, 241, 0.25);
+}
+
+.conteudos-tabs .nav-link.active i {
+    color: white;
+}
