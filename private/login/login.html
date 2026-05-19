@@ -45,8 +45,9 @@
             </div>
 
             <!-- Formulário de login -->
-            <form>
+            <form id="loginForm" novalidate>
 
+                <!-- Nome de utilizador -->
                 <div class="mb-3">
                     <label for="utilizador" class="form-label fw-bold">
                         Nome de utilizador
@@ -58,10 +59,11 @@
                         </span>
 
                         <input type="text" id="utilizador" name="utilizador" class="form-control"
-                            placeholder="Insira o nome de utilizador" required>
+                            placeholder="Insira o nome de utilizador">
                     </div>
                 </div>
 
+                <!-- Palavra-passe -->
                 <div class="mb-3">
                     <label for="password" class="form-label fw-bold">
                         Palavra-passe
@@ -73,20 +75,24 @@
                         </span>
 
                         <input type="password" id="password" name="password" class="form-control"
-                            placeholder="Insira a palavra-passe" required>
+                            placeholder="Insira a palavra-passe">
                     </div>
+
+                    <!-- Mensagem de erro -->
+                    <div id="loginErro" class="text-danger small mt-2 d-none"></div>
                 </div>
 
+                <!-- Esqueceu-se da palavra-passe -->
                 <div class="d-flex justify-content-end mb-4">
                     <a href="#" class="forgot-link">
                         Esqueceu-se da palavra-passe?
                     </a>
                 </div>
 
-                <!-- Temporariamente é link porque ainda não há PHP -->
-                <a href="../../private/views/dashboard/dashboard.html" class="btn btn-primary-custom w-100">
+                <!-- Botão entrar -->
+                <button type="submit" class="btn btn-primary-custom w-100">
                     Entrar
-                </a>
+                </button>
 
             </form>
 
@@ -105,4 +111,11 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Java Script -->
+    <script src="../../assets/js/1241375.js"></script>
+
 </body>
+
+</html>
