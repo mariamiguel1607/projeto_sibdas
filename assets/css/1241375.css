@@ -424,7 +424,7 @@ section {
     }
 }
 
-//*ÁREA PRIVADA */
+/*ÁREA PRIVADA */
 
 .private-body {
     background-color: #f6f4fb;
@@ -475,6 +475,87 @@ section {
 
 .sidebar .nav-link i {
     color: #8E6CF1;
+}
+
+/*LOGIN*/
+
+.login-body {
+    min-height: 100vh;
+    font-family: 'Titillium Web', sans-serif;
+    background: linear-gradient(135deg, #fbfaff 0%, #ffffff 45%, #f4efff 100%);
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 460px;
+    background-color: white;
+    padding: 45px;
+    border-radius: 28px;
+    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.12);
+    border: 1px solid rgba(142, 108, 241, 0.14);
+}
+
+.login-logo {
+    width: 180px;
+    height: auto;
+}
+
+.login-card h1 {
+    color: #1E2A44;
+}
+
+.login-card .input-group-text {
+    background-color: #f7f4ff;
+    color: #8E6CF1;
+    border: 1px solid rgba(30, 42, 68, 0.12);
+}
+
+.login-card .form-control {
+    padding: 13px 15px;
+    border: 1px solid rgba(30, 42, 68, 0.12);
+}
+
+.login-card .form-control:focus {
+    border-color: #8E6CF1;
+    box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
+}
+
+.forgot-link {
+    color: #8E6CF1;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.forgot-link:hover {
+    color: #6C3FE0;
+}
+
+.back-public-link {
+    color: #626b7d;
+    font-weight: 600;
+}
+
+.back-public-link:hover {
+    color: #8E6CF1;
+}
+
+/* Responsivo */
+@media (max-width: 576px) {
+    .login-card {
+        padding: 32px 24px;
+    }
+
+    .login-logo {
+        width: 150px;
+    }
 }
 
 /* CONTEÚDO PRINCIPAL */
