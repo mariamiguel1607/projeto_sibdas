@@ -188,39 +188,84 @@ section {
 
 /*SOBRE NÓS*/
 .about-section {
+    padding: 90px 0;
     background: linear-gradient(135deg, #f7f4ff, #ffffff);
 }
-.about-text {
-    border: 1px solid rgba(142, 108, 241, 0.14);
-}
-.about-text p {
-    color: #5f6675;
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
+
+/* Card grande da esquerda */
 .about-card {
-    border: 1px solid rgba(142, 108, 241, 0.12) !important;
+    background-color: #ffffff;
+    border: 1px solid rgba(142, 108, 241, 0.14);
+    border-radius: 26px;
+    padding: 50px;
+    box-shadow: 0 14px 35px rgba(30, 42, 68, 0.08);
+    height: 100%;
+}
+
+.about-card h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1E2A44;
+    margin-bottom: 12px;
+}
+
+.about-card p {
+    color: #5f6675;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin-bottom: 0;
+    text-align: justify;
+}
+
+/* Linha roxa por baixo do título */
+.section-line {
+    width: 90px;
+    height: 4px;
+    background-color: #8E6CF1;
+    border-radius: 20px;
+}
+
+/* Cards da direita */
+.about-info-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(142, 108, 241, 0.12);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 14px 35px rgba(30, 42, 68, 0.08);
     transition: 0.3s ease;
 }
-.about-card:hover {
+
+.about-info-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13) !important;
-    border-color: rgba(142, 108, 241, 0.35) !important;
+    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13);
+    border-color: rgba(142, 108, 241, 0.35);
 }
+
 .about-icon {
-    min-width: 58px;
-    height: 58px;
+    min-width: 72px;
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(142, 108, 241, 0.12);
     color: #8E6CF1;
-    border-radius: 16px;
-    font-size: 1.7rem;
+    border-radius: 20px;
+    font-size: 1.9rem;
 }
-.about-card p {
+
+.about-info-card h3 {
+    color: #1E2A44;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.about-info-card p {
     color: #6c757d;
+    font-size: 1.05rem;
     line-height: 1.6;
+    margin-bottom: 0;
 }
 
 /*PERGUNTAS FREQUENTES*/

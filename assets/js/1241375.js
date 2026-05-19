@@ -362,6 +362,250 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // =======================================================
+// GESTÃO DA SECÇÃO SOBRE NÓS - SIMULAÇÃO FRONTEND
+// Esta parte permite editar a secção "Sobre Nós" da página pública
+// através da área privada, usando localStorage.
+// Mais tarde, esta lógica será substituída pela base de dados.
+// =======================================================
+
+
+// -------------------------------------------------------
+// 1. Conteúdo inicial da secção Sobre Nós
+// -------------------------------------------------------
+
+const sobreInicial = {
+    titulo: "Sobre Nós",
+
+    texto: `A TechMed Solutions nasceu com o objetivo de apoiar instituições de saúde
+na organização e digitalização dos seus processos internos, promovendo uma
+gestão mais eficiente, segura e acessível da informação associada aos
+equipamentos médicos.
+
+Através de uma plataforma simples e intuitiva, procuramos reduzir a
+dependência de registos manuais, facilitar o trabalho dos profissionais
+responsáveis pela gestão hospitalar e contribuir para uma maior qualidade
+e segurança nos serviços de saúde.`,
+
+    bloco1Titulo: "Missão",
+    bloco1Texto: "Apoiar hospitais na transição para processos digitais mais organizados, seguros e eficientes.",
+
+    bloco2Titulo: "Inovação",
+    bloco2Texto: "Desenvolver soluções tecnológicas simples, intuitivas e adaptadas às necessidades do contexto hospitalar.",
+
+    bloco3Titulo: "Impacto",
+    bloco3Texto: "Contribuir para uma gestão hospitalar mais eficaz e para melhores condições de apoio aos profissionais de saúde.",
+
+    estado: "Ativo"
+};
+
+
+// -------------------------------------------------------
+// 2. Criar conteúdo inicial no localStorage
+// -------------------------------------------------------
+
+if (!localStorage.getItem("sobrePublico")) {
+    localStorage.setItem("sobrePublico", JSON.stringify(sobreInicial));
+}
+
+
+// -------------------------------------------------------
+// 3. Obter e guardar conteúdo Sobre Nós
+// -------------------------------------------------------
+
+function obterSobre() {
+    return JSON.parse(localStorage.getItem("sobrePublico")) || sobreInicial;
+}
+
+function guardarSobre(sobre) {
+    localStorage.setItem("sobrePublico", JSON.stringify(sobre));
+}
+
+
+// -------------------------------------------------------
+// 4. Mostrar Sobre Nós na página pública
+// -------------------------------------------------------
+
+function mostrarSobrePublico() {
+    const secaoSobre = document.getElementById("sobre");
+
+    const titulo = document.getElementById("sobrePublicoTitulo");
+    const texto = document.getElementById("sobrePublicoTexto");
+
+    const bloco1Titulo = document.getElementById("sobrePublicoBloco1Titulo");
+    const bloco1Texto = document.getElementById("sobrePublicoBloco1Texto");
+
+    const bloco2Titulo = document.getElementById("sobrePublicoBloco2Titulo");
+    const bloco2Texto = document.getElementById("sobrePublicoBloco2Texto");
+
+    const bloco3Titulo = document.getElementById("sobrePublicoBloco3Titulo");
+    const bloco3Texto = document.getElementById("sobrePublicoBloco3Texto");
+
+    // Se estes elementos não existirem, significa que não estamos na página pública
+    if (
+        !secaoSobre ||
+        !titulo ||
+        !texto ||
+        !bloco1Titulo ||
+        !bloco1Texto ||
+        !bloco2Titulo ||
+        !bloco2Texto ||
+        !bloco3Titulo ||
+        !bloco3Texto
+    ) {
+        return;
+    }
+
+    const sobre = obterSobre();
+
+    // Se estiver inativo, esconde a secção completa
+    if (sobre.estado === "Inativo") {
+        secaoSobre.style.display = "none";
+        return;
+    }
+
+    secaoSobre.style.display = "";
+
+    titulo.innerText = sobre.titulo;
+    texto.innerHTML = sobre.texto
+    .trim()
+    .split(/\n\s*\n/)
+    .map(paragrafo => `<p>${paragrafo.replace(/\s+/g, " ")}</p>`)
+    .join("");
+
+    bloco1Titulo.innerText = sobre.bloco1Titulo;
+    bloco1Texto.innerText = sobre.bloco1Texto;
+
+    bloco2Titulo.innerText = sobre.bloco2Titulo;
+    bloco2Texto.innerText = sobre.bloco2Texto;
+
+    bloco3Titulo.innerText = sobre.bloco3Titulo;
+    bloco3Texto.innerText = sobre.bloco3Texto;
+}
+
+
+// -------------------------------------------------------
+// 5. Carregar dados na página privada
+// -------------------------------------------------------
+
+function carregarSobreGestao() {
+    const titulo = document.getElementById("sobreTitulo");
+    const texto = document.getElementById("sobreTexto");
+
+    const bloco1Titulo = document.getElementById("sobreBloco1Titulo");
+    const bloco1Texto = document.getElementById("sobreBloco1Texto");
+
+    const bloco2Titulo = document.getElementById("sobreBloco2Titulo");
+    const bloco2Texto = document.getElementById("sobreBloco2Texto");
+
+    const bloco3Titulo = document.getElementById("sobreBloco3Titulo");
+    const bloco3Texto = document.getElementById("sobreBloco3Texto");
+
+    const estado = document.getElementById("sobreEstado");
+
+    // Se estes elementos não existirem, significa que não estamos na página de gestão do Sobre Nós
+    if (
+        !titulo ||
+        !texto ||
+        !bloco1Titulo ||
+        !bloco1Texto ||
+        !bloco2Titulo ||
+        !bloco2Texto ||
+        !bloco3Titulo ||
+        !bloco3Texto ||
+        !estado
+    ) {
+        return;
+    }
+
+    const sobre = obterSobre();
+
+    titulo.value = sobre.titulo;
+    texto.value = sobre.texto;
+
+    bloco1Titulo.value = sobre.bloco1Titulo;
+    bloco1Texto.value = sobre.bloco1Texto;
+
+    bloco2Titulo.value = sobre.bloco2Titulo;
+    bloco2Texto.value = sobre.bloco2Texto;
+
+    bloco3Titulo.value = sobre.bloco3Titulo;
+    bloco3Texto.value = sobre.bloco3Texto;
+
+    estado.value = sobre.estado;
+}
+
+
+// -------------------------------------------------------
+// 6. Guardar alterações da página privada
+// -------------------------------------------------------
+
+function guardarAlteracoesSobre() {
+    const titulo = document.getElementById("sobreTitulo");
+    const texto = document.getElementById("sobreTexto");
+
+    const bloco1Titulo = document.getElementById("sobreBloco1Titulo");
+    const bloco1Texto = document.getElementById("sobreBloco1Texto");
+
+    const bloco2Titulo = document.getElementById("sobreBloco2Titulo");
+    const bloco2Texto = document.getElementById("sobreBloco2Texto");
+
+    const bloco3Titulo = document.getElementById("sobreBloco3Titulo");
+    const bloco3Texto = document.getElementById("sobreBloco3Texto");
+
+    const estado = document.getElementById("sobreEstado");
+
+    if (
+        !titulo ||
+        !texto ||
+        !bloco1Titulo ||
+        !bloco1Texto ||
+        !bloco2Titulo ||
+        !bloco2Texto ||
+        !bloco3Titulo ||
+        !bloco3Texto ||
+        !estado
+    ) {
+        return;
+    }
+
+    if (
+        titulo.value.trim() === "" ||
+        texto.value.trim() === "" ||
+        bloco1Titulo.value.trim() === "" ||
+        bloco1Texto.value.trim() === "" ||
+        bloco2Titulo.value.trim() === "" ||
+        bloco2Texto.value.trim() === "" ||
+        bloco3Titulo.value.trim() === "" ||
+        bloco3Texto.value.trim() === ""
+    ) {
+        alert("Preenche todos os campos antes de guardar.");
+        return;
+    }
+
+    const sobreAtualizado = {
+        titulo: titulo.value.trim(),
+        texto: texto.value.trim(),
+
+        bloco1Titulo: bloco1Titulo.value.trim(),
+        bloco1Texto: bloco1Texto.value.trim(),
+
+        bloco2Titulo: bloco2Titulo.value.trim(),
+        bloco2Texto: bloco2Texto.value.trim(),
+
+        bloco3Titulo: bloco3Titulo.value.trim(),
+        bloco3Texto: bloco3Texto.value.trim(),
+
+        estado: estado.value
+    };
+
+    guardarSobre(sobreAtualizado);
+
+    alert("Alterações guardadas com sucesso.");
+
+    mostrarSobrePublico();
+}
+
+// =======================================================
 // FILTROS DA TABELA DE EQUIPAMENTOS - ÁREA PRIVADA
 // Esta parte só funciona na página equipamentos.html
 // =======================================================
@@ -484,14 +728,22 @@ function atualizarCardsEquipamentos() {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Gestão de conteúdos públicos
+    // ===============================
+    // PÁGINA PÚBLICA
+    // ===============================
     mostrarServicosPublicos();
-    mostrarServicosGestao();
+    mostrarSobrePublico();
 
-    const botaoAdicionar = document.getElementById("btnAdicionarServico");
 
-    if (botaoAdicionar) {
-        botaoAdicionar.addEventListener("click", adicionarServico);
+    // ===============================
+    // GESTÃO DE SERVIÇOS
+    // ===============================
+    carregarServicosParaGestao();
+
+    const botaoAdicionarServico = document.getElementById("btnAdicionarServico");
+
+    if (botaoAdicionarServico) {
+        botaoAdicionarServico.addEventListener("click", adicionarCardServico);
     }
 
     const botaoGuardarServicos = document.getElementById("btnGuardarServicos");
@@ -500,14 +752,24 @@ document.addEventListener("DOMContentLoaded", function () {
         botaoGuardarServicos.addEventListener("click", guardarAlteracoesServicos);
     }
 
-    const botaoLimparServico = document.getElementById("btnLimparServico");
 
-    if (botaoLimparServico) {
-        botaoLimparServico.addEventListener("click", limparCamposNovoServico);
+    // ===============================
+    // GESTÃO DO SOBRE NÓS
+    // ===============================
+    carregarSobreGestao();
+
+    const botaoGuardarSobre = document.getElementById("btnGuardarSobre");
+
+    if (botaoGuardarSobre) {
+        botaoGuardarSobre.addEventListener("click", guardarAlteracoesSobre);
     }
 
-    // Equipamentos
+
+    // ===============================
+    // EQUIPAMENTOS
+    // ===============================
     iniciarFiltrosEquipamentos();
     iniciarArquivarEquipamentos();
     atualizarCardsEquipamentos();
+
 });

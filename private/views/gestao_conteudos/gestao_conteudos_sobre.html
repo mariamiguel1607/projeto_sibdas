@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Conteudos| TechMed Solutions</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/1241375.css">
+</head>
+
+<body class="private-body">
+
+    <div class="private-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar d-flex flex-column p-3">
+
+            <div class="sidebar-logo text-center mb-4">
+                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
+                    class="img-fluid">
+            </div>
+
+            <nav class="sidebar-menu nav nav-pills flex-column gap-2">
+                <a href="../dashboard/dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+
+                <a href="equipamentos.html" class="nav-link">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    Equipamentos
+                </a>
+
+                <a href="../localizacoes/localizacoes.html" class="nav-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Localizações
+                </a>
+
+                <a href="../fornecedores/fornecedores.html" class="nav-link">
+                    <i class="fa-solid fa-truck-medical"></i>
+                    Fornecedores
+                </a>
+
+                <a href="../documentacao/documentacao.html" class="nav-link">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Documentação
+                </a>
+
+                <a href="../garantias-contratos/garantias-contratos.html" class="nav-link">
+                    <i class="fa-solid fa-file-signature"></i>
+                    Garantias e Contratos
+                </a>
+
+                <a href="../gestao-conteudos/gestao-conteudos.html" class="nav-link active">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Gestão de Conteúdos
+                </a>
+            </nav>
+
+            <div class="sidebar-footer mt-auto">
+                <a href="../../../public/index.html" class="nav-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Sair
+                </a>
+            </div>
+
+        </aside>
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="flex-grow-1 p-4 p-lg-5">
+
+            <!-- Cabeçalho da página -->
+            <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+                <div>
+                    <h1 class="fw-bold mb-2">Editar Secção Sobre Nós</h1>
+                    <p class="text-muted mb-0">
+                        Gestão dos textos institucionais apresentados na área pública do website.
+                    </p>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="gestao_conteudos.html" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-arrow-left me-2"></i>
+                        Voltar
+                    </a>
+
+                    <a href="../../../public/index.html#sobre" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-eye me-2"></i>
+                        Ver na Página Pública
+                    </a>
+                </div>
+            </div>
+
+            <!-- CARD DE EDIÇÃO -->
+            <section class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="mb-4">
+                        <h2 class="fw-bold mb-2">Conteúdo da secção</h2>
+                        <p class="text-muted mb-0">
+                            Edita o texto apresentado na secção “Sobre Nós” da página pública.
+                        </p>
+                    </div>
+
+                    <div class="row g-4">
+
+                        <!-- Título -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Título da secção</label>
+                            <input type="text" class="form-control" id="sobreTitulo" placeholder="Ex.: Sobre Nós">
+                        </div>
+
+                        <!-- Texto principal -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Texto principal</label>
+                            <textarea class="form-control" id="sobreTexto" rows="5"
+                                placeholder="Escreve o texto principal da secção Sobre Nós."></textarea>
+                        </div>
+
+                        <!-- Bloco 1 -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Título do bloco 1</label>
+                            <input type="text" class="form-control mb-3" id="sobreBloco1Titulo"
+                                placeholder="Ex.: Missão">
+
+                            <label class="form-label fw-semibold">Texto do bloco 1</label>
+                            <textarea class="form-control" id="sobreBloco1Texto" rows="4"
+                                placeholder="Ex.: Apoiar instituições de saúde na gestão digital dos equipamentos médicos."></textarea>
+                        </div>
+
+                        <!-- Bloco 2 -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Título do bloco 2</label>
+                            <input type="text" class="form-control mb-3" id="sobreBloco2Titulo"
+                                placeholder="Ex.: Visão">
+
+                            <label class="form-label fw-semibold">Texto do bloco 2</label>
+                            <textarea class="form-control" id="sobreBloco2Texto" rows="4"
+                                placeholder="Ex.: Tornar a gestão hospitalar mais organizada, segura e eficiente."></textarea>
+                        </div>
+
+                        <!-- Bloco 3 -->
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Título do bloco 3</label>
+                            <input type="text" class="form-control mb-3" id="sobreBloco3Titulo"
+                                placeholder="Ex.: Valores">
+
+                            <label class="form-label fw-semibold">Texto do bloco 3</label>
+                            <textarea class="form-control" id="sobreBloco3Texto" rows="4"
+                                placeholder="Ex.: Segurança, organização, confiança, inovação e eficiência."></textarea>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Estado da secção</label>
+                            <select class="form-select" id="sobreEstado">
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- Botão guardar -->
+                    <div class="d-flex justify-content-center mt-5">
+                        <button type="button" class="btn btn-primary-custom px-5" id="btnGuardarSobre">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                            Guardar Alterações
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/js/1241375.js"></script>
+</body>
+
+</html>
