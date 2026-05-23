@@ -744,6 +744,193 @@ function guardarAlteracoesContactos() {
 }
 
 // =======================================================
+// FAQ
+// =======================================================
+
+const faqInicial = [
+
+    {
+        pergunta: "A quem se destina a plataforma TechMed Solutions?",
+        resposta: "A plataforma destina-se a instituições de saúde que pretendem organizar e gerir equipamentos médicos de forma centralizada, digital e mais eficiente."
+    },
+
+    {
+        pergunta: "Que tipo de informação pode ser registada?",
+        resposta: "Podem ser registadas informações como identificação do equipamento, categoria, estado, localização, criticidade, documentação associada e histórico relevante."
+    },
+
+    {
+        pergunta: "A plataforma permite consultar documentos dos equipamentos?",
+        resposta: "Sim. A plataforma prevê a associação de documentos aos equipamentos, como manuais, certificados, contratos, relatórios técnicos e outros ficheiros importantes."
+    },
+
+    {
+        pergunta: "Quem pode aceder à área reservada?",
+        resposta: "A área reservada destina-se apenas a utilizadores autorizados, como profissionais responsáveis pela gestão e consulta da informação dos equipamentos médicos."
+    }
+
+];
+
+
+// Criar FAQ inicial
+if (!localStorage.getItem("faqPublica")) {
+    localStorage.setItem("faqPublica", JSON.stringify(faqInicial));
+}
+
+
+// Obter FAQ
+function obterFaq() {
+    return JSON.parse(localStorage.getItem("faqPublica")) || [];
+}
+
+
+// Guardar FAQ
+function guardarFaq(faqs) {
+    localStorage.setItem("faqPublica", JSON.stringify(faqs));
+}
+
+
+// Mostrar FAQ na página pública
+function mostrarFaqPublica() {
+
+    const container = document.getElementById("faqAccordionPublico");
+
+    if (!container) return;
+
+    const faqs = obterFaq();
+
+    container.innerHTML = "";
+
+    faqs.forEach(function (faq, index) {
+
+        container.innerHTML += `
+
+            <div class="accordion-item mb-3 border-0 shadow-sm rounded-4 overflow-hidden">
+
+                <h3 class="accordion-header">
+
+                    <button
+                        class="accordion-button ${index !== 0 ? "collapsed" : ""} fw-bold"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#faq${index}">
+
+                        ${faq.pergunta}
+
+                    </button>
+
+                </h3>
+
+                <div
+                    id="faq${index}"
+                    class="accordion-collapse collapse ${index === 0 ? "show" : ""}"
+                    data-bs-parent="#faqAccordionPublico">
+
+                    <div class="accordion-body">
+                        ${faq.resposta}
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+
+// Mostrar FAQ na gestão
+function carregarFaqGestao() {
+
+    const lista = document.getElementById("listaFaqGestao");
+
+    if (!lista) return;
+
+    const faqs = obterFaq();
+
+    lista.innerHTML = "";
+
+    faqs.forEach(function (faq, index) {
+
+        lista.innerHTML += `
+
+            <div class="faq-gestao-card border rounded-4 p-4 mb-4 bg-light mx-auto">
+
+                <h5 class="fw-bold mb-3">
+                    FAQ ${index + 1}
+                </h5>
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Pergunta
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control faq-pergunta"
+                        value="${faq.pergunta}">
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Resposta
+                    </label>
+
+                    <textarea
+                        class="form-control faq-resposta"
+                        rows="4">${faq.resposta}</textarea>
+
+                </div>
+
+            </div>
+        `;
+    });
+}
+
+
+// Adicionar FAQ
+function adicionarFaq() {
+
+    const faqs = obterFaq();
+
+    faqs.push({
+        pergunta: "",
+        resposta: ""
+    });
+
+    guardarFaq(faqs);
+
+    carregarFaqGestao();
+}
+
+
+// Guardar alterações
+function guardarAlteracoesFaq() {
+
+    const perguntas = document.querySelectorAll(".faq-pergunta");
+    const respostas = document.querySelectorAll(".faq-resposta");
+
+    let novasFaqs = [];
+
+    for (let i = 0; i < perguntas.length; i++) {
+
+        novasFaqs.push({
+
+            pergunta: perguntas[i].value,
+            resposta: respostas[i].value
+
+        });
+    }
+
+    guardarFaq(novasFaqs);
+
+    mostrarFaqPublica();
+
+    alert("FAQs guardadas com sucesso.");
+}
+
+// =======================================================
 // VALIDAÇÃO DO LOGIN - SIMULAÇÃO FRONTEND
 // Esta parte valida o formulário de login antes de entrar
 // na área reservada. Mais tarde será substituída por PHP.
@@ -970,5 +1157,22 @@ document.addEventListener("DOMContentLoaded", function () {
     iniciarFiltrosEquipamentos();
     iniciarArquivarEquipamentos();
     atualizarCardsEquipamentos();
+
+    // FAQ
+    mostrarFaqPublica();
+
+    carregarFaqGestao();
+
+    const btnAdicionarFaq = document.getElementById("btnAdicionarFaq");
+
+    if (btnAdicionarFaq) {
+        btnAdicionarFaq.addEventListener("click", adicionarFaq);
+    }
+
+    const btnGuardarFaq = document.getElementById("btnGuardarFaq");
+
+    if (btnGuardarFaq) {
+        btnGuardarFaq.addEventListener("click", guardarAlteracoesFaq);
+    }
 
 });
