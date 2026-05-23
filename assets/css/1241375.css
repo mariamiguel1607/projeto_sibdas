@@ -299,27 +299,70 @@ section {
 }
 
 /*CONTACTOS*/
+/* CONTACTOS - PÁGINA PÚBLICA */
+
 .contact-section {
+    padding: 90px 0;
     background-color: #ffffff;
 }
-.contact-intro {
-    max-width: 700px;
+
+.contact-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(142, 108, 241, 0.12);
+    border-radius: 24px;
+    padding: 32px 24px;
+    box-shadow: 0 14px 35px rgba(30, 42, 68, 0.08);
+    transition: 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.13);
+    border-color: rgba(142, 108, 241, 0.35);
+}
+
+.contact-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background-color: rgba(142, 108, 241, 0.12);
+    color: #8E6CF1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+}
+
+.contact-card h3 {
+    color: #1E2A44;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.contact-card p {
     color: #6c757d;
-    font-size: 1.15rem;
+    margin-bottom: 0;
+    line-height: 1.5;
 }
-#contactForm {
-    max-width: 700px;
-    background-color: #f7f4ff !important;
+
+.contact-form-card {
+    background-color: #ffffff;
+    border-radius: 26px;
+    padding: 40px;
+    box-shadow: 0 18px 45px rgba(30, 42, 68, 0.1);
+    border: 1px solid rgba(142, 108, 241, 0.12);
 }
-#contactForm .form-control {
-    padding: 14px 16px;
-    border: 1px solid rgba(30, 42, 68, 0.15);
+
+.contact-form-card .form-control {
     border-radius: 12px;
-    font-size: 1rem;
+    padding: 12px 14px;
+    border: 1px solid #dee2e6;
 }
-#contactForm .form-control:focus {
+
+.contact-form-card .form-control:focus {
     border-color: #8E6CF1;
-    box-shadow: 0 0 0 4px rgba(142, 108, 241, 0.12);
+    box-shadow: 0 0 0 0.2rem rgba(142, 108, 241, 0.15);
 }
 
 /*FOOTER*/

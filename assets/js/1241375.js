@@ -467,10 +467,10 @@ function mostrarSobrePublico() {
 
     titulo.innerText = sobre.titulo;
     texto.innerHTML = sobre.texto
-    .trim()
-    .split(/\n\s*\n/)
-    .map(paragrafo => `<p>${paragrafo.replace(/\s+/g, " ")}</p>`)
-    .join("");
+        .trim()
+        .split(/\n\s*\n/)
+        .map(paragrafo => `<p>${paragrafo.replace(/\s+/g, " ")}</p>`)
+        .join("");
 
     bloco1Titulo.innerText = sobre.bloco1Titulo;
     bloco1Texto.innerText = sobre.bloco1Texto;
@@ -603,6 +603,144 @@ function guardarAlteracoesSobre() {
     alert("Alterações guardadas com sucesso.");
 
     mostrarSobrePublico();
+}
+// =======================================================
+// GESTÃO DA SECÇÃO CONTACTOS - SIMULAÇÃO FRONTEND
+// =======================================================
+
+
+// Conteúdo inicial dos contactos
+const contactosInicial = {
+    titulo: "Contactos",
+    texto: "Entre em contacto connosco para obter mais informações sobre os nossos serviços.",
+    formularioTitulo: "Envie-nos uma mensagem",
+    botaoTexto: "Enviar Mensagem",
+    estado: "Ativo"
+};
+
+
+// Criar dados iniciais no localStorage
+if (!localStorage.getItem("contactosPublicos")) {
+    localStorage.setItem("contactosPublicos", JSON.stringify(contactosInicial));
+}
+
+
+// Obter contactos
+function obterContactos() {
+    return JSON.parse(localStorage.getItem("contactosPublicos")) || contactosInicial;
+}
+
+
+// Guardar contactos
+function guardarContactos(contactos) {
+    localStorage.setItem("contactosPublicos", JSON.stringify(contactos));
+}
+
+
+// Mostrar contactos na página pública
+function mostrarContactosPublicos() {
+    const secaoContactos = document.getElementById("contactos");
+
+    const titulo = document.getElementById("contactosPublicoTitulo");
+    const texto = document.getElementById("contactosPublicoTexto");
+    const formularioTitulo = document.getElementById("contactosFormularioTituloPublico");
+    const botaoTexto = document.getElementById("contactosBotaoTextoPublico");
+
+    if (
+        !secaoContactos ||
+        !titulo ||
+        !texto ||
+        !formularioTitulo ||
+        !botaoTexto
+    ) {
+        return;
+    }
+
+    const contactos = obterContactos();
+
+    if (contactos.estado === "Inativo") {
+        secaoContactos.style.display = "none";
+        return;
+    }
+
+    secaoContactos.style.display = "";
+
+    titulo.innerText = contactos.titulo;
+    texto.innerText = contactos.texto;
+    formularioTitulo.innerText = contactos.formularioTitulo;
+    botaoTexto.innerText = contactos.botaoTexto;
+}
+
+
+// Carregar dados na página privada
+function carregarContactosGestao() {
+    const titulo = document.getElementById("contactosTitulo");
+    const texto = document.getElementById("contactosTexto");
+    const formularioTitulo = document.getElementById("contactosFormularioTitulo");
+    const botaoTexto = document.getElementById("contactosBotaoTexto");
+    const estado = document.getElementById("contactosEstado");
+
+    if (
+        !titulo ||
+        !texto ||
+        !formularioTitulo ||
+        !botaoTexto ||
+        !estado
+    ) {
+        return;
+    }
+
+    const contactos = obterContactos();
+
+    titulo.value = contactos.titulo;
+    texto.value = contactos.texto;
+    formularioTitulo.value = contactos.formularioTitulo;
+    botaoTexto.value = contactos.botaoTexto;
+    estado.value = contactos.estado;
+}
+
+
+// Guardar alterações dos contactos
+function guardarAlteracoesContactos() {
+    const titulo = document.getElementById("contactosTitulo");
+    const texto = document.getElementById("contactosTexto");
+    const formularioTitulo = document.getElementById("contactosFormularioTitulo");
+    const botaoTexto = document.getElementById("contactosBotaoTexto");
+    const estado = document.getElementById("contactosEstado");
+
+    if (
+        !titulo ||
+        !texto ||
+        !formularioTitulo ||
+        !botaoTexto ||
+        !estado
+    ) {
+        return;
+    }
+
+    if (
+        titulo.value.trim() === "" ||
+        texto.value.trim() === "" ||
+        formularioTitulo.value.trim() === "" ||
+        botaoTexto.value.trim() === ""
+    ) {
+        alert("Preenche todos os campos antes de guardar.");
+        return;
+    }
+
+    const contactosAtualizados = {
+        titulo: titulo.value.trim(),
+        texto: texto.value.trim(),
+        formularioTitulo: formularioTitulo.value.trim(),
+        botaoTexto: botaoTexto.value.trim(),
+        estado: estado.value
+    };
+
+    guardarContactos(contactosAtualizados);
+
+    alert("Alterações guardadas com sucesso.");
+
+    mostrarContactosPublicos();
 }
 
 // =======================================================
@@ -776,6 +914,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ===============================
     mostrarServicosPublicos();
     mostrarSobrePublico();
+    mostrarContactosPublicos();
 
 
     // ===============================
@@ -806,7 +945,20 @@ document.addEventListener("DOMContentLoaded", function () {
     if (botaoGuardarSobre) {
         botaoGuardarSobre.addEventListener("click", guardarAlteracoesSobre);
     }
-     // ===============================
+
+    // ===============================
+    // GESTÃO DO Contactos
+    // ===============================
+
+    carregarContactosGestao();
+
+    const botaoGuardarContactos = document.getElementById("btnGuardarContactos");
+
+    if (botaoGuardarContactos) {
+        botaoGuardarContactos.addEventListener("click", guardarAlteracoesContactos);
+    }
+
+    // ===============================
     // Validação do Login
     // ===============================
 

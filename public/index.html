@@ -303,43 +303,75 @@
         </div>
     </section>
 
-    <!-- Contactos -->
-    <section id="contactos" class="contact-section pt-2 pb-5">
+    <!-- CONTACTOS -->
+    <section id="contactos" class="contact-section">
         <div class="container">
 
-            <h2 class="section-title text-center mb-4">
-                Contacto
-            </h2>
+            <!-- Título -->
+            <div class="text-center mb-5">
+                <h2 class="section-title" id="contactosPublicoTitulo">Contactos</h2>
 
-            <p class="text-center mx-auto mb-5 contact-intro">
-                Entre em contacto connosco para obter mais informações sobre a plataforma TechMed Solutions.
-            </p>
+                <p class="section-subtitle mx-auto" id="contactosPublicoTexto">
+                    Entre em contacto connosco para obter mais informações sobre os nossos serviços.
+                </p>
+            </div>
 
-            <form id="contactForm" class="mx-auto bg-light rounded-4 shadow-sm p-5">
+            <!-- Formulário de contacto -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-                <div class="mb-3">
-                    <label for="nome" class="form-label fw-bold">Nome:</label>
-                    <input type="text" id="nome" name="nome" class="form-control" required>
+                    <div class="contact-form-card">
+
+                        <h3 class="fw-bold mb-4 text-center" id="contactosFormularioTituloPublico">
+                            Envie-nos uma mensagem
+                        </h3>
+
+                        <form>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label for="nomeContacto" class="form-label fw-semibold">Nome</label>
+                                    <input type="text" class="form-control" id="nomeContacto"
+                                        placeholder="Insira o seu nome">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="emailContacto" class="form-label fw-semibold">Email</label>
+                                    <input type="email" class="form-control" id="emailContacto"
+                                        placeholder="Insira o seu email">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="assuntoContacto" class="form-label fw-semibold">Assunto</label>
+                                    <input type="text" class="form-control" id="assuntoContacto"
+                                        placeholder="Indique o assunto da mensagem">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="mensagemContacto" class="form-label fw-semibold">Mensagem</label>
+                                    <textarea class="form-control" id="mensagemContacto" rows="5"
+                                        placeholder="Escreva aqui a sua mensagem"></textarea>
+                                </div>
+
+                                <div class="col-12 text-center mt-4">
+                                    <button type="button" class="btn btn-primary-custom px-5" id="contactosBotaoTextoPublico">
+                                        id="contactosBotaoTextoPublico">
+                                        Enviar Mensagem
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label for="email" class="form-label fw-bold">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="mensagem" class="form-label fw-bold">Mensagem:</label>
-                    <textarea id="mensagem" name="mensagem" rows="4" class="form-control" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary-custom w-100">
-                    Enviar Mensagem
-                </button>
-
-            </form>
         </div>
     </section>
-
     <!-- Rodapé -->
     <footer class="footer-container">
         <div class="container">
