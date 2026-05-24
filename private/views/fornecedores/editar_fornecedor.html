@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Fornecedor | TechMed Solutions</title>
+
+    <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+
+    <link rel="stylesheet" href="../../../assets/css/1241375.css">
+</head>
+
+<body class="private-body">
+
+    <div class="private-layout">
+
+        <aside class="sidebar d-flex flex-column p-3">
+
+            <div class="sidebar-logo text-center mb-4">
+                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
+                    class="img-fluid">
+            </div>
+
+            <nav class="sidebar-menu nav nav-pills flex-column gap-2">
+                <a href="../dashboard/dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+
+                <a href="../equipamentos/equipamentos.html" class="nav-link">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    Equipamentos
+                </a>
+
+                <a href="../localizacao/localizacao.html" class="nav-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Localizações
+                </a>
+
+                <a href="fornecedores.html" class="nav-link active">
+                    <i class="fa-solid fa-truck-medical"></i>
+                    Fornecedores
+                </a>
+
+                <a href="../documentacao/documentacao.html" class="nav-link">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Documentação
+                </a>
+
+                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
+                    <i class="fa-solid fa-file-signature"></i>
+                    Garantias e Contratos
+                </a>
+
+                <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Gestão de Conteúdos
+                </a>
+            </nav>
+
+            <div class="sidebar-footer mt-auto">
+                <a href="../../../public/index.html" class="nav-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Sair
+                </a>
+            </div>
+
+        </aside>
+
+
+        <main class="flex-grow-1 p-4 p-lg-5">
+
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+                <div>
+                    <h1 class="fw-bold mb-1">
+                        Editar Fornecedor
+                    </h1>
+                    <p class="text-muted mb-0">
+                        Modificar os dados do fornecedor e atualizar as associações de equipamentos médicos.
+                    </p>
+                </div>
+
+                <a href="fornecedores.html" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Voltar
+                </a>
+
+            </div>
+
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form>
+
+                        <h4 class="fw-bold mb-4">
+                            <i class="fa-solid fa-building me-2 text-primary"></i>
+                            Dados do fornecedor
+                        </h4>
+
+                        <div class="row g-4">
+
+                            <div class="col-md-4">
+                                <label for="codigoFornecedor" class="form-label fw-bold">
+                                    Código
+                                </label>
+                                <input type="text" id="codigoFornecedor" class="form-control"
+                                    value="FOR-0005" disabled>
+                                <small class="text-muted">O código não pode ser alterado.</small>
+                            </div>
+
+                            <div class="col-md-8">
+                                <label for="nomeFornecedor" class="form-label fw-bold">
+                                    Nome da empresa
+                                </label>
+                                <input type="text" id="nomeFornecedor" class="form-control" value="Dräger Portugal Lda.">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="tipoFornecedor" class="form-label fw-bold">
+                                    Tipo de fornecedor
+                                </label>
+                                <select id="tipoFornecedor" class="form-select">
+                                    <option disabled>Selecionar tipo</option>
+                                    <option selected>Fabricante</option>
+                                    <option>Distribuidor / Fornecedor Comercial</option>
+                                    <option>Assistência Técnica</option>
+                                    <option>Consumíveis / Acessórios</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="estadoFornecedor" class="form-label fw-bold">
+                                    Estado
+                                </label>
+                                <select id="estadoFornecedor" class="form-select">
+                                    <option selected>Ativo</option>
+                                    <option>Inativo</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="nifFornecedor" class="form-label fw-bold">
+                                    NIF
+                                </label>
+                                <input type="text" id="nifFornecedor" class="form-control" value="509123456"
+                                    maxlength="9" pattern="[0-9]{9}" inputmode="numeric">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="telefoneFornecedor" class="form-label fw-bold">
+                                    Contacto telefónico
+                                </label>
+                                <input type="text" id="telefoneFornecedor" class="form-control"
+                                    value="+351 220 123 456" maxlength="14"
+                                    pattern="\+?[0-9]{1,4}[0-9]{3,4}[0-9]{3,4}" inputmode="tel">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="emailFornecedor" class="form-label fw-bold">
+                                    Email
+                                </label>
+                                <input type="email" id="emailFornecedor" class="form-control"
+                                    value="contacto@draeger.pt">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label for="moradaFornecedor" class="form-label fw-bold">
+                                    Morada
+                                </label>
+                                <input type="text" id="moradaFornecedor" class="form-control"
+                                    value="Avenida da Tecnologia, n.º 45, 4000-000 Porto">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="websiteFornecedor" class="form-label fw-bold">
+                                    Website
+                                </label>
+                                <input type="url" id="websiteFornecedor" class="form-control"
+                                    value="https://www.draeger.com">
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-5">
+
+                        <h4 class="fw-bold mb-4">
+                            <i class="fa-solid fa-user me-2 text-primary"></i>
+                            Pessoa de contacto
+                        </h4>
+
+                        <div class="row g-4">
+
+                            <div class="col-md-6">
+                                <label for="pessoaContacto" class="form-label fw-bold">
+                                    Nome da pessoa de contacto
+                                </label>
+                                <input type="text" id="pessoaContacto" class="form-control"
+                                    value="Eng. Carlos Silva">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="telefoneContacto" class="form-label fw-bold">
+                                    Telefone da pessoa de contacto
+                                </label>
+                                <input type="text" id="telefoneContacto" class="form-control"
+                                    value="+351 912 345 678">
+                            </div>
+
+                        </div>
+
+                        <hr class="my-5">
+
+                        <div class="row g-4">
+
+                            <div class="col-12">
+
+                                <label for="equipamentosAssociados" class="form-label fw-bold">
+                                    Selecionar equipamentos
+                                </label>
+
+                                <div class="row g-3 align-items-end">
+
+                                    <div class="col-md-8">
+                                        <label for="equipamentoAssociado" class="form-label fw-bold">
+                                            Código do equipamento
+                                        </label>
+                                        <input type="text" id="equipamentoAssociado" class="form-control"
+                                            placeholder="Ex: EQ-0001">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-outline-primary w-100" id="btnAssociarEquipamento">
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                            Associar
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div id="listaEquipamentosAssociados" class="mt-4 d-flex flex-wrap gap-2">
+                                    <span class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2">
+                                        EQ-0001 - Ventilador Pulmonar
+                                        <button type="button" class="btn-close" style="font-size: 0.65rem;" aria-label="Remover"></button>
+                                    </span>
+                                    <span class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2">
+                                        EQ-0024 - Monitor Multiparamétrico
+                                        <button type="button" class="btn-close" style="font-size: 0.65rem;" aria-label="Remover"></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-5">
+
+                        <h4 class="fw-bold mb-4">
+                            <i class="fa-solid fa-note-sticky me-2 text-primary"></i>
+                            Observações
+                        </h4>
+
+                        <div class="mb-4">
+                            <textarea class="form-control" rows="5"
+                                placeholder="Observações adicionais sobre o fornecedor...">Contrato de manutenção preventiva ativo válido até Dezembro de 2026. Tempo de resposta premium em menos de 24 horas.</textarea>
+                        </div>
+
+
+                        <div class="d-flex justify-content-end gap-3 mt-5">
+
+                            <a href="fornecedores.html" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary-custom">
+                                <i class="fa-solid fa-floppy-disk me-2"></i>
+                                Atualizar Fornecedor
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/js/1241375.js"></script>
+</body>
+
+</html>

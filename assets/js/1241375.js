@@ -1262,6 +1262,71 @@ function atualizarCardsEquipamentos() {
 }
 
 // =======================================================
+// EQUIPAMENTOS ASSOCIADOS AO FORNECEDOR
+// =======================================================
+
+const btnAssociar =
+    document.getElementById("btnAssociarEquipamento");
+
+const inputEquipamento =
+    document.getElementById("equipamentoAssociado");
+
+const listaEquipamentos =
+    document.getElementById("listaEquipamentosAssociados");
+
+
+if (
+    btnAssociar &&
+    inputEquipamento &&
+    listaEquipamentos
+) {
+
+    btnAssociar.addEventListener("click", function () {
+
+        const codigo =
+            inputEquipamento.value.trim();
+
+        // Não adicionar vazio
+        if (codigo === "") {
+            return;
+        }
+
+        // Criar badge
+        const badge =
+            document.createElement("span");
+
+        badge.className =
+            "badge rounded-pill bg-light text-dark border px-3 py-2";
+
+        badge.innerHTML = `
+
+            ${codigo}
+
+            <i class="fa-solid fa-xmark ms-2 removerEquipamento"
+                style="cursor:pointer;"></i>
+
+        `;
+
+        // Adicionar badge
+        listaEquipamentos.appendChild(badge);
+
+        // Limpar input
+        inputEquipamento.value = "";
+
+        // Remover badge
+        badge
+            .querySelector(".removerEquipamento")
+            .addEventListener("click", function () {
+
+                badge.remove();
+
+            });
+
+    });
+
+}
+
+// =======================================================
 // INICIAR JAVASCRIPT QUANDO A PÁGINA CARREGAR
 // =======================================================
 
