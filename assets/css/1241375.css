@@ -417,6 +417,24 @@ section {
     font-size: 1rem;
     margin-bottom: 10px;
 }
+.footer-logo {
+    max-width: 220px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+.footer-section {
+    background: linear-gradient(135deg, #1d2b5b 0%, #24376f 100%);
+    border-top: 4px solid #8b5cf6;
+    padding: 70px 0 30px;
+    color: white;
+}
+
+.footer-title {
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
 /*RESPONSIVO - TABLET*/
 @media (max-width: 992px) {

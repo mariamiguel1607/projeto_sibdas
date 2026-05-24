@@ -335,31 +335,6 @@ function guardarAlteracoesServicos() {
 }
 
 
-// -------------------------------------------------------
-// 13. Inicialização da gestão de serviços
-// -------------------------------------------------------
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    // Mostrar serviços na página pública, se estivermos nela
-    mostrarServicosPublicos();
-
-    // Carregar serviços na página privada de gestão, se estivermos nela
-    carregarServicosParaGestao();
-
-    const botaoAdicionar = document.getElementById("btnAdicionarServico");
-
-    if (botaoAdicionar) {
-        botaoAdicionar.addEventListener("click", adicionarCardServico);
-    }
-
-    const botaoGuardarServicos = document.getElementById("btnGuardarServicos");
-
-    if (botaoGuardarServicos) {
-        botaoGuardarServicos.addEventListener("click", guardarAlteracoesServicos);
-    }
-
-});
 
 // =======================================================
 // GESTÃO DA SECÇÃO SOBRE NÓS - SIMULAÇÃO FRONTEND
@@ -931,6 +906,202 @@ function guardarAlteracoesFaq() {
 }
 
 // =======================================================
+// RODAPÉ
+// =======================================================
+
+const rodapeInicial = {
+
+    logo: "../assets/images/imagem_logo2.png",
+
+    texto: "Plataforma digital para gestão eficiente de equipamentos médicos.",
+
+    localizacao:
+        "Rua Dr. António Bernardino de Almeida\n4249-015 Porto\nPortugal",
+
+    horario:
+        "2º a 6º Feira - 09h00 às 18h00\n\nSábado: Encerrado\n\nDomingo: Encerrado",
+
+    contactos:
+        "geral@techmedsolutions.pt | +351 912 345 678"
+
+};
+
+
+// Criar rodapé inicial
+if (!localStorage.getItem("rodapePublico")) {
+
+    localStorage.setItem(
+        "rodapePublico",
+        JSON.stringify(rodapeInicial)
+    );
+}
+
+
+// Obter rodapé
+function obterRodape() {
+
+    return JSON.parse(
+        localStorage.getItem("rodapePublico")
+    ) || rodapeInicial;
+}
+
+
+// Guardar rodapé
+function guardarRodape(rodape) {
+
+    localStorage.setItem(
+        "rodapePublico",
+        JSON.stringify(rodape)
+    );
+}
+
+
+// Mostrar rodapé na página pública
+function mostrarRodapePublico() {
+
+    const logo = document.getElementById("footerLogo");
+
+    const texto = document.getElementById("footerTexto");
+
+    const localizacao =
+        document.getElementById("footerLocalizacao");
+
+    const horario =
+        document.getElementById("footerHorario");
+
+    const contactos =
+        document.getElementById("footerContactos");
+
+    if (
+        !logo ||
+        !texto ||
+        !localizacao ||
+        !horario ||
+        !contactos
+    ) return;
+
+
+    const rodape = obterRodape();
+
+
+    if (rodape.logo) {
+        logo.src = rodape.logo;
+    }
+
+    texto.innerText = rodape.texto;
+    localizacao.innerHTML =
+        rodape.localizacao.replace(/\n/g, "<br>");
+
+    horario.innerHTML =
+        rodape.horario.replace(/\n/g, "<br>");
+
+    contactos.innerText =
+        rodape.contactos;
+}
+
+
+// Carregar dados na gestão de conteúdos
+function carregarRodapeGestao() {
+
+    const texto =
+        document.getElementById("rodapeTexto");
+
+    const localizacao =
+        document.getElementById("rodapeLocalizacao");
+
+    const horario =
+        document.getElementById("rodapeHorario");
+
+    const contactos =
+        document.getElementById("rodapeContactos");
+
+    if (
+        !texto ||
+        !localizacao ||
+        !horario ||
+        !contactos
+    ) return;
+
+
+    const rodape = obterRodape();
+
+
+    texto.value = rodape.texto;
+
+    localizacao.value =
+        rodape.localizacao;
+
+    horario.value =
+        rodape.horario;
+
+    contactos.value =
+        rodape.contactos;
+}
+
+
+// Guardar alterações do rodapé
+function guardarAlteracoesRodape() {
+
+    const logoInput =
+        document.getElementById("rodapeLogoInput");
+
+    const texto =
+        document.getElementById("rodapeTexto");
+
+    const localizacao =
+        document.getElementById("rodapeLocalizacao");
+
+    const horario =
+        document.getElementById("rodapeHorario");
+
+    const contactos =
+        document.getElementById("rodapeContactos");
+
+    if (
+        !texto ||
+        !localizacao ||
+        !horario ||
+        !contactos
+    ) {
+        return;
+    }
+
+    const rodapeAtual = obterRodape();
+
+    let logoFinal = rodapeAtual.logo;
+
+    // Só altera o logo se existir imagem nova
+    if (
+        logoInput &&
+        logoInput.files &&
+        logoInput.files.length > 0
+    ) {
+
+        logoFinal =
+            URL.createObjectURL(logoInput.files[0]);
+    }
+
+    const novoRodape = {
+
+        logo: logoFinal,
+
+        texto: texto.value,
+
+        localizacao: localizacao.value,
+
+        horario: horario.value,
+
+        contactos: contactos.value
+    };
+
+    guardarRodape(novoRodape);
+
+    mostrarRodapePublico();
+
+    alert("Rodapé atualizado com sucesso.");
+}
+
+// =======================================================
 // VALIDAÇÃO DO LOGIN - SIMULAÇÃO FRONTEND
 // Esta parte valida o formulário de login antes de entrar
 // na área reservada. Mais tarde será substituída por PHP.
@@ -1096,83 +1267,204 @@ function atualizarCardsEquipamentos() {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===============================
+    // ===================================================
     // PÁGINA PÚBLICA
-    // ===============================
-    mostrarServicosPublicos();
-    mostrarSobrePublico();
-    mostrarContactosPublicos();
+    // ===================================================
+
+    try {
+        mostrarServicosPublicos();
+    } catch (e) {
+        console.log("Erro serviços públicos:", e);
+    }
+
+    try {
+        mostrarSobrePublico();
+    } catch (e) {
+        console.log("Erro sobre público:", e);
+    }
+
+    try {
+        mostrarContactosPublicos();
+    } catch (e) {
+        console.log("Erro contactos públicos:", e);
+    }
+
+    try {
+        mostrarFaqPublica();
+    } catch (e) {
+        console.log("Erro FAQ pública:", e);
+    }
+
+    try {
+        mostrarRodapePublico();
+    } catch (e) {
+        console.log("Erro rodapé público:", e);
+    }
 
 
-    // ===============================
+    // ===================================================
     // GESTÃO DE SERVIÇOS
-    // ===============================
-    carregarServicosParaGestao();
+    // ===================================================
 
-    const botaoAdicionarServico = document.getElementById("btnAdicionarServico");
-
-    if (botaoAdicionarServico) {
-        botaoAdicionarServico.addEventListener("click", adicionarCardServico);
+    try {
+        carregarServicosParaGestao();
+    } catch (e) {
+        console.log("Erro gestão serviços:", e);
     }
 
-    const botaoGuardarServicos = document.getElementById("btnGuardarServicos");
+    const btnAdicionarServico =
+        document.getElementById("btnAdicionarServico");
 
-    if (botaoGuardarServicos) {
-        botaoGuardarServicos.addEventListener("click", guardarAlteracoesServicos);
+    if (btnAdicionarServico) {
+
+        btnAdicionarServico.addEventListener(
+            "click",
+            adicionarCardServico
+        );
+    }
+
+    const btnGuardarServicos =
+        document.getElementById("btnGuardarServicos");
+
+    if (btnGuardarServicos) {
+
+        btnGuardarServicos.addEventListener(
+            "click",
+            guardarAlteracoesServicos
+        );
     }
 
 
-    // ===============================
-    // GESTÃO DO SOBRE NÓS
-    // ===============================
-    carregarSobreGestao();
+    // ===================================================
+    // GESTÃO SOBRE NÓS
+    // ===================================================
 
-    const botaoGuardarSobre = document.getElementById("btnGuardarSobre");
-
-    if (botaoGuardarSobre) {
-        botaoGuardarSobre.addEventListener("click", guardarAlteracoesSobre);
+    try {
+        carregarSobreGestao();
+    } catch (e) {
+        console.log("Erro gestão sobre:", e);
     }
 
-    // ===============================
-    // GESTÃO DO Contactos
-    // ===============================
+    const btnGuardarSobre =
+        document.getElementById("btnGuardarSobre");
 
-    carregarContactosGestao();
+    if (btnGuardarSobre) {
 
-    const botaoGuardarContactos = document.getElementById("btnGuardarContactos");
-
-    if (botaoGuardarContactos) {
-        botaoGuardarContactos.addEventListener("click", guardarAlteracoesContactos);
+        btnGuardarSobre.addEventListener(
+            "click",
+            guardarAlteracoesSobre
+        );
     }
 
-    // ===============================
-    // Validação do Login
-    // ===============================
 
-    iniciarValidacaoLogin();
+    // ===================================================
+    // GESTÃO CONTACTOS
+    // ===================================================
 
-    // ===============================
-    // EQUIPAMENTOS
-    // ===============================
-    iniciarFiltrosEquipamentos();
-    iniciarArquivarEquipamentos();
-    atualizarCardsEquipamentos();
+    try {
+        carregarContactosGestao();
+    } catch (e) {
+        console.log("Erro gestão contactos:", e);
+    }
 
-    // FAQ
-    mostrarFaqPublica();
+    const btnGuardarContactos =
+        document.getElementById("btnGuardarContactos");
 
-    carregarFaqGestao();
+    if (btnGuardarContactos) {
 
-    const btnAdicionarFaq = document.getElementById("btnAdicionarFaq");
+        btnGuardarContactos.addEventListener(
+            "click",
+            guardarAlteracoesContactos
+        );
+    }
+
+
+    // ===================================================
+    // GESTÃO FAQ
+    // ===================================================
+
+    try {
+        carregarFaqGestao();
+    } catch (e) {
+        console.log("Erro gestão FAQ:", e);
+    }
+
+    const btnAdicionarFaq =
+        document.getElementById("btnAdicionarFaq");
 
     if (btnAdicionarFaq) {
-        btnAdicionarFaq.addEventListener("click", adicionarFaq);
+
+        btnAdicionarFaq.addEventListener(
+            "click",
+            adicionarFaq
+        );
     }
 
-    const btnGuardarFaq = document.getElementById("btnGuardarFaq");
+    const btnGuardarFaq =
+        document.getElementById("btnGuardarFaq");
 
     if (btnGuardarFaq) {
-        btnGuardarFaq.addEventListener("click", guardarAlteracoesFaq);
+
+        btnGuardarFaq.addEventListener(
+            "click",
+            guardarAlteracoesFaq
+        );
+    }
+
+
+    // ===================================================
+    // GESTÃO RODAPÉ
+    // ===================================================
+
+    try {
+        carregarRodapeGestao();
+    } catch (e) {
+        console.log("Erro gestão rodapé:", e);
+    }
+
+    const btnGuardarRodape =
+        document.getElementById("btnGuardarRodape");
+
+    if (btnGuardarRodape) {
+
+        btnGuardarRodape.addEventListener(
+            "click",
+            guardarAlteracoesRodape
+        );
+    }
+
+
+    // ===================================================
+    // LOGIN
+    // ===================================================
+
+    try {
+        iniciarValidacaoLogin();
+    } catch (e) {
+        console.log("Erro login:", e);
+    }
+
+
+    // ===================================================
+    // EQUIPAMENTOS
+    // ===================================================
+
+    try {
+        iniciarFiltrosEquipamentos();
+    } catch (e) {
+        console.log("Erro filtros equipamentos:", e);
+    }
+
+    try {
+        iniciarArquivarEquipamentos();
+    } catch (e) {
+        console.log("Erro arquivar equipamentos:", e);
+    }
+
+    try {
+        atualizarCardsEquipamentos();
+    } catch (e) {
+        console.log("Erro atualizar cards:", e);
     }
 
 });
