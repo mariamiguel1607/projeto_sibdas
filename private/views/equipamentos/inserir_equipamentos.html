@@ -48,7 +48,7 @@
                     Equipamentos
                 </a>
 
-                <a href="../localizacoes/localizacoes.html" class="nav-link">
+                <a href="../localizacao/localizacao.html" class="nav-link">
                     <i class="fa-solid fa-location-dot"></i>
                     Localizações
                 </a>
@@ -213,6 +213,124 @@
                                 <label for="observacoes" class="form-label fw-bold">Observações</label>
                                 <textarea id="observacoes" class="form-control" rows="4"
                                     placeholder="Observações adicionais sobre o equipamento"></textarea>
+                            </div>
+
+                        </div>
+                        <!-- LOCALIZAÇÃO -->
+                        <hr class="my-5">
+
+                        <h4 class="fw-bold mb-4">
+                            Localização
+                        </h4>
+
+                        <div class="row g-4">
+
+                            <!-- Edifício -->
+                            <div class="col-md-6">
+
+                                <label for="edificio" class="form-label fw-bold">
+                                    Edifício
+                                </label>
+
+                                <select id="edificio" class="form-select">
+
+                                    <option selected disabled>
+                                        Selecionar edifício
+                                    </option>
+
+                                    <option>
+                                        Hospital Central
+                                    </option>
+
+                                    <option>
+                                        Clínica Norte
+                                    </option>
+
+                                    <option>
+                                        Bloco Operatório
+                                    </option>
+
+                                    <option>
+                                        Urgência
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- Piso -->
+                            <div class="col-md-6">
+
+                                <label for="piso" class="form-label fw-bold">
+                                    Piso
+                                </label>
+
+                                <select id="piso" class="form-select">
+
+                                    <option selected disabled>
+                                        Selecionar piso
+                                    </option>
+
+                                    <option>Piso -1</option>
+
+                                    <option>Piso 0</option>
+
+                                    <option>Piso 1</option>
+
+                                    <option>Piso 2</option>
+
+                                    <option>Piso 3</option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- Departamento -->
+                            <div class="col-md-6">
+
+                                <label for="departamento" class="form-label fw-bold">
+                                    Departamento / Serviço
+                                </label>
+
+                                <select id="departamento" class="form-select">
+
+                                    <option selected disabled>
+                                        Selecionar departamento
+                                    </option>
+
+                                    <option>
+                                        Cardiologia
+                                    </option>
+
+                                    <option>
+                                        Radiologia
+                                    </option>
+
+                                    <option>
+                                        Cuidados Intensivos
+                                    </option>
+
+                                    <option>
+                                        Cirurgia
+                                    </option>
+
+                                    <option>
+                                        Urgência
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- Sala -->
+                            <div class="col-md-6">
+
+                                <label for="sala" class="form-label fw-bold">
+                                    Sala / Gabinete
+                                </label>
+
+                                <input type="text" class="form-control" id="sala" placeholder="Ex: Sala 2.14">
+
                             </div>
 
                         </div>
