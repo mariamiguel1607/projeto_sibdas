@@ -33,7 +33,8 @@
         <aside class="sidebar d-flex flex-column p-3">
 
             <div class="sidebar-logo text-center mb-4">
-                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions" class="img-fluid">
+                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
+                    class="img-fluid">
             </div>
 
             <nav class="sidebar-menu nav nav-pills flex-column gap-2">
@@ -185,8 +186,11 @@
                                         <a href="editar_equipamentos.html" class="btn btn-sm btn-outline-warning">
                                             Editar
                                         </a>
-                                        <button class="btn btn-sm btn-outline-secondary">
-                                            Arquivar
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            data-bs-target="#eliminarDocumentoModal">
+
+                                            Eliminar
+
                                         </button>
                                     </td>
                                 </tr>
@@ -210,8 +214,11 @@
                                         <a href="editar_equipamento.html" class="btn btn-sm btn-outline-warning">
                                             Editar
                                         </a>
-                                        <button class="btn btn-sm btn-outline-secondary">
-                                            Arquivar
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            data-bs-target="#eliminarDocumentoModal">
+
+                                            Eliminar
+
                                         </button>
                                     </td>
                                 </tr>
@@ -235,8 +242,11 @@
                                         <a href="editar_equipamento.html" class="btn btn-sm btn-outline-warning">
                                             Editar
                                         </a>
-                                        <button class="btn btn-sm btn-outline-secondary">
-                                            Arquivar
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            data-bs-target="#eliminarDocumentoModal">
+
+                                            Eliminar
+
                                         </button>
                                     </td>
                                 </tr>
@@ -260,8 +270,11 @@
                                         <a href="editar_equipamento.html" class="btn btn-sm btn-outline-warning">
                                             Editar
                                         </a>
-                                        <button class="btn btn-sm btn-outline-secondary">
-                                            Arquivar
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                            data-bs-target="#eliminarDocumentoModal">
+
+                                            Eliminar
+
                                         </button>
                                     </td>
                                 </tr>
@@ -286,8 +299,11 @@
                                             <a href="editar_equipamento.html" class="btn btn-sm btn-outline-warning">
                                                 Editar
                                             </a>
-                                            <button class="btn btn-sm btn-outline-secondary btn-arquivar">
-                                                Arquivar
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarDocumentoModal">
+
+                                                Eliminar
+
                                             </button>
                                         </div>
                                     </td>
@@ -301,6 +317,66 @@
             </section>
 
         </main>
+
+    </div>
+    <!-- MODAL ELIMINAR DOCUMENTO -->
+    <div class="modal fade" id="eliminarDocumentoModal" tabindex="-1" aria-labelledby="eliminarDocumentoModalLabel"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="eliminarDocumentoModalLabel">
+
+                        Confirmar eliminação
+
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+
+                    </button>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    Tem a certeza que pretende eliminar este equipamento?
+
+                    <br><br>
+
+                    <small class="text-muted">
+
+                        Esta ação não pode ser revertida.
+
+                    </small>
+
+                </div>
+
+                <!-- FOOTER -->
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="button" class="btn btn-danger">
+
+                        Eliminar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
