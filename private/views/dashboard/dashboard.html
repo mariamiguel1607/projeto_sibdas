@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TechMed Solutions</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="../../../assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../assets/css/1241375.css">
+</head>
+
+<body class="private-body">
+
+    <div class="private-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar d-flex flex-column p-3">
+
+            <div class="sidebar-logo text-center mb-4">
+                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
+                    class="img-fluid">
+            </div>
+
+            <nav class="sidebar-menu nav nav-pills flex-column gap-2">
+                <a href="dashboard.html" class="nav-link active">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
+
+                <a href="../equipamentos/equipamentos.html" class="nav-link">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    Equipamentos
+                </a>
+
+                <a href="../localizacao/localizacao.html" class="nav-link">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Localizações
+                </a>
+
+                <a href="../fornecedores/fornecedores.html" class="nav-link">
+                    <i class="fa-solid fa-truck-medical"></i>
+                    Fornecedores
+                </a>
+
+                <a href="../documentacao/documentacao.html" class="nav-link">
+                    <i class="fa-solid fa-file-lines"></i>
+                    Documentação
+                </a>
+
+                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
+                    <i class="fa-solid fa-file-signature"></i>
+                    Garantias e Contratos
+                </a>
+
+                <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Gestão de Conteúdos
+                </a>
+            </nav>
+
+            <div class="sidebar-footer mt-auto">
+                <a href="../../../public/index.html" class="nav-link">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Sair
+                </a>
+            </div>
+
+        </aside>
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="flex-grow-1 p-4 p-lg-5">
+
+            <!-- TÍTULO -->
+            <div class="mb-4">
+
+                <h1 class="fw-bold mb-2">
+                    Dashboard
+                </h1>
+
+                <p class="text-muted mb-0">
+                    Visão geral do parque tecnológico hospitalar.
+                </p>
+
+            </div>
+
+
+            <!-- KPI'S -->
+            <div class="row g-4 mb-5">
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">152</h2>
+                            <small class="text-muted">Total de Equipamentos</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">127</h2>
+                            <small class="text-muted">Equipamentos Ativos</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">12</h2>
+                            <small class="text-muted">Em Manutenção</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">13</h2>
+                            <small class="text-muted">Inativos</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">8</h2>
+                            <small class="text-muted">Garantias Expiradas</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body text-center py-4">
+                            <h2 class="fw-bold mb-1">5</h2>
+                            <small class="text-muted">Sem Documentação</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- LINHA 1 -->
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-8">
+
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold mb-4 text-primary">
+
+                                <i class="fa-solid fa-chart-column me-2"></i>
+                                Equipamentos por Serviço
+
+                            </h5>
+
+                            <canvas id="equipamentosServico"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4">
+
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold mb-4 text-primary">
+
+                                <i class="fa-solid fa-chart-pie me-2"></i>
+                                Distribuição por Categoria
+
+                            </h5>
+
+                            <canvas id="categoriasChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LINHA 2 -->
+            <div class="row g-4">
+
+                <div class="col-lg-6">
+
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold mb-4 text-primary">
+
+                                <i class="fa-solid fa-calendar-days me-2"></i>
+                                Garantias a Expirar (Próximos Meses)
+
+                            </h5>
+
+                            <canvas id="garantiasChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold mb-4 text-primary">
+
+                                <i class="fa-solid fa-heart-pulse me-2"></i>
+                                Equipamentos de Suporte de Vida por Serviço
+
+                            </h5>
+
+                            <canvas id="suporteVidaChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        new Chart(document.getElementById('equipamentosServico'), {
+            type: 'bar',
+            data: {
+                labels: ['UCI', 'Urgência', 'Cardiologia', 'Imagiologia', 'Bloco Operatório'],
+                datasets: [{
+                    label: 'Equipamentos',
+                    data: [25, 34, 18, 22, 30]
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('categoriasChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Monitorização', 'Suporte de Vida', 'Diagnóstico', 'Terapia'],
+                datasets: [{
+                    data: [45, 18, 38, 29]
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('suporteVidaChart'), {
+            type: 'bar',
+            data: {
+                labels: ['UCI', 'Urgência', 'Bloco Operatório'],
+                datasets: [{
+                    label: 'Suporte de Vida',
+                    data: [12, 4, 2]
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('garantiasChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Junho', 'Julho', 'Agosto', 'Setembro'],
+                datasets: [{
+                    data: [8, 5, 3, 2]
+                }]
+            }
+        });
+
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

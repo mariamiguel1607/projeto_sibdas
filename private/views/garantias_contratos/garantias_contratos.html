@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fornecedores | TechMed Solutions</title>
+    <title>Garantias e Contratos | TechMed Solutions</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
@@ -53,7 +53,7 @@
                     Localizações
                 </a>
 
-                <a href="fornecedores.html" class="nav-link active">
+                <a href="../fornecedores/fornecedores.html" class="nav-link">
                     <i class="fa-solid fa-truck-medical"></i>
                     Fornecedores
                 </a>
@@ -63,7 +63,7 @@
                     Documentação
                 </a>
 
-                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
+                <a href="garantias_contratos.html" class="nav-link active">
                     <i class="fa-solid fa-file-signature"></i>
                     Garantias e Contratos
                 </a>
@@ -82,7 +82,6 @@
             </div>
 
         </aside>
-
         <!-- CONTEÚDO PRINCIPAL -->
         <main class="private-main">
 
@@ -91,18 +90,18 @@
 
                 <div>
 
-                    <h1>Fornecedores</h1>
+                    <h1>Garantias e Contratos</h1>
 
                     <p>
-                        Gestão de fornecedores associados aos equipamentos médicos da plataforma.
+                        Gestão das garantias e contratos de manutenção associados aos equipamentos médicos.
                     </p>
 
                 </div>
 
-                <a href="inserir_fornecedor.html" class="btn btn-primary-custom">
+                <a href="inserir_garantia.html" class="btn btn-primary-custom">
 
                     <i class="fa-solid fa-plus me-2"></i>
-                    Adicionar Fornecedor
+                    Adicionar Garantia
 
                 </a>
 
@@ -123,7 +122,7 @@
                                 Pesquisa
                             </label>
 
-                            <input type="text" class="form-control" placeholder="Pesquisar fornecedor...">
+                            <input type="text" class="form-control" placeholder="Pesquisar equipamento ou contrato...">
 
                         </div>
 
@@ -131,7 +130,7 @@
                         <div class="col-md-3">
 
                             <label class="form-label">
-                                Tipo de fornecedor
+                                Tipo de Contrato
                             </label>
 
                             <select class="form-select">
@@ -141,19 +140,19 @@
                                 </option>
 
                                 <option>
-                                    Fabricante
+                                    Manutenção Preventiva
                                 </option>
 
                                 <option>
-                                    Distribuidor
+                                    Manutenção Corretiva
                                 </option>
 
                                 <option>
-                                    Assistência Técnica
+                                    Full Service
                                 </option>
 
                                 <option>
-                                    Consumíveis / Acessórios
+                                    Calibração
                                 </option>
 
                             </select>
@@ -178,14 +177,18 @@
                                 </option>
 
                                 <option>
-                                    Inativo
+                                    Expirado
+                                </option>
+
+                                <option>
+                                    Pendente
                                 </option>
 
                             </select>
 
                         </div>
 
-                        <!-- Botão -->
+                        <!-- BOTÃO -->
                         <div class="col-md-2">
 
                             <button class="btn btn-outline-secondary w-100">
@@ -219,17 +222,17 @@
 
                                     <th>Código</th>
 
-                                    <th>Nome</th>
+                                    <th>Equipamento</th>
 
-                                    <th>Contacto</th>
+                                    <th>Garantia</th>
 
-                                    <th>Email</th>
+                                    <th>Contrato</th>
 
-                                    <th>Equipamentos</th>
+                                    <th>Entidade Responsável</th>
+
+                                    <th>Periodicidade</th>
 
                                     <th>Estado</th>
-
-                                    <th>Tipo</th>
 
                                     <th class="text-end">
                                         Ações
@@ -241,28 +244,30 @@
 
                             <tbody>
 
-                                <!-- FORNECEDOR 1 -->
+                                <!-- REGISTO 1 -->
                                 <tr>
 
-                                    <td>FOR-0001</td>
+                                    <td>GAR-0001</td>
 
-                                    <td>Dräger</td>
+                                    <td>Ventilador Pulmonar</td>
 
-                                    <td class="text-nowrap">
-                                        +351 220 000 001
+                                    <td>
+                                        01/01/2025 - 01/01/2027
                                     </td>
-
-                                    <td>info@draeger.pt</td>
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-2 py-1">
+                                        <span class="badge rounded-pill bg-primary-subtle text-primary px-2 py-1">
 
-                                            5 equipamentos
+                                            Preventiva
 
                                         </span>
 
                                     </td>
+
+                                    <td>Dräger Portugal</td>
+
+                                    <td>Semestral</td>
 
                                     <td>
 
@@ -272,35 +277,26 @@
 
                                     </td>
 
-                                    <td>
-
-                                        <span class="badge rounded-pill bg-primary-subtle text-primary px-2 py-1">
-
-                                            Fabricante
-
-                                        </span>
-
-                                    </td>
-
                                     <td class="text-end">
 
                                         <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                            <a href="ficha_fornecedor.html" class="btn btn-sm btn-outline-primary">
+                                            <a href="ficha_garantia.html" class="btn btn-sm btn-outline-primary">
 
                                                 Ver
 
                                             </a>
 
-                                            <a href="editar_fornecedor.html" class="btn btn-sm btn-outline-warning">
+                                            <a href="editar_garantia.html" class="btn btn-sm btn-outline-warning">
 
                                                 Editar
 
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
-                                                Arquivo
+                                                Eliminar
 
                                             </button>
 
@@ -311,35 +307,15 @@
                                 </tr>
 
 
-                                <!-- FORNECEDOR 2 -->
+                                <!-- REGISTO 2 -->
                                 <tr>
 
-                                    <td>FOR-0002</td>
+                                    <td>GAR-0002</td>
 
-                                    <td>MedEquip Portugal</td>
-
-                                    <td class="text-nowrap">
-                                        +351 220 000 002
-                                    </td>
-
-                                    <td>geral@medequip.pt</td>
+                                    <td>Monitor Multiparamétrico</td>
 
                                     <td>
-
-                                        <span class="badge rounded-pill bg-light text-dark border px-2 py-1">
-
-                                            12 equipamentos
-
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-success">
-                                            Ativo
-                                        </span>
-
+                                        15/03/2023 - 15/03/2025
                                     </td>
 
                                     <td>
@@ -347,8 +323,20 @@
                                         <span
                                             class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-2 py-1">
 
-                                            Distribuidor
+                                            Calibração
 
+                                        </span>
+
+                                    </td>
+
+                                    <td>Philips Portugal</td>
+
+                                    <td>Anual</td>
+
+                                    <td>
+
+                                        <span class="badge bg-danger">
+                                            Expirado
                                         </span>
 
                                     </td>
@@ -357,21 +345,22 @@
 
                                         <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                            <a href="ficha_fornecedor.html" class="btn btn-sm btn-outline-primary">
+                                            <a href="ficha_garantia.html" class="btn btn-sm btn-outline-primary">
 
                                                 Ver
 
                                             </a>
 
-                                            <a href="editar_fornecedor.html" class="btn btn-sm btn-outline-warning">
+                                            <a href="editar_garantia.html" class="btn btn-sm btn-outline-warning">
 
                                                 Editar
 
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
-                                                Arquivo
+                                                Eliminar
 
                                             </button>
 
@@ -392,12 +381,69 @@
             </section>
 
         </main>
+
+
+        <!-- MODAL ELIMINAR -->
+        <div class="modal fade" id="eliminarGarantiaModal" tabindex="-1" aria-labelledby="eliminarGarantiaModalLabel"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title" id="eliminarGarantiaModalLabel">
+
+                            Confirmar eliminação
+
+                        </h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        Tem a certeza que pretende eliminar este registo de garantia/contrato?
+
+                        <br><br>
+
+                        <small class="text-muted">
+
+                            Esta ação não pode ser revertida.
+
+                        </small>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+
+                            Cancelar
+
+                        </button>
+
+                        <button type="button" class="btn btn-danger">
+
+                            Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="../../../assets/js/1241375.js"></script>
-
 </body>
+
 
 </html>

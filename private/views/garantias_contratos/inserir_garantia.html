@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentação | TechMed Solutions</title>
+    <title>Fornecedores | TechMed Solutions</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
@@ -58,12 +58,12 @@
                     Fornecedores
                 </a>
 
-                <a href="documentacao/documentacao.html" class="nav-link active">
+                <a href="../documentacao/documentacao.html" class="nav-link">
                     <i class="fa-solid fa-file-lines"></i>
                     Documentação
                 </a>
 
-                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
+                <a href="garantias_contratos.html" class="nav-link active">
                     <i class="fa-solid fa-file-signature"></i>
                     Garantias e Contratos
                 </a>
@@ -82,6 +82,7 @@
             </div>
 
         </aside>
+
         <!-- CONTEÚDO PRINCIPAL -->
         <main class="private-main">
 
@@ -90,10 +91,10 @@
 
                 <div>
 
-                    <h1>Adicionar Documento</h1>
+                    <h1>Adicionar Garantia e Contrato</h1>
 
                     <p>
-                        Registo de documentação associada aos equipamentos médicos.
+                        Registo de novas garantias e contratos de manutenção associados aos equipamentos médicos.
                     </p>
 
                 </div>
@@ -106,7 +107,7 @@
 
                 <div class="card-body">
 
-                    <form enctype="multipart/form-data">
+                    <form>
 
                         <div class="row g-4">
 
@@ -114,55 +115,12 @@
                             <div class="col-md-4">
 
                                 <label class="form-label">
-                                    Código do Documento
+                                    Código
                                 </label>
 
-                                <input type="text" class="form-control" placeholder="DOC-0003">
+                                <input type="text" class="form-control" placeholder="GAR-0003">
 
                             </div>
-
-
-                            <!-- TIPO -->
-                            <div class="col-md-4">
-
-                                <label class="form-label">
-                                    Tipo de Documento
-                                </label>
-
-                                <select class="form-select">
-
-                                    <option selected disabled>
-                                        Selecionar tipo
-                                    </option>
-
-                                    <option>
-                                        Manual Técnico
-                                    </option>
-
-                                    <option>
-                                        Manual de Utilizador
-                                    </option>
-
-                                    <option>
-                                        Certificado de Calibração
-                                    </option>
-
-                                    <option>
-                                        Contrato de Manutenção
-                                    </option>
-
-                                    <option>
-                                        Relatório Técnico
-                                    </option>
-
-                                    <option>
-                                        Declaração de Conformidade
-                                    </option>
-
-                                </select>
-
-                            </div>
-
 
                             <!-- ESTADO -->
                             <div class="col-md-4">
@@ -174,7 +132,7 @@
                                 <select class="form-select">
 
                                     <option selected>
-                                        Válido
+                                        Ativo
                                     </option>
 
                                     <option>
@@ -182,28 +140,15 @@
                                     </option>
 
                                     <option>
-                                        Arquivado
+                                        Pendente
                                     </option>
 
                                 </select>
 
                             </div>
 
-
-                            <!-- NOME -->
-                            <div class="col-md-6">
-
-                                <label class="form-label">
-                                    Nome do Documento
-                                </label>
-
-                                <input type="text" class="form-control" placeholder="Ex: Manual Ventilador V500">
-
-                            </div>
-
-
                             <!-- EQUIPAMENTO -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
 
                                 <label class="form-label">
                                     Equipamento Associado
@@ -236,29 +181,110 @@
                             </div>
 
 
-                            <!-- FORNECEDOR -->
+                            <!-- DATA INÍCIO -->
                             <div class="col-md-6">
 
                                 <label class="form-label">
-                                    Fornecedor
+                                    Data de Início da Garantia
+                                </label>
+
+                                <input type="date" class="form-control">
+
+                            </div>
+
+                            <!-- DATA FIM -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Data de Fim da Garantia
+                                </label>
+
+                                <input type="date" class="form-control">
+
+                            </div>
+
+
+                            <!-- EXISTE CONTRATO -->
+                            <div class="col-md-4">
+
+                                <label class="form-label">
+                                    Existe Contrato?
+                                </label>
+
+                                <select class="form-select">
+
+                                    <option selected>
+                                        Sim
+                                    </option>
+
+                                    <option>
+                                        Não
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- TIPO -->
+                            <div class="col-md-4">
+
+                                <label class="form-label">
+                                    Tipo
                                 </label>
 
                                 <select class="form-select">
 
                                     <option selected disabled>
-                                        Selecionar fornecedor
+                                        Selecionar tipo
                                     </option>
 
                                     <option>
-                                        Dräger
+                                        Garantia do Fabricante
                                     </option>
 
                                     <option>
-                                        Philips
+                                        Manutenção Preventiva
                                     </option>
 
                                     <option>
-                                        MedEquip Portugal
+                                        Manutenção Corretiva
+                                    </option>
+
+                                    <option>
+                                        Calibração
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <!-- PERIODICIDADE -->
+                            <div class="col-md-4">
+
+                                <label class="form-label">
+                                    Periodicidade
+                                </label>
+
+                                <select class="form-select">
+
+                                    <option selected disabled>
+                                        Selecionar periodicidade
+                                    </option>
+
+                                    <option>
+                                        Mensal
+                                    </option>
+
+                                    <option>
+                                        Trimestral
+                                    </option>
+
+                                    <option>
+                                        Semestral
+                                    </option>
+
+                                    <option>
+                                        Anual
                                     </option>
 
                                 </select>
@@ -266,44 +292,32 @@
                             </div>
 
 
-                            <!-- DATA DOCUMENTO -->
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Data do Documento
-                                </label>
-
-                                <input type="date" class="form-control">
-
-                            </div>
-
-
-                            <!-- VALIDADE -->
-                            <div class="col-md-3">
-
-                                <label class="form-label">
-                                    Data de Validade
-                                </label>
-
-                                <input type="date" class="form-control">
-
-                            </div>
-
-
-                            <!-- UPLOAD -->
+                            <!-- ENTIDADE -->
                             <div class="col-md-12">
 
                                 <label class="form-label">
-                                    Documento PDF
+                                    Entidade Responsável
                                 </label>
 
-                                <input type="file" class="form-control" accept=".pdf">
+                                <select class="form-select">
 
-                                <small class="text-muted">
+                                    <option selected disabled>
+                                        Selecionar entidade responsável
+                                    </option>
 
-                                    Formato permitido: PDF
+                                    <option>
+                                        Dräger Portugal
+                                    </option>
 
-                                </small>
+                                    <option>
+                                        Philips Portugal
+                                    </option>
+
+                                    <option>
+                                        MedEquip Portugal
+                                    </option>
+
+                                </select>
 
                             </div>
 
@@ -326,7 +340,7 @@
                         <!-- BOTÕES -->
                         <div class="d-flex justify-content-end gap-3 mt-4">
 
-                            <a href="documentacao.html" class="btn btn-outline-secondary">
+                            <a href="garantias_contratos.html" class="btn btn-outline-secondary">
 
                                 Cancelar
 
@@ -335,8 +349,7 @@
                             <button type="submit" class="btn btn-primary-custom">
 
                                 <i class="fa-solid fa-floppy-disk me-2"></i>
-
-                                Guardar Documento
+                                Guardar Garantia
 
                             </button>
 
