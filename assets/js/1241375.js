@@ -334,6 +334,197 @@ function guardarAlteracoesServicos() {
     mostrarServicosPublicos();
 }
 
+// =======================================================
+// GESTÃO DA SECÇÃO INÍCIO
+// =======================================================
+
+const inicioInicial = {
+
+    titulo: "Gestão eficiente de equipamentos médicos",
+
+    descricao:
+        "A TechMed Solutions ajuda hospitais a gerir o inventário de equipamentos médicos de forma centralizada, segura e eficiente.",
+
+    botao:
+        "Conhecer Serviços",
+
+    imagem:
+        "../assets/images/imagem_inicio.png"
+};
+
+
+// Criar conteúdo inicial
+if (!localStorage.getItem("inicioPublico")) {
+
+    localStorage.setItem(
+        "inicioPublico",
+        JSON.stringify(inicioInicial)
+    );
+}
+
+
+// Obter
+function obterInicio() {
+
+    return JSON.parse(
+        localStorage.getItem("inicioPublico")
+    ) || inicioInicial;
+}
+
+
+// Guardar
+function guardarInicio(inicio) {
+
+    localStorage.setItem(
+        "inicioPublico",
+        JSON.stringify(inicio)
+    );
+}
+
+
+// Mostrar na página pública
+function mostrarInicioPublico() {
+
+    const titulo =
+        document.getElementById("inicioPublicoTitulo");
+
+    const descricao =
+        document.getElementById("inicioPublicoDescricao");
+
+    const botao =
+        document.getElementById("inicioPublicoBotao");
+
+    const imagem =
+        document.getElementById("inicioPublicoImagem");
+
+    if (
+        !titulo ||
+        !descricao ||
+        !botao ||
+        !imagem
+    ) {
+        return;
+    }
+
+    const inicio =
+        obterInicio();
+
+    titulo.innerText =
+        inicio.titulo;
+
+    descricao.innerText =
+        inicio.descricao;
+
+    botao.innerHTML =
+        inicio.botao +
+        ' <i class="fa-solid fa-arrow-right ms-2"></i>';
+
+    imagem.src =
+        inicio.imagem;
+}
+
+
+// Carregar gestão
+function carregarInicioGestao() {
+
+    const titulo =
+        document.getElementById("inicioTitulo");
+
+    const descricao =
+        document.getElementById("inicioDescricao");
+
+    const botao =
+        document.getElementById("inicioBotao");
+
+    if (
+        !titulo ||
+        !descricao ||
+        !botao
+    ) {
+        return;
+    }
+
+    const inicio =
+        obterInicio();
+
+    titulo.value =
+        inicio.titulo;
+
+    descricao.value =
+        inicio.descricao;
+
+    botao.value =
+        inicio.botao;
+}
+
+
+// Guardar alterações
+function guardarAlteracoesInicio() {
+
+    const titulo =
+        document.getElementById("inicioTitulo");
+
+    const descricao =
+        document.getElementById("inicioDescricao");
+
+    const botao =
+        document.getElementById("inicioBotao");
+
+    const imagemInput =
+        document.getElementById("inicioImagem");
+
+    if (
+        !titulo ||
+        !descricao ||
+        !botao
+    ) {
+        return;
+    }
+
+    const inicioAtual =
+        obterInicio();
+
+    let imagemFinal =
+        inicioAtual.imagem;
+
+    if (
+        imagemInput &&
+        imagemInput.files &&
+        imagemInput.files.length > 0
+    ) {
+
+        imagemFinal =
+            URL.createObjectURL(
+                imagemInput.files[0]
+            );
+    }
+
+    const novoInicio = {
+
+        titulo:
+            titulo.value.trim(),
+
+        descricao:
+            descricao.value.trim(),
+
+        botao:
+            botao.value.trim(),
+
+        imagem:
+            imagemFinal
+    };
+
+    guardarInicio(
+        novoInicio
+    );
+
+    mostrarInicioPublico();
+
+    alert(
+        "Página inicial atualizada com sucesso."
+    );
+}
+
 
 
 // =======================================================
@@ -1337,6 +1528,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // ===================================================
 
     try {
+        mostrarInicioPublico();
+    } catch (e) {
+        console.log("Erro início público:", e);
+    }
+    try {
         mostrarServicosPublicos();
     } catch (e) {
         console.log("Erro serviços públicos:", e);
@@ -1364,6 +1560,27 @@ document.addEventListener("DOMContentLoaded", function () {
         mostrarRodapePublico();
     } catch (e) {
         console.log("Erro rodapé público:", e);
+    }
+
+    // ===================================================
+    // GESTÃO INÍCIO
+    // ===================================================
+
+    try {
+        carregarInicioGestao();
+    } catch (e) {
+        console.log("Erro gestão início:", e);
+    }
+
+    const btnGuardarInicio =
+        document.getElementById("btnGuardarInicio");
+
+    if (btnGuardarInicio) {
+
+        btnGuardarInicio.addEventListener(
+            "click",
+            guardarAlteracoesInicio
+        );
     }
 
 

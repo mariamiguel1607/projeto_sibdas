@@ -24,7 +24,7 @@
 <body class="private-body">
 
     <div class="private-layout">
- <!-- Sidebar -->
+        <!-- Sidebar -->
         <aside class="sidebar d-flex flex-column p-3">
 
             <div class="sidebar-logo text-center mb-4">
@@ -78,9 +78,8 @@
 
         </aside>
 
- <!-- Conteudo Principal -->
-        <main class="flex-grow-1 p-4 p-lg-5">
-
+        <!-- Conteudo Principal -->
+        <main class="private-main">
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
 
                 <div>
@@ -117,8 +116,7 @@
                                 <label for="codigoFornecedor" class="form-label fw-bold">
                                     Código
                                 </label>
-                                <input type="text" id="codigoFornecedor" class="form-control"
-                                    value="FOR-0005" disabled>
+                                <input type="text" id="codigoFornecedor" class="form-control" value="FOR-0005" disabled>
                                 <small class="text-muted">O código não pode ser alterado.</small>
                             </div>
 
@@ -126,7 +124,8 @@
                                 <label for="nomeFornecedor" class="form-label fw-bold">
                                     Nome da empresa
                                 </label>
-                                <input type="text" id="nomeFornecedor" class="form-control" value="Dräger Portugal Lda.">
+                                <input type="text" id="nomeFornecedor" class="form-control"
+                                    value="Dräger Portugal Lda.">
                             </div>
 
                             <div class="col-md-6">
@@ -164,9 +163,8 @@
                                 <label for="telefoneFornecedor" class="form-label fw-bold">
                                     Contacto telefónico
                                 </label>
-                                <input type="text" id="telefoneFornecedor" class="form-control"
-                                    value="+351 220 123 456" maxlength="14"
-                                    pattern="\+?[0-9]{1,4}[0-9]{3,4}[0-9]{3,4}" inputmode="tel">
+                                <input type="text" id="telefoneFornecedor" class="form-control" value="+351 220 123 456"
+                                    maxlength="14" pattern="\+?[0-9]{1,4}[0-9]{3,4}[0-9]{3,4}" inputmode="tel">
                             </div>
 
                             <div class="col-md-4">
@@ -209,16 +207,14 @@
                                 <label for="pessoaContacto" class="form-label fw-bold">
                                     Nome da pessoa de contacto
                                 </label>
-                                <input type="text" id="pessoaContacto" class="form-control"
-                                    value="Eng. Carlos Silva">
+                                <input type="text" id="pessoaContacto" class="form-control" value="Eng. Carlos Silva">
                             </div>
 
                             <div class="col-md-6">
                                 <label for="telefoneContacto" class="form-label fw-bold">
                                     Telefone da pessoa de contacto
                                 </label>
-                                <input type="text" id="telefoneContacto" class="form-control"
-                                    value="+351 912 345 678">
+                                <input type="text" id="telefoneContacto" class="form-control" value="+351 912 345 678">
                             </div>
 
                         </div>
@@ -229,9 +225,10 @@
 
                             <div class="col-12">
 
-                                <label for="equipamentosAssociados" class="form-label fw-bold">
-                                    Selecionar equipamentos
-                                </label>
+                                <h4 class="fw-bold mb-4">
+                                    <i class="fa-solid fa-laptop-medical text-primary me-3"></i>
+                                    Selecionar equipamentos associados
+                                </h4>
 
                                 <div class="row g-3 align-items-end">
 
@@ -244,7 +241,8 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <button type="button" class="btn btn-outline-primary w-100" id="btnAssociarEquipamento">
+                                        <button type="button" class="btn btn-outline-primary w-100"
+                                            id="btnAssociarEquipamento">
                                             <i class="fa-solid fa-plus me-2"></i>
                                             Associar
                                         </button>
@@ -255,11 +253,13 @@
                                 <div id="listaEquipamentosAssociados" class="mt-4 d-flex flex-wrap gap-2">
                                     <span class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2">
                                         EQ-0001 - Ventilador Pulmonar
-                                        <button type="button" class="btn-close" style="font-size: 0.65rem;" aria-label="Remover"></button>
+                                        <button type="button" class="btn-close" style="font-size: 0.65rem;"
+                                            aria-label="Remover"></button>
                                     </span>
                                     <span class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2">
                                         EQ-0024 - Monitor Multiparamétrico
-                                        <button type="button" class="btn-close" style="font-size: 0.65rem;" aria-label="Remover"></button>
+                                        <button type="button" class="btn-close" style="font-size: 0.65rem;"
+                                            aria-label="Remover"></button>
                                     </span>
                                 </div>
                             </div>
@@ -301,7 +301,7 @@
 
         </main>
     </div>
-     <!-- Bootstrap JS -->
+    <!-- Bootstrap JS -->
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../../../assets/js/1241375.js"></script>
 </body>

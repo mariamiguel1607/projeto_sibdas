@@ -417,12 +417,14 @@ section {
     font-size: 1rem;
     margin-bottom: 10px;
 }
+
 .footer-logo {
     max-width: 220px;
     height: auto;
     object-fit: contain;
     display: block;
 }
+
 .footer-section {
     background: linear-gradient(135deg, #1d2b5b 0%, #24376f 100%);
     border-top: 4px solid #8b5cf6;
@@ -601,15 +603,21 @@ section {
     min-height: 100vh;
     display: flex;
     align-items: stretch;
+    overflow-x: hidden;
 }
 
 /* SIDEBAR */
 
 .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
     width: 260px;
-    min-width: 260px;
-    min-height: 100vh;
+    height: 100vh;
+
     background: linear-gradient(180deg, #202c4d, #344675);
+    z-index: 1000;
 }
 
 .sidebar-logo {
@@ -641,6 +649,8 @@ section {
 .sidebar .nav-link i {
     color: #8E6CF1;
 }
+
+
 
 /*LOGIN*/
 
@@ -723,13 +733,6 @@ section {
     }
 }
 
-/* CONTEÚDO PRINCIPAL */
-
-.private-main {
-    flex: 1;
-    padding: 32px;
-    min-width: 0;
-}
 
 /* TOPO DA PÁGINA */
 
@@ -838,9 +841,29 @@ section {
     background-color: #f6f4fb;
     padding: 10px;
     border-radius: 18px;
-    display: inline-flex;
+
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+
     gap: 8px;
-    flex-wrap: wrap;
+
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.conteudos-tabs::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Edge */
+}
+
+.conteudos-tabs .nav-item {
+    flex: 1;
+}
+
+.conteudos-tabs .nav-link {
+    padding: 10px 14px;
+    font-size: 0.95rem;
 }
 
 .conteudos-tabs .nav-link {
@@ -877,4 +900,12 @@ section {
 .faq-gestao-card {
     max-width: 900px;
     width: 100%;
+}
+
+.private-main {
+    flex: 1;
+    padding: 32px;
+    min-width: 0;
+
+    margin-left: 260px;
 }

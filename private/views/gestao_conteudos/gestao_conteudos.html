@@ -82,7 +82,8 @@
             </div>
 
         </aside>
-        <main class="flex-grow-1 p-4 p-lg-5">
+
+        <main class="private-main">
             <!-- CABEÇALHO -->
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
 
@@ -165,39 +166,68 @@
                         <!-- TAB INÍCIO -->
                         <div class="tab-pane fade show active" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
 
-                            <h4 class="fw-bold mb-4">Secção Inicial</h4>
+                            <h4 class="fw-bold mb-4">
+                                Secção Inicial
+                            </h4>
 
                             <div class="row g-4">
 
+                                <!-- TÍTULO -->
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Título principal</label>
-                                    <input type="text" class="form-control"
-                                        value="Gestão eficiente de equipamentos médicos">
+
+                                    <label class="form-label fw-semibold">
+                                        Título principal
+                                    </label>
+
+                                    <input type="text" id="inicioTitulo" class="form-control">
+
                                 </div>
 
+                                <!-- BOTÃO -->
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Texto do botão</label>
-                                    <input type="text" class="form-control" value="Conhecer Serviços">
+
+                                    <label class="form-label fw-semibold">
+                                        Texto do botão
+                                    </label>
+
+                                    <input type="text" id="inicioBotao" class="form-control">
+
                                 </div>
 
+                                <!-- DESCRIÇÃO -->
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">Descrição</label>
-                                    <textarea class="form-control"
-                                        rows="4">A TechMed Solutions ajuda hospitais a gerir o inventário de equipamentos médicos de forma centralizada, segura e eficiente.</textarea>
+
+                                    <label class="form-label fw-semibold">
+                                        Descrição
+                                    </label>
+
+                                    <textarea id="inicioDescricao" class="form-control" rows="4"></textarea>
+
                                 </div>
 
+                                <!-- IMAGEM -->
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Imagem principal</label>
-                                    <input type="file" class="form-control">
+
+                                    <label class="form-label fw-semibold">
+                                        Imagem principal
+                                    </label>
+
+                                    <input type="file" id="inicioImagem" class="form-control">
+
                                 </div>
 
                             </div>
 
+                            <!-- BOTÃO GUARDAR -->
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" class="btn btn-primary-custom">
+
+                                <button type="button" id="btnGuardarInicio" class="btn btn-primary-custom">
+
                                     <i class="fa-solid fa-floppy-disk me-2"></i>
                                     Guardar alterações
+
                                 </button>
+
                             </div>
 
                         </div>

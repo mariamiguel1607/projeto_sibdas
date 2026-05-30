@@ -258,7 +258,8 @@
                                                 Editar
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary btn-eliminar">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
                                                 Eliminar
                                             </button>
@@ -283,7 +284,7 @@
 
                                     <td>Gabinete 4</td>
 
-                                     <td>
+                                    <td>
 
                                         <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
 
@@ -310,9 +311,11 @@
                                                 Editar
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary btn-eliminar">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
                                                 Eliminar
+
                                             </button>
 
                                         </div>
@@ -335,7 +338,7 @@
 
                                     <td>Sala de Triagem</td>
 
-                                     <td>
+                                    <td>
 
                                         <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
 
@@ -362,9 +365,11 @@
                                                 Editar
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary btn-eliminar">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
                                                 Eliminar
+
                                             </button>
 
                                         </div>
@@ -387,7 +392,7 @@
 
                                     <td>Bloco 3</td>
 
-                                     <td>
+                                    <td>
 
                                         <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
 
@@ -414,9 +419,11 @@
                                                 Editar
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary btn-eliminar">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
                                                 Eliminar
+
                                             </button>
 
                                         </div>
@@ -439,7 +446,7 @@
 
                                     <td>Sala Técnica</td>
 
-                                     <td>
+                                    <td>
 
                                         <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
 
@@ -466,7 +473,8 @@
                                                 Editar
                                             </a>
 
-                                            <button class="btn btn-sm btn-outline-secondary btn-arquivar">
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#eliminarGarantiaModal">
 
                                                 Eliminar
                                             </button>
@@ -487,6 +495,62 @@
 
             </section>
         </main>
+        <!-- MODAL ELIMINAR -->
+        <div class="modal fade" id="eliminarGarantiaModal" tabindex="-1" aria-labelledby="eliminarGarantiaModalLabel"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title" id="eliminarGarantiaModalLabel">
+
+                            Confirmar eliminação
+
+                        </h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        Tem a certeza que pretende eliminar esta localização?
+
+                        <br><br>
+
+                        <small class="text-muted">
+
+                            Esta ação não pode ser revertida.
+
+                        </small>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+
+                            Cancelar
+
+                        </button>
+
+                        <button type="button" class="btn btn-danger">
+
+                            Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
     <!-- Bootstrap JS -->
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>

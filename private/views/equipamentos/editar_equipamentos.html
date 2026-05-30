@@ -83,7 +83,7 @@
 
         </aside>
         <!-- CONTEÚDO PRINCIPAL -->
-        <main class="flex-grow-1 p-4 p-lg-5">
+        <main class="private-main">
 
             <!-- CABEÇALHO -->
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
@@ -107,240 +107,508 @@
             <!-- FORMULÁRIO -->
             <form>
 
-                <!-- DADOS GERAIS -->
+                <!-- RESUMO DO EQUIPAMENTO -->
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
+
                     <div class="card-body p-4">
 
-                        <h4 class="fw-bold mb-4">
-                            <i class="fa-solid fa-circle-info me-2 text-primary"></i>
-                            Dados gerais
-                        </h4>
+                        <div class="row align-items-center">
 
-                        <div class="row g-3">
+                            <div class="col-lg-8">
 
-                            <div class="col-md-4">
-                                <label for="codigo" class="form-label fw-semibold">Código interno de inventário</label>
-                                <input type="text" class="form-control" id="codigo" value="EQ-0001">
+                                <h3 class="fw-bold mb-1">
+                                    Ventilador Pulmonar
+                                </h3>
+
+                                <p class="text-muted mb-0">
+                                    Código: EQ-0001
+                                </p>
+
                             </div>
 
-                            <div class="col-md-8">
-                                <label for="designacao" class="form-label fw-semibold">Designação do equipamento</label>
-                                <input type="text" class="form-control" id="designacao" value="Ventilador Pulmonar">
-                            </div>
+                            <div class="col-lg-4">
 
-                            <div class="col-md-4">
-                                <label for="categoria" class="form-label fw-semibold">Categoria</label>
-                                <select id="categoria" class="form-select">
-                                    <option>Diagnóstico</option>
-                                    <option selected>Suporte de vida</option>
-                                    <option>Monitorização</option>
-                                    <option>Terapia</option>
-                                    <option>Imagem médica</option>
-                                    <option>Laboratório</option>
-                                </select>
-                            </div>
+                                <div class="d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
 
-                            <div class="col-md-4">
-                                <label for="fabricante" class="form-label fw-semibold">Fabricante</label>
-                                <input type="text" class="form-control" id="fabricante" value="Philips">
-                            </div>
+                                    <span class="badge bg-success">
+                                        Ativo
+                                    </span>
 
-                            <div class="col-md-4">
-                                <label for="marcaModelo" class="form-label fw-semibold">Marca / Modelo</label>
-                                <input type="text" class="form-control" id="marcaModelo" value="Philips VX-200">
-                            </div>
+                                    <span class="badge bg-danger">
+                                        Crítico
+                                    </span>
 
-                            <div class="col-md-4">
-                                <label for="numeroSerie" class="form-label fw-semibold">Número de série</label>
-                                <input type="text" class="form-control" id="numeroSerie" value="SN-2026-001">
-                            </div>
+                                    <span class="badge bg-primary">
+                                        UCI
+                                    </span>
 
-                            <div class="col-md-4">
-                                <label for="anoFabrico" class="form-label fw-semibold">Ano de fabrico</label>
-                                <input type="number" class="form-control" id="anoFabrico" value="2023">
-                            </div>
+                                </div>
 
-                            <div class="col-md-4">
-                                <label for="criticidade" class="form-label fw-semibold">Criticidade</label>
-                                <select id="criticidade" class="form-select">
-                                    <option>Baixa</option>
-                                    <option>Média</option>
-                                    <option>Alta</option>
-                                    <option selected>Crítica</option>
-                                </select>
                             </div>
 
                         </div>
 
                     </div>
+
                 </div>
 
-                <!-- AQUISIÇÃO -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                <!-- TABS -->
+                <div class="card border-0 shadow-sm rounded-4">
+
                     <div class="card-body p-4">
 
-                        <h4 class="fw-bold mb-4">
-                            <i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>
-                            Aquisição
-                        </h4>
+                        <ul class="nav nav-pills conteudos-tabs mb-4">
 
-                        <div class="row g-3">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link active" data-bs-toggle="pill"
+                                    data-bs-target="#dadosGerais">
+                                    Dados Gerais
+                                </button>
+                            </li>
 
-                            <div class="col-md-4">
-                                <label for="dataAquisicao" class="form-label fw-semibold">Data de aquisição</label>
-                                <input type="date" class="form-control" id="dataAquisicao" value="2024-03-12">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#aquisicao">
+                                    Aquisição
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#localizacao">
+                                    Localização
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#fornecedor">
+                                    Fornecedor
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#garantias">
+                                    Garantias
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#documentacao">
+                                    Documentação
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#manutencao">
+                                    Manutenção
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" data-bs-toggle="pill"
+                                    data-bs-target="#observacoes">
+                                    Observações
+                                </button>
+                            </li>
+
+                        </ul>
+
+
+                        <div class="tab-content">
+
+                            <!-- DADOS GERAIS -->
+                            <div class="tab-pane fade show active" id="dadosGerais">
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Código Interno</label>
+                                        <input type="text" class="form-control" value="EQ-0001">
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <label class="form-label fw-semibold">Designação</label>
+                                        <input type="text" class="form-control" value="Ventilador Pulmonar">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Categoria</label>
+                                        <select class="form-select">
+                                            <option selected>Suporte de Vida</option>
+                                            <option>Diagnóstico</option>
+                                            <option>Monitorização</option>
+                                            <option>Terapia</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Marca / Modelo</label>
+                                        <input type="text" class="form-control" value="Philips VX-200">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Número de Série</label>
+                                        <input type="text" class="form-control" value="SN-2026-001">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Ano Fabrico</label>
+                                        <input type="number" class="form-control" value="2023">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Criticidade</label>
+                                        <select class="form-select">
+                                            <option>Baixa</option>
+                                            <option>Média</option>
+                                            <option>Alta</option>
+                                            <option selected>Crítica</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Estado</label>
+                                        <select class="form-select">
+                                            <option selected>Ativo</option>
+                                            <option>Inativo</option>
+                                            <option>Em manutenção</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- Aquisição -->
+                            <div class="tab-pane fade" id="aquisicao">
+
+                                <div class="row g-4">
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label fw-semibold">
+                                            Data de Aquisição
+                                        </label>
+
+                                        <input type="date" class="form-control" value="2024-03-12">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label fw-semibold">
+                                            Custo de Aquisição
+                                        </label>
+
+                                        <input type="number" class="form-control" min="0" step="0.01">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+
+                                        <label class="form-label fw-semibold">
+                                            Tipo de Entrada
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                Compra
+                                            </option>
+
+                                            <option>
+                                                Doação
+                                            </option>
+
+                                            <option>
+                                                Aluguer
+                                            </option>
+
+                                            <option>
+                                                Empréstimo
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <label class="form-label fw-semibold">
+                                            Estado Atual
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                Ativo
+                                            </option>
+
+                                            <option>
+                                                Inativo
+                                            </option>
+
+                                            <option>
+                                                Em manutenção
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="custoAquisicao" class="form-label fw-semibold">Custo de aquisição</label>
-                                <input type="number" class="form-control" id="custoAquisicao" value="8500">
+                            <!-- LOCALIZAÇÃO -->
+                            <div class="tab-pane fade" id="localizacao">
+
+                                <div class="row g-4">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Localização Associada
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                UCI - Piso 2 - Sala UCI02
+                                            </option>
+
+                                            <option>
+                                                Urgência - Piso 1
+                                            </option>
+
+                                            <option>
+                                                Bloco Operatório
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <div class="card border bg-light">
+
+                                            <div class="card-body">
+
+                                                <h6 class="fw-bold">
+                                                    Resumo da Localização
+                                                </h6>
+
+                                                <p class="mb-1">
+                                                    Hospital São João
+                                                </p>
+
+                                                <p class="mb-1">
+                                                    Unidade de Cuidados Intensivos
+                                                </p>
+
+                                                <p class="mb-0">
+                                                    Piso 2 • Sala UCI02
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="col-md-4">
-                                <label for="tipoEntrada" class="form-label fw-semibold">Tipo de entrada</label>
-                                <select id="tipoEntrada" class="form-select">
-                                    <option selected>Compra</option>
-                                    <option>Doação</option>
-                                    <option>Aluguer</option>
-                                    <option>Empréstimo</option>
-                                </select>
+                            <!-- FORNECEDOR -->
+                            <div class="tab-pane fade" id="fornecedor">
+
+                                <div class="row g-4">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Fornecedor Associado
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                MedEquip Portugal
+                                            </option>
+
+                                            <option>
+                                                SaúdeTec Lda.
+                                            </option>
+
+                                            <option>
+                                                HospitalCare Solutions
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <div class="card border bg-light">
+
+                                            <div class="card-body">
+
+                                                <h6 class="fw-bold">
+                                                    Dados do Fornecedor
+                                                </h6>
+
+                                                <p class="mb-1">
+                                                    MedEquip Portugal
+                                                </p>
+
+                                                <p class="mb-1">
+                                                    geral@medequip.pt
+                                                </p>
+
+                                                <p class="mb-0">
+                                                    +351 220 000 000
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="fornecedor" class="form-label fw-semibold">Fornecedor</label>
-                                <select id="fornecedor" class="form-select">
-                                    <option selected>MedEquip Portugal</option>
-                                    <option>SaúdeTec Lda.</option>
-                                    <option>HospitalCare Solutions</option>
-                                </select>
+                            <!-- GARANTIAS -->
+                            <div class="tab-pane fade" id="garantias">
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Garantia Associada
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                Garantia Ventilador VX-200
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-semibold">
+                                            Contrato Associado
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option selected>
+                                                Contrato de Manutenção Philips
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="estadoAtual" class="form-label fw-semibold">Estado atual</label>
-                                <select id="estadoAtual" class="form-select">
-                                    <option selected>Ativo</option>
-                                    <option>Inativo</option>
-                                    <option>Em manutenção</option>
-                                    <option>Em calibração</option>
-                                    <option>Fora de serviço</option>
-                                </select>
+                            <!-- DOCUMENTAÇÃO -->
+                            <div class="tab-pane fade" id="documentacao">
+
+                                <div class="list-group">
+
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        Manual de Utilizador.pdf
+                                    </a>
+
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        Certificado CE.pdf
+                                    </a>
+
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        Relatório de Calibração.pdf
+                                    </a>
+
+                                    <a href="#" class="list-group-item list-group-item-action">
+                                        Contrato de Manutenção.pdf
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <!-- MANUTENÇÃO -->
+                            <div class="tab-pane fade" id="manutencao">
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Última Manutenção</label>
+                                        <input type="date" class="form-control" value="2026-01-15">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Próxima Manutenção</label>
+                                        <input type="date" class="form-control" value="2026-07-15">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label fw-semibold">Última Calibração</label>
+                                        <input type="date" class="form-control" value="2026-01-20">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- OBSERVAÇÕES -->
+                            <div class="tab-pane fade" id="observacoes">
+
+                                <label class="form-label fw-semibold">
+                                    Observações
+                                </label>
+
+                                <textarea class="form-control"
+                                    rows="6">Equipamento em funcionamento regular. Deve ser dada prioridade à manutenção preventiva devido à sua criticidade.</textarea>
+
                             </div>
 
                         </div>
 
                     </div>
+
                 </div>
 
-                <!-- LOCALIZAÇÃO -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
-                    <div class="card-body p-4">
-
-                        <h4 class="fw-bold mb-4">
-                            <i class="fa-solid fa-location-dot me-2 text-primary"></i>
-                            Localização
-                        </h4>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-                                <label for="instituicao" class="form-label fw-semibold">Instituição</label>
-                                <input type="text" class="form-control" id="instituicao" value="Hospital de São João">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="servico" class="form-label fw-semibold">Serviço</label>
-                                <input type="text" class="form-control" id="servico"
-                                    value="Unidade de Cuidados Intensivos">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="piso" class="form-label fw-semibold">Piso</label>
-                                <input type="text" class="form-control" id="piso" value="Piso 2">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="sala" class="form-label fw-semibold">Sala</label>
-                                <input type="text" class="form-control" id="sala" value="UCI-02">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="localizacaoDetalhe" class="form-label fw-semibold">Localização
-                                    detalhada</label>
-                                <input type="text" class="form-control" id="localizacaoDetalhe"
-                                    value="Junto ao posto de enfermagem">
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- MANUTENÇÃO -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
-                    <div class="card-body p-4">
-
-                        <h4 class="fw-bold mb-4">
-                            <i class="fa-solid fa-screwdriver-wrench me-2 text-primary"></i>
-                            Manutenção e calibração
-                        </h4>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-3">
-                                <label for="ultimaManutencao" class="form-label fw-semibold">Última manutenção</label>
-                                <input type="date" class="form-control" id="ultimaManutencao" value="2026-01-15">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="proximaManutencao" class="form-label fw-semibold">Próxima manutenção</label>
-                                <input type="date" class="form-control" id="proximaManutencao" value="2026-07-15">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="ultimaCalibracao" class="form-label fw-semibold">Última calibração</label>
-                                <input type="date" class="form-control" id="ultimaCalibracao" value="2026-01-20">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="estadoTecnico" class="form-label fw-semibold">Estado técnico</label>
-                                <select id="estadoTecnico" class="form-select">
-                                    <option selected>Operacional</option>
-                                    <option>Necessita manutenção</option>
-                                    <option>Aguardar calibração</option>
-                                    <option>Fora de serviço</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- OBSERVAÇÕES -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
-                    <div class="card-body p-4">
-
-                        <h4 class="fw-bold mb-4">
-                            <i class="fa-solid fa-note-sticky me-2 text-primary"></i>
-                            Observações
-                        </h4>
-
-                        <textarea class="form-control"
-                            rows="4">Equipamento em funcionamento regular. Deve ser dada prioridade à manutenção preventiva devido à sua criticidade no serviço onde se encontra instalado.</textarea>
-
-                    </div>
-                </div>
 
                 <!-- BOTÕES -->
-                <div class="d-flex justify-content-end gap-2 mb-4">
+                <div class="d-flex justify-content-end gap-2 mt-4">
 
                     <a href="ficha_equipamento.html" class="btn btn-outline-secondary">
+
                         Cancelar
+
                     </a>
 
                     <button type="submit" class="btn btn-primary-custom">
+
                         <i class="fa-solid fa-floppy-disk me-2"></i>
+
                         Guardar Alterações
+
                     </button>
 
                 </div>
