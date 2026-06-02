@@ -1300,17 +1300,17 @@ function guardarAlteracoesRodape() {
 
 function iniciarValidacaoLogin() {
     const loginForm = document.getElementById("loginForm");
-    const utilizador = document.getElementById("utilizador");
+    const email = document.getElementById("email");
     const password = document.getElementById("password");
     const loginErro = document.getElementById("loginErro");
 
     // Se estes elementos não existirem, significa que não estamos na página de login
-    if (!loginForm || !utilizador || !password || !loginErro) return;
+    if (!loginForm || !email || !password || !loginErro) return;
 
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const nomeUtilizador = utilizador.value.trim();
+        const nomeUtilizador = email.value.trim();
         const palavraPasse = password.value.trim();
 
         const temLetra = /[A-Za-zÀ-ÿ]/.test(palavraPasse);
@@ -1450,71 +1450,6 @@ function atualizarCardsEquipamentos() {
     cards[1].innerText = ativos;
     cards[2].innerText = manutencao;
     cards[3].innerText = criticos;
-}
-
-// =======================================================
-// EQUIPAMENTOS ASSOCIADOS AO FORNECEDOR
-// =======================================================
-
-const btnAssociar =
-    document.getElementById("btnAssociarEquipamento");
-
-const inputEquipamento =
-    document.getElementById("equipamentoAssociado");
-
-const listaEquipamentos =
-    document.getElementById("listaEquipamentosAssociados");
-
-
-if (
-    btnAssociar &&
-    inputEquipamento &&
-    listaEquipamentos
-) {
-
-    btnAssociar.addEventListener("click", function () {
-
-        const codigo =
-            inputEquipamento.value.trim();
-
-        // Não adicionar vazio
-        if (codigo === "") {
-            return;
-        }
-
-        // Criar badge
-        const badge =
-            document.createElement("span");
-
-        badge.className =
-            "badge rounded-pill bg-light text-dark border px-3 py-2";
-
-        badge.innerHTML = `
-
-            ${codigo}
-
-            <i class="fa-solid fa-xmark ms-2 removerEquipamento"
-                style="cursor:pointer;"></i>
-
-        `;
-
-        // Adicionar badge
-        listaEquipamentos.appendChild(badge);
-
-        // Limpar input
-        inputEquipamento.value = "";
-
-        // Remover badge
-        badge
-            .querySelector(".removerEquipamento")
-            .addEventListener("click", function () {
-
-                badge.remove();
-
-            });
-
-    });
-
 }
 
 // =======================================================
@@ -1748,5 +1683,70 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (e) {
         console.log("Erro atualizar cards:", e);
     }
+
+    // =======================================================
+// EQUIPAMENTOS ASSOCIADOS AO FORNECEDOR
+// =======================================================
+
+const btnAssociar =
+    document.getElementById("btnAssociarEquipamento");
+
+const inputEquipamento =
+    document.getElementById("equipamentoAssociado");
+
+const listaEquipamentos =
+    document.getElementById("listaEquipamentosAssociados");
+
+
+if (
+    btnAssociar &&
+    inputEquipamento &&
+    listaEquipamentos
+) {
+
+    btnAssociar.addEventListener("click", function () {
+
+        const codigo =
+            inputEquipamento.value.trim();
+
+        // Não adicionar vazio
+        if (codigo === "") {
+            return;
+        }
+
+        // Criar badge
+        const badge =
+            document.createElement("span");
+
+        badge.className =
+            "badge rounded-pill bg-light text-dark border px-3 py-2";
+
+        badge.innerHTML = `
+
+            ${codigo}
+
+            <i class="fa-solid fa-xmark ms-2 removerEquipamento"
+                style="cursor:pointer;"></i>
+
+        `;
+
+        // Adicionar badge
+        listaEquipamentos.appendChild(badge);
+
+        // Limpar input
+        inputEquipamento.value = "";
+
+        // Remover badge
+        badge
+            .querySelector(".removerEquipamento")
+            .addEventListener("click", function () {
+
+                badge.remove();
+
+            });
+
+    });
+
+}
 
 });

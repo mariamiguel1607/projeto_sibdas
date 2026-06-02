@@ -157,13 +157,6 @@
 
                                     <li class="nav-item">
                                         <button type="button" class="nav-link" data-bs-toggle="pill"
-                                            data-bs-target="#manutencaoNovo">
-                                            Manutenção
-                                        </button>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link" data-bs-toggle="pill"
                                             data-bs-target="#observacoesNovo">
                                             Observações
                                         </button>
@@ -229,8 +222,11 @@
                                                 <label class="form-label fw-bold">Estado</label>
                                                 <select class="form-select">
                                                     <option>Ativo</option>
-                                                    <option>Inativo</option>
                                                     <option>Em manutenção</option>
+                                                    <option>Inativo</option>
+                                                    <option>Em calibração</option>
+                                                    <option>Em quarentena</option>
+                                                    <option>Abatido</option>
                                                 </select>
                                             </div>
 
@@ -457,34 +453,7 @@
                                         </select>
 
                                     </div>
-                                    <!-- Manutenção -->
-                                    <div class="tab-pane fade" id="manutencaoNovo">
 
-                                        <div class="row g-4">
-
-                                            <div class="col-md-6">
-
-                                                <label class="form-label fw-bold">
-                                                    Próxima Manutenção
-                                                </label>
-
-                                                <input type="date" class="form-control">
-
-                                            </div>
-
-                                            <div class="col-md-6">
-
-                                                <label class="form-label fw-bold">
-                                                    Próxima Calibração
-                                                </label>
-
-                                                <input type="date" class="form-control">
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
 
                                     <div class="tab-pane fade" id="observacoesNovo">
 
