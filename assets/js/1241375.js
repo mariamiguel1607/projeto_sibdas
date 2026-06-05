@@ -1685,43 +1685,43 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =======================================================
-// EQUIPAMENTOS ASSOCIADOS AO FORNECEDOR
-// =======================================================
+    // EQUIPAMENTOS ASSOCIADOS AO FORNECEDOR
+    // =======================================================
 
-const btnAssociar =
-    document.getElementById("btnAssociarEquipamento");
+    const btnAssociar =
+        document.getElementById("btnAssociarEquipamento");
 
-const inputEquipamento =
-    document.getElementById("equipamentoAssociado");
+    const inputEquipamento =
+        document.getElementById("equipamentoAssociado");
 
-const listaEquipamentos =
-    document.getElementById("listaEquipamentosAssociados");
+    const listaEquipamentos =
+        document.getElementById("listaEquipamentosAssociados");
 
 
-if (
-    btnAssociar &&
-    inputEquipamento &&
-    listaEquipamentos
-) {
+    if (
+        btnAssociar &&
+        inputEquipamento &&
+        listaEquipamentos
+    ) {
 
-    btnAssociar.addEventListener("click", function () {
+        btnAssociar.addEventListener("click", function () {
 
-        const codigo =
-            inputEquipamento.value.trim();
+            const codigo =
+                inputEquipamento.value.trim();
 
-        // Não adicionar vazio
-        if (codigo === "") {
-            return;
-        }
+            // Não adicionar vazio
+            if (codigo === "") {
+                return;
+            }
 
-        // Criar badge
-        const badge =
-            document.createElement("span");
+            // Criar badge
+            const badge =
+                document.createElement("span");
 
-        badge.className =
-            "badge rounded-pill bg-light text-dark border px-3 py-2";
+            badge.className =
+                "badge rounded-pill bg-light text-dark border px-3 py-2";
 
-        badge.innerHTML = `
+            badge.innerHTML = `
 
             ${codigo}
 
@@ -1730,23 +1730,521 @@ if (
 
         `;
 
-        // Adicionar badge
-        listaEquipamentos.appendChild(badge);
+            // Adicionar badge
+            listaEquipamentos.appendChild(badge);
 
-        // Limpar input
-        inputEquipamento.value = "";
+            // Limpar input
+            inputEquipamento.value = "";
 
-        // Remover badge
-        badge
-            .querySelector(".removerEquipamento")
-            .addEventListener("click", function () {
+            // Remover badge
+            badge
+                .querySelector(".removerEquipamento")
+                .addEventListener("click", function () {
 
-                badge.remove();
+                    badge.remove();
 
-            });
+                });
 
-    });
+        });
 
-}
+    }
 
+    // MOSTRAR / ESCONDER ACESSÓRIOS
+    console.log("Entrou no código dos acessórios");
+    document.getElementById("temAcessorios")
+        .addEventListener("change", function () {
+            console.log("Valor:", this.value);
+            const secaoAcessorios =
+                document.getElementById("secaoAcessorios");
+
+            if (this.value === "sim") {
+
+                secaoAcessorios.style.display = "block";
+
+            } else {
+
+                secaoAcessorios.style.display = "none";
+
+            }
+
+        });
+
+    // MOSTRAR / ESCONDER CONSUMÍVEIS
+
+    document.getElementById("temConsumiveis")
+        .addEventListener("change", function () {
+
+            const secaoConsumiveis =
+                document.getElementById("secaoConsumiveis");
+
+            if (this.value === "sim") {
+
+                secaoConsumiveis.style.display = "block";
+
+            } else {
+
+                secaoConsumiveis.style.display = "none";
+
+            }
+
+        });
+
+    // ADICIONAR ACESSÓRIO
+
+    document.getElementById("btnAdicionarAcessorio")
+        .addEventListener("click", function () {
+
+            document.getElementById("listaAcessorios")
+                .insertAdjacentHTML(
+                    "beforeend",
+                    `
+        <div class="row g-4 mt-3 acessorio-item">
+
+            <div class="col-md-6">
+
+                <input type="text"
+                    class="form-control"
+                    placeholder="Nome do Acessório">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <input type="number"
+                    class="form-control"
+                    min="1"
+                    placeholder="Quantidade">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <select class="form-select">
+
+                    <option>Ativo</option>
+                    <option>Inativo</option>
+                    <option>Avariado</option>
+
+                </select>
+
+            </div>
+
+        </div>
+        `
+                );
+
+        });
+
+    // ADICIONAR CONSUMÍVEL
+
+    document.getElementById("btnAdicionarConsumivel")
+        .addEventListener("click", function () {
+
+            document.getElementById("listaConsumiveis")
+                .insertAdjacentHTML(
+                    "beforeend",
+                    `
+        <div class="row g-4 mt-3 consumivel-item">
+
+            <div class="col-md-8">
+
+                <input type="text"
+                    class="form-control"
+                    placeholder="Nome do Consumível">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <input type="number"
+                    class="form-control"
+                    min="1"
+                    placeholder="Quantidade">
+
+            </div>
+
+        </div>
+        `
+                );
+
+        });
+
+    // GARANTIAS
+
+    const temGarantia =
+        document.getElementById("temGarantia");
+
+    if (temGarantia) {
+
+        temGarantia.addEventListener("change", function () {
+
+            const cardGarantia =
+                document.getElementById("cardGarantia");
+
+            if (this.value === "sim") {
+
+                cardGarantia.style.display = "block";
+
+            } else {
+
+                cardGarantia.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    // CONTRATOS
+
+    const temContrato =
+        document.getElementById("temContrato");
+
+    if (temContrato) {
+
+        temContrato.addEventListener("change", function () {
+
+            const secaoContrato =
+                document.getElementById("secaoContrato");
+
+            const cardContrato =
+                document.getElementById("cardContrato");
+
+            if (this.value === "sim") {
+
+                secaoContrato.style.display = "block";
+                cardContrato.style.display = "block";
+
+            } else {
+
+                secaoContrato.style.display = "none";
+                cardContrato.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - GARANTIAS
+    // ======================================
+
+    const temGarantiaEditar =
+        document.getElementById("temGarantiaEditar");
+
+    if (temGarantiaEditar) {
+
+        const cardGarantia =
+            document.getElementById("cardGarantia");
+
+        // Estado inicial da página
+
+        if (temGarantiaEditar.value === "sim") {
+
+            cardGarantia.style.display = "block";
+
+        } else {
+
+            cardGarantia.style.display = "none";
+
+        }
+
+        // Quando altera
+
+        temGarantiaEditar.addEventListener("change", function () {
+
+            if (this.value === "sim") {
+
+                cardGarantia.style.display = "block";
+
+            } else {
+
+                cardGarantia.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - CONTRATOS
+    // ======================================
+
+    const temContratoEditar =
+        document.getElementById("temContratoEditar");
+
+    if (temContratoEditar) {
+
+        const secaoContratoEditar =
+            document.getElementById("secaoContratoEditar");
+
+        const cardContrato =
+            document.getElementById("cardContrato");
+
+        // Estado inicial
+
+        if (temContratoEditar.value === "sim") {
+
+            secaoContratoEditar.style.display = "block";
+            cardContrato.style.display = "block";
+
+        } else {
+
+            secaoContratoEditar.style.display = "none";
+            cardContrato.style.display = "none";
+
+        }
+
+        // Quando altera
+
+        temContratoEditar.addEventListener("change", function () {
+
+            if (this.value === "sim") {
+
+                secaoContratoEditar.style.display = "block";
+                cardContrato.style.display = "block";
+
+            } else {
+
+                secaoContratoEditar.style.display = "none";
+                cardContrato.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+    // ======================================
+    // INSERIR EQUIPAMENTO - DOCUMENTAÇÃO ADICIONAL
+    // ======================================
+
+    const temDocumentacaoAdicional =
+        document.getElementById("temDocumentacaoAdicional");
+
+    if (temDocumentacaoAdicional) {
+
+        temDocumentacaoAdicional.addEventListener("change", function () {
+
+            const secao =
+                document.getElementById("secaoDocumentacaoAdicional");
+
+            if (this.value === "sim") {
+
+                secao.style.display = "block";
+
+            } else {
+
+                secao.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+    const btnAdicionarDocumentoAdicional =
+        document.getElementById("btnAdicionarDocumentoAdicional");
+
+    if (btnAdicionarDocumentoAdicional) {
+
+        btnAdicionarDocumentoAdicional.addEventListener("click", function () {
+
+            document.getElementById("listaDocumentacaoAdicional")
+                .insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                <div class="border rounded-3 p-3 mt-3 documento-adicional-item">
+
+                    <h6 class="fw-bold">
+                        Documento Adicional
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Nome do Documento
+                            </label>
+
+                            <input type="text"
+                                class="form-control"
+                                name="nome_documento_adicional[]">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Ficheiro PDF
+                            </label>
+
+                            <input type="file"
+                                class="form-control"
+                                name="ficheiro_documento_adicional[]"
+                                accept="application/pdf">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Data do Documento
+                            </label>
+
+                            <input type="date"
+                                class="form-control"
+                                name="data_documento_adicional[]">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Data de Validade
+                            </label>
+
+                            <input type="date"
+                                class="form-control"
+                                name="validade_documento_adicional[]">
+
+                        </div>
+
+                    </div>
+
+                </div>
+                `
+                );
+
+        });
+
+    }
+
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - DOCUMENTAÇÃO ADICIONAL
+    // ======================================
+
+    const temDocumentacaoAdicionalEditar =
+        document.getElementById("temDocumentacaoAdicionalEditar");
+
+    if (temDocumentacaoAdicionalEditar) {
+
+        const secaoDocumentacaoAdicionalEditar =
+            document.getElementById("secaoDocumentacaoAdicionalEditar");
+
+        if (temDocumentacaoAdicionalEditar.value === "sim") {
+
+            secaoDocumentacaoAdicionalEditar.style.display = "block";
+
+        } else {
+
+            secaoDocumentacaoAdicionalEditar.style.display = "none";
+
+        }
+
+        temDocumentacaoAdicionalEditar.addEventListener("change", function () {
+
+            if (this.value === "sim") {
+
+                secaoDocumentacaoAdicionalEditar.style.display = "block";
+
+            } else {
+
+                secaoDocumentacaoAdicionalEditar.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - ADICIONAR DOCUMENTO
+    // ======================================
+
+    const btnAdicionarDocumentoAdicionalEditar =
+        document.getElementById("btnAdicionarDocumentoAdicionalEditar");
+
+    if (btnAdicionarDocumentoAdicionalEditar) {
+
+        btnAdicionarDocumentoAdicionalEditar.addEventListener("click", function () {
+
+            document.getElementById("listaDocumentacaoAdicionalEditar")
+                .insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                <div class="border rounded-3 p-3 mt-3 documento-adicional-item">
+
+                    <h6 class="fw-bold">
+                        Documento Adicional
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Nome do Documento
+                            </label>
+
+                            <input type="text"
+                                class="form-control">
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                PDF
+                            </label>
+
+                            <input type="file"
+                                class="form-control"
+                                accept="application/pdf">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label">
+                                Data do Documento
+                            </label>
+
+                            <input type="date"
+                                class="form-control">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label">
+                                Data de Validade
+                            </label>
+
+                            <input type="date"
+                                class="form-control">
+
+                        </div>
+
+                    </div>
+
+                </div>
+                `
+                );
+
+        });
+
+    }
 });
+
+
+

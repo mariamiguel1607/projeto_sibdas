@@ -862,8 +862,8 @@ section {
 }
 
 .conteudos-tabs .nav-link {
-    padding: 10px 14px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
 }
 
 .conteudos-tabs .nav-link {
