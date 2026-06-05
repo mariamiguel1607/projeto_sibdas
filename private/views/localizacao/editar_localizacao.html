@@ -37,6 +37,63 @@
                     class="img-fluid">
             </div>
 
+            <!-- UTILIZADOR -->
+
+            <div class="dropdown utilizador-sidebar mx-3 mb-4">
+
+                <button class="btn w-100 border-0 rounded-3 text-start dropdown-toggle utilizador-btn"
+                    data-bs-toggle="dropdown">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="avatar-utilizador">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div class="ms-2">
+
+                            <div class="nome-utilizador">
+                                Maria Silva
+                            </div>
+
+                            <div class="cargo-utilizador">
+                                Administrador
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </button>
+
+                <ul class="dropdown-menu w-100">
+
+                    <li>
+                        <h6 class="dropdown-header">
+                            maria.silva@techmed.pt
+                        </h6>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="#">
+
+                            <i class="fa-solid fa-key me-2"></i>
+                            Alterar Palavra-passe
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
             <nav class="sidebar-menu nav nav-pills flex-column gap-2">
                 <a href="../dashboard/dashboard.html" class="nav-link">
                     <i class="fa-solid fa-chart-line"></i>
@@ -56,16 +113,6 @@
                 <a href="../fornecedores/fornecedores.html" class="nav-link">
                     <i class="fa-solid fa-truck-medical"></i>
                     Fornecedores
-                </a>
-
-                <a href="../documentacao/documentacao.html" class="nav-link">
-                    <i class="fa-solid fa-file-lines"></i>
-                    Documentação
-                </a>
-
-                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
-                    <i class="fa-solid fa-file-signature"></i>
-                    Garantias e Contratos
                 </a>
 
                 <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
@@ -127,6 +174,25 @@
                             Dados da localização
 
                         </h4>
+                        <!-- ALERTAS -->
+                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                            <h6 class="alert-heading mb-2">
+
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                Foram encontrados erros
+
+                            </h6>
+
+                            <ul class="mb-0">
+
+                                <li>Código interno é obrigatório.</li>
+
+                                <li>Categoria é obrigatória.</li>
+
+                            </ul>
+
+                        </div>
 
                         <div class="row g-4">
 
@@ -140,33 +206,6 @@
                                 </label>
 
                                 <input type="text" id="codigoLocalizacao" class="form-control" value="LOC-001">
-
-                            </div>
-
-                            <!-- Estado -->
-                            <div class="col-md-6">
-
-                                <label for="estadoLocalizacao" class="form-label fw-bold">
-
-                                    Estado
-
-                                </label>
-
-                                <select id="estadoLocalizacao" class="form-select">
-
-                                    <option selected>
-                                        Ativa
-                                    </option>
-
-                                    <option>
-                                        Em manutenção
-                                    </option>
-
-                                    <option>
-                                        Inativa
-                                    </option>
-
-                                </select>
 
                             </div>
 
@@ -270,7 +309,7 @@
 
                         </div>
 
-                    
+
 
 
                         <!-- BOTÕES -->

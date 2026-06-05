@@ -1750,10 +1750,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // MOSTRAR / ESCONDER ACESSÓRIOS
-    console.log("Entrou no código dos acessórios");
-    document.getElementById("temAcessorios")
-        .addEventListener("change", function () {
-            console.log("Valor:", this.value);
+
+    const temAcessorios = document.getElementById("temAcessorios");
+
+    if (temAcessorios) {
+
+        temAcessorios.addEventListener("change", function () {
+
             const secaoAcessorios =
                 document.getElementById("secaoAcessorios");
 
@@ -1769,10 +1772,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
 
+    }
+
     // MOSTRAR / ESCONDER CONSUMÍVEIS
 
-    document.getElementById("temConsumiveis")
-        .addEventListener("change", function () {
+    const temConsumiveis = document.getElementById("temConsumiveis");
+
+    if (temConsumiveis) {
+
+        temConsumiveis.addEventListener("change", function () {
 
             const secaoConsumiveis =
                 document.getElementById("secaoConsumiveis");
@@ -1789,15 +1797,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
 
+    }
+
     // ADICIONAR ACESSÓRIO
 
-    document.getElementById("btnAdicionarAcessorio")
-        .addEventListener("click", function () {
+    const btnAdicionarAcessorio = document.getElementById("btnAdicionarAcessorio");
 
-            document.getElementById("listaAcessorios")
-                .insertAdjacentHTML(
-                    "beforeend",
-                    `
+    if (btnAdicionarAcessorio) {
+
+        btnAdicionarAcessorio
+            .addEventListener("click", function () {
+
+                document.getElementById("listaAcessorios")
+                    .insertAdjacentHTML(
+                        "beforeend",
+                        `
         <div class="row g-4 mt-3 acessorio-item">
 
             <div class="col-md-6">
@@ -1831,19 +1845,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
         </div>
         `
-                );
+                    );
 
-        });
+            });
 
-    // ADICIONAR CONSUMÍVEL
+        // ADICIONAR CONSUMÍVEL
 
-    document.getElementById("btnAdicionarConsumivel")
-        .addEventListener("click", function () {
+        const btnAdicionarConsumivel = document.getElementById("btnAdicionarConsumivel");
 
-            document.getElementById("listaConsumiveis")
-                .insertAdjacentHTML(
-                    "beforeend",
-                    `
+        if (btnAdicionarConsumivel) {
+
+            btnAdicionarConsumivel.addEventListener("click", function () {
+
+                document.getElementById("listaConsumiveis")
+                    .insertAdjacentHTML(
+                        "beforeend",
+                        `
         <div class="row g-4 mt-3 consumivel-item">
 
             <div class="col-md-8">
@@ -1865,9 +1882,178 @@ document.addEventListener("DOMContentLoaded", function () {
 
         </div>
         `
+                    );
+
+            });
+
+        }
+
+    }
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - ACESSÓRIOS
+    // ======================================
+
+    const btnAdicionarAcessorioEditar =
+        document.getElementById("btnAdicionarAcessorioEditar");
+
+    if (btnAdicionarAcessorioEditar) {
+
+        btnAdicionarAcessorioEditar.addEventListener("click", function () {
+
+            document.getElementById("listaAcessoriosEditar")
+                .insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                <div class="border rounded-3 p-3 mb-3 mt-3">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-5">
+
+                            <label class="form-label fw-bold">
+                                Nome do Acessório
+                            </label>
+
+                            <input type="text"
+                                class="form-control">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-bold">
+                                Quantidade
+                            </label>
+
+                            <input type="number"
+                                class="form-control"
+                                min="1">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-bold">
+                                Estado
+                            </label>
+
+                            <select class="form-select">
+
+                                <option>
+                                    Ativo
+                                </option>
+
+                                <option>
+                                    Inativo
+                                </option>
+
+                                <option>
+                                    Avariado
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-1 d-flex align-items-end">
+
+                            <button type="button"
+                                class="btn btn-outline-danger">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                `
                 );
 
         });
+
+    }
+
+    // ======================================
+    // EDITAR EQUIPAMENTO - CONSUMÍVEIS
+    // ======================================
+
+    const btnAdicionarConsumivelEditar =
+        document.getElementById("btnAdicionarConsumivelEditar");
+
+    if (btnAdicionarConsumivelEditar) {
+
+        btnAdicionarConsumivelEditar.addEventListener("click", function () {
+
+            document.getElementById("listaConsumiveisEditar")
+                .insertAdjacentHTML(
+                    "beforeend",
+
+                    `
+                <div class="border rounded-3 p-3 mb-3 mt-3">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-5">
+
+                            <label class="form-label fw-bold">
+                                Nome do Consumível
+                            </label>
+
+                            <input type="text"
+                                class="form-control">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-bold">
+                                Quantidade
+                            </label>
+
+                            <input type="number"
+                                class="form-control"
+                                min="1">
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label class="form-label fw-bold">
+                                Stock Mínimo
+                            </label>
+
+                            <input type="number"
+                                class="form-control"
+                                min="0">
+
+                        </div>
+
+                        <div class="col-md-1 d-flex align-items-end">
+
+                            <button type="button"
+                                class="btn btn-outline-danger">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                `
+                );
+
+        });
+
+    }
+
 
     // GARANTIAS
 

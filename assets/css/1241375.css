@@ -909,3 +909,62 @@ section {
 
     margin-left: 260px;
 }
+/* ==========================================
+   UTILIZADOR SIDEBAR
+========================================== */
+
+.utilizador-btn {
+
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px;
+
+}
+
+.utilizador-btn:hover {
+
+    background: rgba(255, 255, 255, 0.12);
+
+}
+
+.avatar-utilizador {
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6f42c1;
+    font-size: 0.85rem;
+
+    flex-shrink: 0;
+
+}
+
+.nome-utilizador {
+
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.1;
+
+}
+
+.cargo-utilizador {
+
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.80rem;
+
+}
+
+.utilizador-sidebar .dropdown-toggle::after {
+
+    margin-left: auto;
+    color: white;
+
+}

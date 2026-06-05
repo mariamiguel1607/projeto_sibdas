@@ -37,6 +37,63 @@
                     class="img-fluid">
             </div>
 
+            <!-- UTILIZADOR -->
+
+            <div class="dropdown utilizador-sidebar mx-3 mb-4">
+
+                <button class="btn w-100 border-0 rounded-3 text-start dropdown-toggle utilizador-btn"
+                    data-bs-toggle="dropdown">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="avatar-utilizador">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div class="ms-2">
+
+                            <div class="nome-utilizador">
+                                Maria Silva
+                            </div>
+
+                            <div class="cargo-utilizador">
+                                Administrador
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </button>
+
+                <ul class="dropdown-menu w-100">
+
+                    <li>
+                        <h6 class="dropdown-header">
+                            maria.silva@techmed.pt
+                        </h6>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="#">
+
+                            <i class="fa-solid fa-key me-2"></i>
+                            Alterar Palavra-passe
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
             <nav class="sidebar-menu nav nav-pills flex-column gap-2">
                 <a href="../dashboard/dashboard.html" class="nav-link">
                     <i class="fa-solid fa-chart-line"></i>
@@ -56,16 +113,6 @@
                 <a href="../fornecedores/fornecedores.html" class="nav-link">
                     <i class="fa-solid fa-truck-medical"></i>
                     Fornecedores
-                </a>
-
-                <a href="../documentacao/documentacao.html" class="nav-link">
-                    <i class="fa-solid fa-file-lines"></i>
-                    Documentação
-                </a>
-
-                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
-                    <i class="fa-solid fa-file-signature"></i>
-                    Garantias e Contratos
                 </a>
 
                 <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
@@ -140,27 +187,6 @@
 
                         </div>
 
-                        <!-- Estado -->
-                        <div class="col-md-3">
-
-                            <label for="estado" class="form-label">
-                                Estado
-                            </label>
-
-                            <select id="estado" class="form-select">
-
-                                <option selected>Todos</option>
-
-                                <option>Ativa</option>
-
-                                <option>Em manutenção</option>
-
-                                <option>Inativa</option>
-
-                            </select>
-
-                        </div>
-
                         <!-- Botão -->
                         <div class="col-md-2">
 
@@ -205,8 +231,6 @@
 
                                     <th>Equipamentos</th>
 
-                                    <th>Estado</th>
-
                                     <th class="text-end">
                                         Ações
                                     </th>
@@ -232,19 +256,13 @@
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                        <button class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                            style="cursor:pointer;" data-bs-toggle="modal"
+                                            data-bs-target="#modalEquipamentosLOC0001">
 
                                             2 equipamentos
 
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-success">
-                                            Ativa
-                                        </span>
+                                        </button>
 
                                     </td>
 
@@ -286,19 +304,13 @@
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                        <button class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                            style="cursor:pointer;" data-bs-toggle="modal"
+                                            data-bs-target="#modalEquipamentosLOC0001">
 
-                                            3 equipamentos
+                                            2 equipamentos
 
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-warning text-dark">
-                                            Em manutenção
-                                        </span>
+                                        </button>
 
                                     </td>
 
@@ -340,19 +352,13 @@
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                        <button class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                            style="cursor:pointer;" data-bs-toggle="modal"
+                                            data-bs-target="#modalEquipamentosLOC0001">
 
-                                            4 equipamentos
+                                            2 equipamentos
 
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-success">
-                                            Ativa
-                                        </span>
+                                        </button>
 
                                     </td>
 
@@ -394,19 +400,13 @@
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                        <button class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                            style="cursor:pointer;" data-bs-toggle="modal"
+                                            data-bs-target="#modalEquipamentosLOC0001">
 
-                                            1 equipamentos
+                                            2 equipamentos
 
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-success">
-                                            Ativa
-                                        </span>
+                                        </button>
 
                                     </td>
 
@@ -448,21 +448,16 @@
 
                                     <td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-3 py-2">
+                                        <button class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                            style="cursor:pointer;" data-bs-toggle="modal"
+                                            data-bs-target="#modalEquipamentosLOC0001">
 
-                                            5 equipamentos
+                                            2 equipamentos
 
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span class="badge bg-secondary">
-                                            Inativa
-                                        </span>
+                                        </button>
 
                                     </td>
+
 
                                     <td class="text-end">
 
@@ -543,6 +538,113 @@
                             Eliminar
 
                         </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- MODAL EQUIPAMENTOS DA LOCALIZAÇÃO -->
+
+        <div class="modal fade" id="modalEquipamentosLOC0001" tabindex="-1">
+
+            <div class="modal-dialog modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">
+
+                            Equipamentos da Localização LOC-0001
+
+                        </h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                        </button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <table class="table align-middle">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Código</th>
+                                    <th>Designação</th>
+                                    <th>Estado</th>
+                                    <th>Ações</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td>EQ-0001</td>
+
+                                    <td>Ventilador Pulmonar</td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            Ativo
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="../equipamentos/ficha_equipamento.html"
+                                            class="btn btn-sm btn-outline-primary">
+
+                                            <i class="fa-solid fa-eye me-1"></i>
+                                            Ver Ficha
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <td>EQ-0024</td>
+
+                                    <td>Monitor Multiparamétrico</td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+                                            Ativo
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="../equipamentos/ficha_equipamento.html"
+                                            class="btn btn-sm btn-outline-primary">
+
+                                            <i class="fa-solid fa-eye me-1"></i>
+                                            Ver Ficha
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 
                     </div>
 

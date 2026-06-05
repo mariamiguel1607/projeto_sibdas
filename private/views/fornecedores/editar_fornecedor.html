@@ -31,6 +31,62 @@
                 <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
                     class="img-fluid">
             </div>
+            <!-- UTILIZADOR -->
+
+            <div class="dropdown utilizador-sidebar mx-3 mb-4">
+
+                <button class="btn w-100 border-0 rounded-3 text-start dropdown-toggle utilizador-btn"
+                    data-bs-toggle="dropdown">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="avatar-utilizador">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div class="ms-2">
+
+                            <div class="nome-utilizador">
+                                Maria Silva
+                            </div>
+
+                            <div class="cargo-utilizador">
+                                Administrador
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </button>
+
+                <ul class="dropdown-menu w-100">
+
+                    <li>
+                        <h6 class="dropdown-header">
+                            maria.silva@techmed.pt
+                        </h6>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="#">
+
+                            <i class="fa-solid fa-key me-2"></i>
+                            Alterar Palavra-passe
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
 
             <nav class="sidebar-menu nav nav-pills flex-column gap-2">
                 <a href="../dashboard/dashboard.html" class="nav-link">
@@ -51,16 +107,6 @@
                 <a href="fornecedores.html" class="nav-link active">
                     <i class="fa-solid fa-truck-medical"></i>
                     Fornecedores
-                </a>
-
-                <a href="../documentacao/documentacao.html" class="nav-link">
-                    <i class="fa-solid fa-file-lines"></i>
-                    Documentação
-                </a>
-
-                <a href="../garantias_contratos/garantias_contratos.html" class="nav-link">
-                    <i class="fa-solid fa-file-signature"></i>
-                    Garantias e Contratos
                 </a>
 
                 <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
@@ -109,6 +155,25 @@
                             <i class="fa-solid fa-building me-2 text-primary"></i>
                             Dados do fornecedor
                         </h4>
+                        <!-- ALERTAS -->
+                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                            <h6 class="alert-heading mb-2">
+
+                                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                Foram encontrados erros
+
+                            </h6>
+
+                            <ul class="mb-0">
+
+                                <li>Código interno é obrigatório.</li>
+
+                                <li>Categoria é obrigatória.</li>
+
+                            </ul>
+
+                        </div>
 
                         <div class="row g-4">
 
@@ -141,22 +206,12 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="estadoFornecedor" class="form-label fw-bold">
-                                    Estado
-                                </label>
-                                <select id="estadoFornecedor" class="form-select">
-                                    <option selected>Ativo</option>
-                                    <option>Inativo</option>
-                                </select>
-                            </div>
-
                             <div class="col-md-4">
                                 <label for="nifFornecedor" class="form-label fw-bold">
                                     NIF
                                 </label>
                                 <input type="text" id="nifFornecedor" class="form-control" value="509123456"
-                                    maxlength="9" pattern="[0-9]{9}" inputmode="numeric">
+                                   inputmode="numeric">
                             </div>
 
                             <div class="col-md-4">
@@ -164,7 +219,7 @@
                                     Contacto telefónico
                                 </label>
                                 <input type="text" id="telefoneFornecedor" class="form-control" value="+351 220 123 456"
-                                    maxlength="14" pattern="\+?[0-9]{1,4}[0-9]{3,4}[0-9]{3,4}" inputmode="tel">
+                                    inputmode="tel">
                             </div>
 
                             <div class="col-md-4">
