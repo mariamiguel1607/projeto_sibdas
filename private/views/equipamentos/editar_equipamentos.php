@@ -1,151 +1,81 @@
-<!DOCTYPE html>
-<html lang="pt">
+<?php include '../../includes/header.php';
+$paginaAtiva = 'equipamentos';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipamentos | TechMed Solutions</title>
+<div class="private-layout">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
+    <?php include '../../includes/sidebar.php'; ?>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
-        rel="stylesheet">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="private-main">
 
-    <!-- Bootstrap CSS -->
-    <link href="../../../assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+        <!-- CABEÇALHO -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/1241375.css">
-</head>
-
-<body class="private-body">
-
-    <div class="private-layout">
-
-        <!-- SIDEBAR -->
-        <aside class="sidebar d-flex flex-column p-3">
-
-            <div class="sidebar-logo text-center mb-4">
-                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
-                    class="img-fluid">
+            <div>
+                <h1 class="fw-bold mb-1">Editar Equipamento</h1>
+                <p class="text-muted mb-0">
+                    Atualização dos dados técnicos e administrativos do equipamento.
+                </p>
             </div>
 
-            <!-- UTILIZADOR -->
+            <div class="d-flex gap-2">
+                <a href="ficha_equipamento.php" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Voltar
+                </a>
+            </div>
 
-            <div class="dropdown utilizador-sidebar mx-3 mb-4">
+        </div>
 
-                <button class="btn w-100 border-0 rounded-3 text-start dropdown-toggle utilizador-btn"
-                    data-bs-toggle="dropdown">
+        <!-- FORMULÁRIO -->
+        <form>
 
-                    <div class="d-flex align-items-center">
+            <!-- RESUMO DO EQUIPAMENTO -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
 
-                        <div class="avatar-utilizador">
+                <div class="card-body p-4">
 
-                            <i class="fa-solid fa-user"></i>
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-8">
+
+                            <h3 class="fw-bold mb-1">
+                                Ventilador Pulmonar
+                            </h3>
+
+                            <p class="text-muted mb-0">
+                                Código: EQ-0001
+                            </p>
 
                         </div>
 
-                        <div class="ms-2">
+                        <div class="col-lg-4">
 
-                            <div class="nome-utilizador">
-                                Maria Silva
-                            </div>
+                            <div class="d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
 
-                            <div class="cargo-utilizador">
-                                Administrador
+                                <span class="badge bg-success">
+                                    Ativo
+                                </span>
+
+                                <span class="badge bg-danger">
+                                    Crítico
+                                </span>
+
+                                <span class="badge bg-primary">
+                                    UCI
+                                </span>
+
                             </div>
 
                         </div>
 
                     </div>
 
-                </button>
-
-                <ul class="dropdown-menu w-100">
-
-                    <li>
-                        <h6 class="dropdown-header">
-                            maria.silva@techmed.pt
-                        </h6>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="#">
-
-                            <i class="fa-solid fa-key me-2"></i>
-                            Alterar Palavra-passe
-
-                        </a>
-                    </li>
-
-                </ul>
-
-            </div>
-
-
-            <nav class="sidebar-menu nav nav-pills flex-column gap-2">
-                <a href="../dashboard/dashboard.html" class="nav-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    Dashboard
-                </a>
-
-                <a href="equipamentos.html" class="nav-link active">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    Equipamentos
-                </a>
-
-                <a href="../localizacao/localizacao.html" class="nav-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Localizações
-                </a>
-
-                <a href="../fornecedores/fornecedores.html" class="nav-link">
-                    <i class="fa-solid fa-truck-medical"></i>
-                    Fornecedores
-                </a>
-
-                <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    Gestão de Conteúdos
-                </a>
-            </nav>
-
-            <div class="sidebar-footer mt-auto">
-                <a href="../../../public/index.html" class="nav-link">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    Sair
-                </a>
-            </div>
-
-        </aside>
-
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="private-main">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 class="fw-bold mb-1">Adicionar Equipamento</h1>
-                    <p class="text-muted mb-0">
-                        Registo de um novo equipamento médico na plataforma.
-                    </p>
                 </div>
 
-                <a href="equipamentos.html" class="btn btn-outline-secondary">
-                    <i class="fa-solid fa-arrow-left me-2"></i>
-                    Voltar
-                </a>
             </div>
+
 
             <!-- TABS -->
             <div class="card border-0 shadow-sm rounded-4">
@@ -156,65 +86,67 @@
 
                         <li class="nav-item">
                             <button type="button" class="nav-link active" data-bs-toggle="pill"
-                                data-bs-target="#dadosGeraisNovo">
+                                data-bs-target="#dadosGerais">
                                 Dados Gerais
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#aquisicaoNovo">
+                                data-bs-target="#aquisicao">
                                 Aquisição
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#acessoriosNovo">
+                                data-bs-target="#acessorios">
                                 Acessórios e Consumíveis
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#localizacaoNovo">
+                                data-bs-target="#localizacao">
                                 Localização
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#fornecedorNovo">
+                                data-bs-target="#fornecedor">
                                 Fornecedor Associado
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#garantiasNovo">
+                                data-bs-target="#garantias">
                                 Garantias e Contratos
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#documentacaoNovo">
+                                data-bs-target="#documentacao">
                                 Documentação
                             </button>
                         </li>
 
                         <li class="nav-item">
                             <button type="button" class="nav-link" data-bs-toggle="pill"
-                                data-bs-target="#observacoesNovo">
+                                data-bs-target="#observacoes">
                                 Observações
                             </button>
                         </li>
 
                     </ul>
-                    <!-- Dados Gerais -->
+
+
                     <div class="tab-content">
 
-                        <div class="tab-pane fade show active" id="dadosGeraisNovo">
+                        <!-- DADOS GERAIS -->
+                        <div class="tab-pane fade show active" id="dadosGerais">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -234,34 +166,26 @@
                                 </ul>
 
                             </div>
-
-
-                            <div class="row g-4">
+                            <div class="row g-3">
 
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Código Interno</label>
-                                    <input type="text" class="form-control">
+                                    <label class="form-label fw-semibold">Código Interno</label>
+                                    <input type="text" class="form-control" value="EQ-0001">
                                 </div>
 
                                 <div class="col-md-8">
-                                    <label class="form-label fw-bold">Designação</label>
-                                    <input type="text" class="form-control">
+                                    <label class="form-label fw-semibold">Designação</label>
+                                    <input type="text" class="form-control" value="Ventilador Pulmonar">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Categoria</label>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Categoria</label>
                                     <select class="form-select">
-                                        <option selected disabled>Selecionar categoria</option>
-                                        <option>Suporte de Vida</option>
-                                        <option>Monitorização</option>
+                                        <option selected>Suporte de Vida</option>
                                         <option>Diagnóstico</option>
+                                        <option>Monitorização</option>
                                         <option>Terapia</option>
                                     </select>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Fabricante</label>
-                                    <input type="text" class="form-control">
                                 </div>
 
                                 <div class="col-md-6">
@@ -274,88 +198,102 @@
                                     <input type="text" class="form-control">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Número de Série</label>
-                                    <input type="text" class="form-control">
+
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Número de Série</label>
+                                    <input type="text" class="form-control" value="SN-2026-001">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Ano de Fabrico</label>
-                                    <input type="number" class="form-control">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Ano Fabrico</label>
+                                    <input type="number" class="form-control" value="2023">
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Criticidade</label>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Criticidade</label>
                                     <select class="form-select">
                                         <option>Baixa</option>
                                         <option>Média</option>
                                         <option>Alta</option>
-                                        <option>Crítica</option>
+                                        <option selected>Crítica</option>
                                     </select>
                                 </div>
 
-                            </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Estado</label>
+                                    <select class="form-select">
+                                        <option>Ativo</option>
+                                        <option>Em manutenção</option>
+                                        <option>Inativo</option>
+                                        <option>Em calibração</option>
+                                        <option>Em quarentena</option>
+                                        <option>Abatido</option>
+                                    </select>
+                                </div>
 
 
-                            <hr class="my-4">
+                                <hr class="my-4">
 
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                                <h5 class="fw-bold mb-0">
-                                    Documentação Técnica
-                                </h5>
+                                    <h5 class="fw-bold mb-0">
+                                        Documentação Técnica
+                                    </h5>
 
-                            </div>
+                                </div>
 
-                            <div class="row g-3">
+                                <div class="row g-3">
 
-                                <div class="col-md-6">
+                                    <div class="col-md-6">
 
-                                    <div class="border rounded-3 p-3">
+                                        <div class="border rounded-3 p-3">
 
-                                        <h6 class="fw-bold">
-                                            Manual de Utilização
-                                        </h6>
+                                            <h6 class="fw-bold">
+                                                Manual de Utilização
+                                            </h6>
 
-                                        <p class="text-muted small mb-3">
-                                            Documento técnico associado ao equipamento.
-                                        </p>
+                                            <p class="text-muted small mb-3">
+                                                Documento técnico associado ao equipamento.
+                                            </p>
 
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalManualUtilizacao">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-bs-toggle="modal" data-bs-target="#modalManualUtilizacao">
 
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Editar Documento
 
-                                        </button>
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <div class="border rounded-3 p-3">
+
+                                            <h6 class="fw-bold">
+                                                Manual Técnico
+                                            </h6>
+
+                                            <p class="text-muted small mb-3">
+                                                Manual técnico disponibilizado pelo fabricante.
+                                            </p>
+
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-bs-toggle="modal" data-bs-target="#modalManualTecnico">
+
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Editar Documento
+
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
                                 </div>
 
-                                <div class="col-md-6">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Manual Técnico
-                                        </h6>
-
-                                        <p class="text-muted small mb-3">
-                                            Manual técnico disponibilizado pelo fabricante.
-                                        </p>
-
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalManualTecnico">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
 
                             </div>
 
@@ -371,10 +309,11 @@
                                         <div class="modal-header">
 
                                             <h5 class="modal-title">
-                                                Manual de Utilização
+                                                Editar Manual de Utilização
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -397,11 +336,12 @@
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control" name="manual_utilizacao_data">
+                                                <input type="date" class="form-control"
+                                                    name="manual_utilizacao_data" value="2023-03-15">
 
                                             </div>
 
-                                            <div>
+                                            <div class="mb-3">
 
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
@@ -411,6 +351,22 @@
                                                     name="manual_utilizacao_validade">
 
                                             </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                                Cancelar
+
+                                            </button>
+
+                                            <button type="button" class="btn btn-primary">
+
+                                                Guardar Alterações
+
+                                            </button>
 
                                         </div>
 
@@ -432,10 +388,11 @@
                                         <div class="modal-header">
 
                                             <h5 class="modal-title">
-                                                Manual Técnico
+                                                Editar Manual Técnico
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -458,19 +415,37 @@
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control" name="manual_tecnico_data">
+                                                <input type="date" class="form-control" name="manual_tecnico_data"
+                                                    value="2023-03-20">
 
                                             </div>
 
-                                            <div>
+                                            <div class="mb-3">
 
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
 
-                                                <input type="date" class="form-control" name="manual_tecnico_validade">
+                                                <input type="date" class="form-control"
+                                                    name="manual_tecnico_validade">
 
                                             </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                                Cancelar
+
+                                            </button>
+
+                                            <button type="button" class="btn btn-primary">
+
+                                                Guardar Alterações
+
+                                            </button>
 
                                         </div>
 
@@ -480,10 +455,11 @@
 
                             </div>
 
+
                         </div>
 
-                        <!-- AQUISIÇÃO -->
-                        <div class="tab-pane fade" id="aquisicaoNovo">
+                        <!-- Aquisição -->
+                        <div class="tab-pane fade" id="aquisicao">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -503,23 +479,22 @@
                                 </ul>
 
                             </div>
-
                             <div class="row g-4">
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-semibold">
                                         Data de Aquisição
                                     </label>
 
-                                    <input type="date" class="form-control">
+                                    <input type="date" class="form-control" value="2024-03-12">
 
                                 </div>
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
-                                        Custo de Aquisição (€)
+                                    <label class="form-label fw-semibold">
+                                        Custo de Aquisição
                                     </label>
 
                                     <input type="number" class="form-control" placeholder="0.00">
@@ -528,17 +503,13 @@
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-semibold">
                                         Tipo de Entrada
                                     </label>
 
                                     <select class="form-select">
 
-                                        <option selected disabled>
-                                            Selecionar tipo
-                                        </option>
-
-                                        <option>
+                                        <option selected>
                                             Compra
                                         </option>
 
@@ -557,18 +528,53 @@
                                     </select>
 
                                 </div>
+                                <div class="col-md-3">
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">Estado</label>
+                                    <label class="form-label fw-bold">
+
+                                        Estado
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm border-0 p-0 ms-1"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="hover focus"
+                                            data-bs-html="true"
+                                            title="Estados dos Equipamentos"
+                                            data-bs-content="
+            <b>Ativo</b> - Disponível e operacional.<br>
+            <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
+            <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
+            <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
+
+                                            <i class="fa-solid fa-circle-question text-primary"></i>
+
+                                        </button>
+
+                                    </label>
+
                                     <select class="form-select">
-                                        <option>Ativo</option>
-                                        <option>Em manutenção</option>
-                                        <option>Inativo</option>
-                                        <option>Em calibração</option>
-                                        <option>Em quarentena</option>
-                                        <option>Abatido</option>
+
+                                        <option selected>
+                                            Ativo
+                                        </option>
+
+                                        <option>
+                                            Inativo
+                                        </option>
+
+                                        <option>
+                                            Em manutenção
+                                        </option>
+
+                                        <option>
+                                            Em calibração
+                                        </option>
+
                                     </select>
+
                                 </div>
+
                             </div>
 
                             <hr class="my-4">
@@ -601,7 +607,7 @@
                                             data-bs-target="#modalFaturaAquisicao">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -620,14 +626,14 @@
                                         </h6>
 
                                         <p class="text-muted small mb-3">
-                                            Contrato associado à compra ou aquisição do equipamento.
+                                            Contrato associado à compra do equipamento.
                                         </p>
 
                                         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                                             data-bs-target="#modalContratoAquisicao">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -649,10 +655,11 @@
                                         <div class="modal-header">
 
                                             <h5 class="modal-title">
-                                                Fatura de Aquisição
+                                                Editar Fatura de Aquisição
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -661,11 +668,10 @@
                                             <div class="mb-3">
 
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Substituir PDF
                                                 </label>
 
-                                                <input type="file" class="form-control" name="fatura_aquisicao"
-                                                    accept="application/pdf">
+                                                <input type="file" class="form-control" accept="application/pdf">
 
                                             </div>
 
@@ -675,7 +681,7 @@
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control" name="fatura_aquisicao_data">
+                                                <input type="date" class="form-control" value="2024-03-12">
 
                                             </div>
 
@@ -685,8 +691,7 @@
                                                     Data de Validade
                                                 </label>
 
-                                                <input type="date" class="form-control"
-                                                    name="fatura_aquisicao_validade">
+                                                <input type="date" class="form-control">
 
                                             </div>
 
@@ -710,10 +715,11 @@
                                         <div class="modal-header">
 
                                             <h5 class="modal-title">
-                                                Contrato de Aquisição
+                                                Editar Contrato de Aquisição
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -722,11 +728,10 @@
                                             <div class="mb-3">
 
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Substituir PDF
                                                 </label>
 
-                                                <input type="file" class="form-control" name="contrato_aquisicao"
-                                                    accept="application/pdf">
+                                                <input type="file" class="form-control" accept="application/pdf">
 
                                             </div>
 
@@ -736,7 +741,7 @@
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control" name="contrato_aquisicao_data">
+                                                <input type="date" class="form-control" value="2024-03-12">
 
                                             </div>
 
@@ -746,8 +751,7 @@
                                                     Data de Validade
                                                 </label>
 
-                                                <input type="date" class="form-control"
-                                                    name="contrato_aquisicao_validade">
+                                                <input type="date" class="form-control" value="2034-03-12">
 
                                             </div>
 
@@ -759,14 +763,13 @@
 
                             </div>
 
-
-
                         </div>
 
                         <!-- ACESSÓRIOS E CONSUMÍVEIS -->
-                        <div class="tab-pane fade" id="acessoriosNovo">
+                        <div class="tab-pane fade" id="acessorios">
+
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <div id="alertasAcessoriosEditar" class="alert alert-danger mb-4" style="display:none;">
 
                                 <h6 class="alert-heading mb-2">
 
@@ -775,13 +778,7 @@
 
                                 </h6>
 
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
+                                <ul class="mb-0"></ul>
 
                             </div>
 
@@ -795,13 +792,9 @@
                                         Existem acessórios associados ao equipamento?
                                     </label>
 
-                                    <select class="form-select" id="temAcessorios">
+                                    <select class="form-select" id="temAcessoriosEditar">
 
-                                        <option selected disabled>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim">
+                                        <option value="sim" selected>
                                             Sim
                                         </option>
 
@@ -821,13 +814,9 @@
                                         Existem consumíveis associados ao equipamento?
                                     </label>
 
-                                    <select class="form-select" id="temConsumiveis">
+                                    <select class="form-select" id="temConsumiveisEditar">
 
-                                        <option selected disabled>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim">
+                                        <option value="sim" selected>
                                             Sim
                                         </option>
 
@@ -841,9 +830,9 @@
 
                             </div>
 
-                            <!-- SECÇÃO ACESSÓRIOS -->
+                            <!-- ACESSÓRIOS -->
 
-                            <div id="secaoAcessorios" style="display:none;">
+                            <div id="secaoAcessoriosEditar">
 
                                 <hr class="my-4">
 
@@ -851,43 +840,90 @@
                                     Acessórios Associados
                                 </h5>
 
-                                <div id="listaAcessorios">
+                                <div id="listaAcessoriosEditar">
 
-                                    <div class="row g-4 acessorio-item">
+                                    <!-- Acessório existente -->
 
-                                        <div class="col-md-6">
+                                    <div class="border rounded-3 p-3 mb-3">
 
-                                            <label class="form-label fw-bold">
-                                                Nome do Acessório
-                                            </label>
+                                        <div class="row g-3">
 
-                                            <input type="text" class="form-control" placeholder="Ex: Sensor de Fluxo">
+                                            <div class="col-md-5">
 
-                                        </div>
+                                                <label class="form-label fw-bold">
+                                                    Nome do Acessório
+                                                </label>
 
-                                        <div class="col-md-3">
+                                                <input type="text" class="form-control" value="Sensor de Fluxo">
 
-                                            <label class="form-label fw-bold">
-                                                Quantidade
-                                            </label>
+                                            </div>
 
-                                            <input type="number" class="form-control" >
+                                            <div class="col-md-3">
 
-                                        </div>
+                                                <label class="form-label fw-bold">
+                                                    Quantidade
+                                                </label>
 
-                                        <div class="col-md-3">
+                                                <input type="number" class="form-control" value="2">
 
-                                            <label class="form-label fw-bold">
-                                                Estado
-                                            </label>
+                                            </div>
 
-                                            <select class="form-select">
+                                            <div class="col-md-3">
 
-                                                <option>Ativo</option>
-                                                <option>Inativo</option>
-                                                <option>Avariado</option>
+                                                <label class="form-label fw-bold">
 
-                                            </select>
+                                                    Estado
+
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm border-0 p-0 ms-1"
+                                                        data-bs-toggle="popover"
+                                                        data-bs-trigger="hover focus"
+                                                        data-bs-html="true"
+                                                        title="Estados dos Equipamentos"
+                                                        data-bs-content="
+            <b>Ativo</b> - Disponível e operacional.<br>
+            <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
+            <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
+            <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
+
+                                                        <i class="fa-solid fa-circle-question text-primary"></i>
+
+                                                    </button>
+
+                                                </label>
+
+                                                <select class="form-select">
+
+                                                    <option selected>
+                                                        Ativo
+                                                    </option>
+
+                                                    <option>
+                                                        Inativo
+                                                    </option>
+
+                                                    <option>
+                                                        Em manutenção
+                                                    </option>
+
+                                                    <option>
+                                                        Em calibração
+                                                    </option>
+
+                                                </select>
+
+                                            </div>
+
+                                            <div class="col-md-1 d-flex align-items-end">
+
+                                                <button type="button" class="btn btn-outline-danger">
+
+                                                    <i class="fa-solid fa-trash"></i>
+
+                                                </button>
+
+                                            </div>
 
                                         </div>
 
@@ -895,22 +931,19 @@
 
                                 </div>
 
-                                <div class="mt-3">
+                                <button type="button" class="btn btn-outline-primary"
+                                    id="btnAdicionarAcessorioEditar">
 
-                                    <button type="button" id="btnAdicionarAcessorio" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    Adicionar Acessório
 
-                                        <i class="fa-solid fa-plus me-2"></i>
-                                        Adicionar Acessório
-
-                                    </button>
-
-                                </div>
+                                </button>
 
                             </div>
 
-                            <!-- SECÇÃO CONSUMÍVEIS -->
+                            <!-- CONSUMÍVEIS -->
 
-                            <div id="secaoConsumiveis" style="display:none;">
+                            <div id="secaoConsumiveisEditar">
 
                                 <hr class="my-4">
 
@@ -918,27 +951,43 @@
                                     Consumíveis Associados
                                 </h5>
 
-                                <div id="listaConsumiveis">
+                                <div id="listaConsumiveisEditar">
 
-                                    <div class="row g-4 consumivel-item">
+                                    <!-- Consumível existente -->
 
-                                        <div class="col-md-8">
+                                    <div class="border rounded-3 p-3 mb-3">
 
-                                            <label class="form-label fw-bold">
-                                                Nome do Consumível
-                                            </label>
+                                        <div class="row g-3">
 
-                                            <input type="text" class="form-control" placeholder="Ex: Filtro Bacteriano">
+                                            <div class="col-md-5">
 
-                                        </div>
+                                                <label class="form-label fw-bold">
+                                                    Nome do Consumível
+                                                </label>
 
-                                        <div class="col-md-4">
+                                                <input type="text" class="form-control" value="Filtro Bacteriano">
 
-                                            <label class="form-label fw-bold">
-                                                Quantidade
-                                            </label>
+                                            </div>
 
-                                            <input type="number" class="form-control">
+                                            <div class="col-md-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Quantidade
+                                                </label>
+
+                                                <input type="number" class="form-control" value="10">
+
+                                            </div>
+
+                                            <div class="col-md-1 d-flex align-items-end">
+
+                                                <button type="button" class="btn btn-outline-danger">
+
+                                                    <i class="fa-solid fa-trash"></i>
+
+                                                </button>
+
+                                            </div>
 
                                         </div>
 
@@ -946,14 +995,91 @@
 
                                 </div>
 
-                                <div class="mt-3">
+                                <button type="button" class="btn btn-outline-primary"
+                                    id="btnAdicionarConsumivelEditar">
 
-                                    <button type="button" id="btnAdicionarConsumivel" class="btn btn-outline-primary">
+                                    <i class="fa-solid fa-plus me-2"></i>
+                                    Adicionar Consumível
 
-                                        <i class="fa-solid fa-plus me-2"></i>
-                                        Adicionar Consumível
+                                </button>
 
-                                    </button>
+                            </div>
+
+                        </div>
+
+
+                        <!-- LOCALIZAÇÃO -->
+                        <div class="tab-pane fade" id="localizacao">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-semibold">
+                                        Localização Associada
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option selected>
+                                            UCI - Piso 2 - Sala UCI02
+                                        </option>
+
+                                        <option>
+                                            Urgência - Piso 1
+                                        </option>
+
+                                        <option>
+                                            Bloco Operatório
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="card border bg-light">
+
+                                        <div class="card-body">
+
+                                            <h6 class="fw-bold">
+                                                Resumo da Localização
+                                            </h6>
+
+                                            <p class="mb-1">
+                                                Hospital São João
+                                            </p>
+
+                                            <p class="mb-1">
+                                                Unidade de Cuidados Intensivos
+                                            </p>
+
+                                            <p class="mb-0">
+                                                Piso 2 • Sala UCI02
+                                            </p>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
@@ -961,9 +1087,8 @@
 
                         </div>
 
-                        <!-- Localização -->
-                        <div class="tab-pane fade" id="localizacaoNovo">
-
+                        <!-- FORNECEDOR -->
+                        <div class="tab-pane fade" id="fornecedor">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -983,82 +1108,66 @@
                                 </ul>
 
                             </div>
+                            <div class="row g-4">
 
-                            <label class="form-label fw-bold">
-                                Localização Associada
-                            </label>
+                                <div class="col-md-6">
 
-                            <select class="form-select">
+                                    <label class="form-label fw-semibold">
+                                        Fornecedor Associado
+                                    </label>
 
-                                <option selected disabled>
-                                    Selecionar localização
-                                </option>
+                                    <select class="form-select">
 
-                                <option>
-                                    UCI - Piso 2 - Sala UCI02
-                                </option>
+                                        <option selected>
+                                            MedEquip Portugal
+                                        </option>
 
-                                <option>
-                                    Urgência - Piso 1
-                                </option>
+                                        <option>
+                                            SaúdeTec Lda.
+                                        </option>
 
-                                <option>
-                                    Bloco Operatório
-                                </option>
+                                        <option>
+                                            HospitalCare Solutions
+                                        </option>
 
-                            </select>
+                                    </select>
 
-                        </div>
-                        <!-- Fornecedor -->
-                        <div class="tab-pane fade" id="fornecedorNovo">
-                            <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                                </div>
 
-                                <h6 class="alert-heading mb-2">
+                                <div class="col-md-6">
 
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
+                                    <div class="card border bg-light">
 
-                                </h6>
+                                        <div class="card-body">
 
-                                <ul class="mb-0">
+                                            <h6 class="fw-bold">
+                                                Dados do Fornecedor
+                                            </h6>
 
-                                    <li>Código interno é obrigatório.</li>
+                                            <p class="mb-1">
+                                                MedEquip Portugal
+                                            </p>
 
-                                    <li>Categoria é obrigatória.</li>
+                                            <p class="mb-1">
+                                                geral@medequip.pt
+                                            </p>
 
-                                </ul>
+                                            <p class="mb-0">
+                                                +351 220 000 000
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                             </div>
-
-                            <label class="form-label fw-bold">
-                                Fornecedor Associado
-                            </label>
-
-                            <select class="form-select">
-
-                                <option selected disabled>
-                                    Selecionar fornecedor
-                                </option>
-
-                                <option>
-                                    MedEquip Portugal
-                                </option>
-
-                                <option>
-                                    SaúdeTec Lda.
-                                </option>
-
-                                <option>
-                                    HospitalCare Solutions
-                                </option>
-
-                            </select>
 
                         </div>
 
-                        <!-- Garantias e Contratos -->
-                        <div class="tab-pane fade" id="garantiasNovo">
+                        <!-- GARANTIAS -->
+                        <div class="tab-pane fade" id="garantias">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -1078,24 +1187,18 @@
                                 </ul>
 
                             </div>
-
-                            <!-- GARANTIA -->
 
                             <div class="row g-4">
 
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-semibold">
                                         Garantia Associada
                                     </label>
 
-                                    <select class="form-select" id="temGarantia">
+                                    <select class="form-select" id="temGarantiaEditar">
 
-                                        <option selected disabled>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim">
+                                        <option value="sim" selected>
                                             Sim
                                         </option>
 
@@ -1111,23 +1214,17 @@
 
                             <hr class="my-4">
 
-                            <!-- CONTRATO -->
-
                             <div class="row g-4">
 
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-semibold">
                                         Contrato de Manutenção Associado
                                     </label>
 
-                                    <select class="form-select" id="temContrato">
+                                    <select class="form-select" id="temContratoEditar">
 
-                                        <option selected disabled>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim">
+                                        <option value="sim" selected>
                                             Sim
                                         </option>
 
@@ -1141,15 +1238,13 @@
 
                             </div>
 
-                            <!-- SECÇÃO CONTRATO -->
-
-                            <div id="secaoContrato" style="display:none;">
+                            <div id="secaoContratoEditar">
 
                                 <div class="row g-4 mt-2">
 
                                     <div class="col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-semibold">
                                             Tipo de Contrato
                                         </label>
 
@@ -1163,7 +1258,7 @@
                                                 Manutenção Corretiva
                                             </option>
 
-                                            <option>
+                                            <option selected>
                                                 Manutenção Preventiva e Corretiva
                                             </option>
 
@@ -1173,17 +1268,17 @@
 
                                     <div class="col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-semibold">
                                             Entidade Responsável
                                         </label>
 
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" value="Philips Healthcare">
 
                                     </div>
 
                                     <div class="col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-semibold">
                                             Periodicidade
                                         </label>
 
@@ -1197,7 +1292,7 @@
                                                 Trimestral
                                             </option>
 
-                                            <option>
+                                            <option selected>
                                                 Semestral
                                             </option>
 
@@ -1235,7 +1330,7 @@
                                             data-bs-toggle="modal" data-bs-target="#modalGarantia">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -1257,7 +1352,7 @@
                                             data-bs-toggle="modal" data-bs-target="#modalContratoManutencao">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -1279,7 +1374,7 @@
                                             data-bs-toggle="modal" data-bs-target="#modalCertificadoCalibracao">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -1301,7 +1396,7 @@
                                             data-bs-toggle="modal" data-bs-target="#modalRelatorioCalibracao">
 
                                             <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
+                                            Editar Documento
 
                                         </button>
 
@@ -1325,7 +1420,8 @@
                                                 Certificado de Garantia
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -1349,7 +1445,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="certificado_garantia_data">
+                                                    name="certificado_garantia_data" value="2024-03-12">
 
                                             </div>
 
@@ -1360,7 +1456,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="certificado_garantia_validade">
+                                                    name="certificado_garantia_validade" value="2024-03-12">
 
                                             </div>
 
@@ -1386,7 +1482,8 @@
                                                 Contrato de Manutenção
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -1409,7 +1506,8 @@
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control" name="contrato_manutencao_data">
+                                                <input type="date" class="form-control"
+                                                    name="contrato_manutencao_data" value="2024-03-12">
 
                                             </div>
 
@@ -1420,7 +1518,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="contrato_manutencao_validade">
+                                                    name="contrato_manutencao_validade" value="2024-03-12">
 
                                             </div>
 
@@ -1446,7 +1544,8 @@
                                                 Certificado de Calibração
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -1458,8 +1557,8 @@
                                                     Ficheiro PDF
                                                 </label>
 
-                                                <input type="file" class="form-control" name="certificado_calibracao"
-                                                    accept="application/pdf">
+                                                <input type="file" class="form-control"
+                                                    name="certificado_calibracao" accept="application/pdf">
 
                                             </div>
 
@@ -1470,7 +1569,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="certificado_calibracao_data">
+                                                    name="certificado_calibracao_data" value="2024-03-12">
 
                                             </div>
 
@@ -1481,7 +1580,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="certificado_calibracao_validade">
+                                                    name="certificado_calibracao_validade" value="2024-03-12">
 
                                             </div>
 
@@ -1507,7 +1606,8 @@
                                                 Relatório de Calibração
                                             </h5>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
 
                                         </div>
 
@@ -1531,7 +1631,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_data">
+                                                    name="relatorio_calibracao_data" value="2024-03-12">
 
                                             </div>
 
@@ -1542,7 +1642,7 @@
                                                 </label>
 
                                                 <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_validade">
+                                                    name="relatorio_calibracao_validade" value="2024-03-12">
 
                                             </div>
 
@@ -1554,11 +1654,12 @@
 
                             </div>
 
+
+
                         </div>
 
                         <!-- DOCUMENTAÇÃO -->
-                        <div class="tab-pane fade" id="documentacaoNovo">
-
+                        <div class="tab-pane fade" id="documentacao">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -1578,12 +1679,11 @@
                                 </ul>
 
                             </div>
-
                             <h5 class="fw-bold mb-3">
                                 Resumo da Documentação Associada
                             </h5>
 
-                            <div class="accordion" id="accordionResumoDocumentacao">
+                            <div class="accordion" id="accordionResumoDocumentacaoEditar">
 
                                 <!-- DOCUMENTAÇÃO TÉCNICA -->
 
@@ -1592,7 +1692,7 @@
                                     <h2 class="accordion-header">
 
                                         <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnica">
+                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnicaEditar">
 
                                             Documentação Técnica
 
@@ -1600,7 +1700,7 @@
 
                                     </h2>
 
-                                    <div id="collapseResumoTecnica" class="accordion-collapse collapse">
+                                    <div id="collapseResumoTecnicaEditar" class="accordion-collapse collapse">
 
                                         <div class="accordion-body">
 
@@ -1624,7 +1724,8 @@
                                     <h2 class="accordion-header">
 
                                         <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoAquisicao">
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapseResumoAquisicaoEditar">
 
                                             Documentação de Aquisição
 
@@ -1632,7 +1733,7 @@
 
                                     </h2>
 
-                                    <div id="collapseResumoAquisicao" class="accordion-collapse collapse">
+                                    <div id="collapseResumoAquisicaoEditar" class="accordion-collapse collapse">
 
                                         <div class="accordion-body">
 
@@ -1651,12 +1752,13 @@
 
                                 <!-- GARANTIAS -->
 
-                                <div class="accordion-item border rounded-3">
+                                <div class="accordion-item border rounded-3 mb-3">
 
                                     <h2 class="accordion-header">
 
                                         <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoGarantias">
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapseResumoGarantiasEditar">
 
                                             Garantias e Contratos
 
@@ -1664,7 +1766,7 @@
 
                                     </h2>
 
-                                    <div id="collapseResumoGarantias" class="accordion-collapse collapse">
+                                    <div id="collapseResumoGarantiasEditar" class="accordion-collapse collapse">
 
                                         <div class="accordion-body">
 
@@ -1695,13 +1797,9 @@
                                         Documentação Adicional Associada
                                     </label>
 
-                                    <select class="form-select" id="temDocumentacaoAdicional">
+                                    <select class="form-select" id="temDocumentacaoAdicionalEditar">
 
-                                        <option selected disabled>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim">
+                                        <option value="sim" selected>
                                             Sim
                                         </option>
 
@@ -1715,13 +1813,13 @@
 
                             </div>
 
-                            <div id="secaoDocumentacaoAdicional" style="display:none;">
+                            <div id="secaoDocumentacaoAdicionalEditar">
 
                                 <hr class="my-4">
 
-                                <div id="listaDocumentacaoAdicional">
+                                <div id="listaDocumentacaoAdicionalEditar">
 
-                                    <!-- DOCUMENTO 1 -->
+                                    <!-- DOCUMENTO EXISTENTE -->
 
                                     <div class="border rounded-3 p-3 documento-adicional-item">
 
@@ -1737,41 +1835,51 @@
                                                     Nome do Documento
                                                 </label>
 
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_adicional[]">
+                                                <input type="text" class="form-control" value="Certificado CE">
 
                                             </div>
 
                                             <div class="col-md-6">
 
                                                 <label class="form-label">
-                                                    Ficheiro PDF
+                                                    PDF Atual
                                                 </label>
 
-                                                <input type="file" class="form-control"
-                                                    name="ficheiro_documento_adicional[]" accept="application/pdf">
+                                                <div class="border rounded p-2 bg-light">
+
+                                                    CertificadoCE.pdf
+
+                                                </div>
 
                                             </div>
 
                                             <div class="col-md-6">
+
+                                                <label class="form-label">
+                                                    Substituir PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="col-md-3">
 
                                                 <label class="form-label">
                                                     Data do Documento
                                                 </label>
 
-                                                <input type="date" class="form-control"
-                                                    name="data_documento_adicional[]">
+                                                <input type="date" class="form-control" value="2025-03-15">
 
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-3">
 
                                                 <label class="form-label">
                                                     Data de Validade
                                                 </label>
 
-                                                <input type="date" class="form-control"
-                                                    name="validade_documento_adicional[]">
+                                                <input type="date" class="form-control" value="2030-03-15">
 
                                             </div>
 
@@ -1782,7 +1890,7 @@
                                 </div>
 
                                 <button type="button" class="btn btn-outline-primary mt-3"
-                                    id="btnAdicionarDocumentoAdicional">
+                                    id="btnAdicionarDocumentoAdicionalEditar">
 
                                     <i class="fa-solid fa-plus me-2"></i>
                                     Adicionar Documento
@@ -1790,9 +1898,11 @@
                                 </button>
 
                             </div>
+
                         </div>
 
-                        <div class="tab-pane fade" id="observacoesNovo">
+                        <!-- OBSERVAÇÕES -->
+                        <div class="tab-pane fade" id="observacoes">
                             <!-- ALERTAS -->
                             <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
@@ -1813,42 +1923,45 @@
 
                             </div>
 
-                            <label class="form-label fw-bold">
+                            <label class="form-label fw-semibold">
                                 Observações
                             </label>
 
-                            <textarea class="form-control" rows="6"></textarea>
-
-                        </div>
-
-
-                        <div class="d-flex justify-content-end gap-3 mt-4">
-
-                            <a href="equipamentos.html" class="btn btn-outline-secondary">
-                                Cancelar
-                            </a>
-
-                            <button type="submit" class="btn btn-primary-custom">
-
-                                <i class="fa-solid fa-floppy-disk me-2"></i>
-                                Guardar Equipamento
-
-                            </button>
+                            <textarea class="form-control"
+                                rows="6">Equipamento em funcionamento regular. Deve ser dada prioridade à manutenção preventiva devido à sua criticidade.</textarea>
 
                         </div>
 
                     </div>
+
                 </div>
 
             </div>
-        </main>
-    </div>
 
-</body>
-<!-- JavaScript -->
-<script src="../../../assets/js/1241375.js"></script>
-<script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
 
-</body>
+            <!-- BOTÕES -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
 
-</html>
+                <a href="ficha_equipamento.php" class="btn btn-outline-secondary">
+
+                    Cancelar
+
+                </a>
+
+                <button type="submit" class="btn btn-primary-custom">
+
+                    <i class="fa-solid fa-floppy-disk me-2"></i>
+
+                    Guardar Alterações
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+<?php include '../../includes/footer.php'; ?>

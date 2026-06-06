@@ -1,128 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha do Fornecedor | TechMed Solutions</title>
-
-    <link rel="shortcut icon" href="../../../assets/images/imagem_logo1-semfundo.png" type="image/png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,700;1,400&display=swap"
-        rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
-    <link href="../../../assets/bootstrap/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
-
-    <link rel="stylesheet" href="../../../assets/css/1241375.css">
-</head>
-
-<body class="private-body">
+<?php include '../../includes/header.php'; 
+$paginaAtiva = 'fornecedores';
+?>
 
     <div class="private-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar d-flex flex-column p-3">
-
-            <div class="sidebar-logo text-center mb-4">
-                <img src="../../../assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
-                    class="img-fluid">
-            </div>
-            <!-- UTILIZADOR -->
-
-            <div class="dropdown utilizador-sidebar mx-3 mb-4">
-
-                <button class="btn w-100 border-0 rounded-3 text-start dropdown-toggle utilizador-btn"
-                    data-bs-toggle="dropdown">
-
-                    <div class="d-flex align-items-center">
-
-                        <div class="avatar-utilizador">
-
-                            <i class="fa-solid fa-user"></i>
-
-                        </div>
-
-                        <div class="ms-2">
-
-                            <div class="nome-utilizador">
-                                Maria Silva
-                            </div>
-
-                            <div class="cargo-utilizador">
-                                Administrador
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </button>
-
-                <ul class="dropdown-menu w-100">
-
-                    <li>
-                        <h6 class="dropdown-header">
-                            maria.silva@techmed.pt
-                        </h6>
-                    </li>
-
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="#">
-
-                            <i class="fa-solid fa-key me-2"></i>
-                            Alterar Palavra-passe
-
-                        </a>
-                    </li>
-
-                </ul>
-
-            </div>
-
-
-            <nav class="sidebar-menu nav nav-pills flex-column gap-2">
-                <a href="../dashboard/dashboard.html" class="nav-link">
-                    <i class="fa-solid fa-chart-line"></i>
-                    Dashboard
-                </a>
-
-                <a href="../equipamentos/equipamentos.html" class="nav-link">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    Equipamentos
-                </a>
-
-                <a href="../localizacao/localizacao.html" class="nav-link">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Localizações
-                </a>
-
-                <a href="fornecedores.html" class="nav-link active">
-                    <i class="fa-solid fa-truck-medical"></i>
-                    Fornecedores
-                </a>
-
-                <a href="../gestao_conteudos/gestao_conteudos.html" class="nav-link">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    Gestão de Conteúdos
-                </a>
-            </nav>
-
-            <div class="sidebar-footer mt-auto">
-                <a href="../../../public/index.html" class="nav-link">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    Sair
-                </a>
-            </div>
-
-        </aside>
+       <?php include '../../includes/sidebar.php'; ?> 
 
         <!-- Conteudo Principal -->
         <main class="private-main">
@@ -141,11 +22,11 @@
                 </div>
 
                 <div class="d-flex gap-2">
-                    <a href="fornecedores.html" class="btn btn-outline-secondary">
+                    <a href="fornecedores.php" class="btn btn-outline-secondary">
                         <i class="fa-solid fa-arrow-left me-2"></i>
                         Voltar
                     </a>
-                    <a href="editar_fornecedor.html" class="btn btn-primary-custom">
+                    <a href="editar_fornecedor.php" class="btn btn-primary-custom">
                         <i class="fa-solid fa-pen-to-square me-2"></i>
                         Editar Dados
                     </a>
@@ -218,7 +99,7 @@
                                                     de Vida</span>
                                             </td>
                                             <td>
-                                                <a href="../equipamentos/ficha_equipamento.html"
+                                                <a href="../equipamentos/ficha_equipamento.php"
                                                     class="btn btn-sm btn-outline-primary py-1">
                                                     <i class="fa-solid fa-eye"></i> Ver Ficha
                                                 </a>
@@ -233,7 +114,7 @@
                                                     class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill text-dark">Média</span>
                                             </td>
                                             <td>
-                                                <a href="../equipamentos/ficha_equipamento.html"
+                                                <a href="../equipamentos/ficha_equipamento.php"
                                                     class="btn btn-sm btn-outline-primary py-1">
                                                     <i class="fa-solid fa-eye"></i> Ver Ficha
                                                 </a>
@@ -309,9 +190,4 @@
 
         </main>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="../../../assets/js/1241375.js"></script>
-</body>
-
-</html>
+    <?php include '../../includes/footer.php'; ?> 
