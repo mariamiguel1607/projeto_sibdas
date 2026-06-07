@@ -909,6 +909,7 @@ section {
 
     margin-left: 260px;
 }
+
 /* ==========================================
    UTILIZADOR SIDEBAR
 ========================================== */
@@ -917,7 +918,9 @@ section {
 
     background: rgba(255, 255, 255, 0.08);
     padding: 12px;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .utilizador-btn:hover {

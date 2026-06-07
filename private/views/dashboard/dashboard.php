@@ -1,5 +1,11 @@
-<?php include '../../includes/header.php'; 
+
+<?php
+require_once '../../includes/funcoes.php';
+redirect_if_not_logged();
+start_session();
+
 $paginaAtiva = 'dashboard';
+include '../../includes/header.php';
 ?>
 
 <div class="private-layout">

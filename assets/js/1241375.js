@@ -1293,49 +1293,6 @@ function guardarAlteracoesRodape() {
 }
 
 // =======================================================
-// VALIDAÇÃO DO LOGIN - SIMULAÇÃO FRONTEND
-// Esta parte valida o formulário de login antes de entrar
-// na área reservada. Mais tarde será substituída por PHP.
-// =======================================================
-
-function iniciarValidacaoLogin() {
-    const loginForm = document.getElementById("loginForm");
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const loginErro = document.getElementById("loginErro");
-
-    // Se estes elementos não existirem, significa que não estamos na página de login
-    if (!loginForm || !email || !password || !loginErro) return;
-
-    loginForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const nomeUtilizador = email.value.trim();
-        const palavraPasse = password.value.trim();
-
-        const temLetra = /[A-Za-zÀ-ÿ]/.test(palavraPasse);
-        const temNumero = /[0-9]/.test(palavraPasse);
-        const temCaracterEspecial = /[^A-Za-zÀ-ÿ0-9]/.test(palavraPasse);
-
-        if (nomeUtilizador === "" || palavraPasse === "") {
-            loginErro.textContent = "Preencha o nome de utilizador e a palavra-passe.";
-            loginErro.classList.remove("d-none");
-            return;
-        }
-
-        if (!temLetra || !temNumero || !temCaracterEspecial) {
-            loginErro.textContent = "A palavra-passe deve conter letras, números e caracteres especiais.";
-            loginErro.classList.remove("d-none");
-            return;
-        }
-
-        loginErro.classList.add("d-none");
-
-        // Redireciona para a dashboard
-        window.location.href = "../../private/views/dashboard/dashboard.html";
-    });
-}
-// =======================================================
 // FILTROS DA TABELA DE EQUIPAMENTOS - ÁREA PRIVADA
 // Esta parte só funciona na página equipamentos.html
 // =======================================================
