@@ -131,7 +131,7 @@ if (!empty($_SESSION['server_error'])) {
 
         <!-- Voltar à página pública -->
         <div class="text-center mt-4">
-            <a href="../../public/index.html" class="back-public-link">
+            <a href="../../public/index.php" class="back-public-link">
                 <i class="fa-solid fa-arrow-left me-2"></i>
                 Voltar à página pública
             </a>

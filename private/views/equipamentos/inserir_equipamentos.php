@@ -1,4 +1,13 @@
-<<?php include '../../includes/header.php';
+<?php
+// --------------------------------------------------------------------
+// SEGURANÇA: Proteção de acesso à página de edição
+// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
+// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
+// --------------------------------------------------------------------
+require_once __DIR__ . '/../../includes/funcoes.php';
+redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+?>
+<?php include '../../includes/header.php';
     $paginaAtiva = 'equipamentos';
     ?>
 
@@ -23,779 +32,1098 @@
             </a>
         </div>
 
-        <!-- TABS -->
-        <div class="card border-0 shadow-sm rounded-4">
+        <form action="inserir_equipamento.php" method="post" novalidate enctype="multipart/form-data">
+            <!-- TABS -->
+            <div class="card border-0 shadow-sm rounded-4">
 
-            <div class="card-body p-4">
+                <div class="card-body p-4">
 
-                <ul class="nav nav-pills conteudos-tabs mb-4">
+                    <ul class="nav nav-pills conteudos-tabs mb-4">
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link active" data-bs-toggle="pill"
-                            data-bs-target="#dadosGeraisNovo">
-                            Dados Gerais
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link active" data-bs-toggle="pill"
+                                data-bs-target="#dadosGeraisNovo">
+                                Dados Gerais
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#aquisicaoNovo">
-                            Aquisição
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#aquisicaoNovo">
+                                Aquisição
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#acessoriosNovo">
-                            Acessórios e Consumíveis
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#acessoriosNovo">
+                                Acessórios e Consumíveis
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#localizacaoNovo">
-                            Localização
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#localizacaoNovo">
+                                Localização
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#fornecedorNovo">
-                            Fornecedor Associado
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#fornecedorNovo">
+                                Fornecedor Associado
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#garantiasNovo">
-                            Garantias e Contratos
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#garantiasNovo">
+                                Garantias e Contratos
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#documentacaoNovo">
-                            Documentação
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#documentacaoNovo">
+                                Documentação
+                            </button>
+                        </li>
 
-                    <li class="nav-item">
-                        <button type="button" class="nav-link" data-bs-toggle="pill"
-                            data-bs-target="#observacoesNovo">
-                            Observações
-                        </button>
-                    </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#observacoesNovo">
+                                Observações
+                            </button>
+                        </li>
 
-                </ul>
-                <!-- Dados Gerais -->
-                <div class="tab-content">
+                    </ul>
+                    <!-- Dados Gerais -->
+                    <div class="tab-content">
 
-                    <div class="tab-pane fade show active" id="dadosGeraisNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                        <div class="tab-pane fade show active" id="dadosGeraisNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
-                            <h6 class="alert-heading mb-2">
+                                <h6 class="alert-heading mb-2">
 
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
 
-                            </h6>
+                                </h6>
 
-                            <ul class="mb-0">
+                                <ul class="mb-0">
 
-                                <li>Código interno é obrigatório.</li>
+                                    <li>Código interno é obrigatório.</li>
 
-                                <li>Categoria é obrigatória.</li>
+                                    <li>Categoria é obrigatória.</li>
 
-                            </ul>
+                                </ul>
 
-                        </div>
-
-
-                        <div class="row g-4">
-
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold">Código Interno</label>
-                                <input type="text" class="form-control">
                             </div>
 
-                            <div class="col-md-8">
-                                <label class="form-label fw-bold">Designação</label>
-                                <input type="text" class="form-control">
-                            </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Categoria</label>
-                                <select class="form-select">
-                                    <option selected disabled>Selecionar categoria</option>
-                                    <option>Suporte de Vida</option>
-                                    <option>Monitorização</option>
-                                    <option>Diagnóstico</option>
-                                    <option>Terapia</option>
-                                </select>
-                            </div>
+                            <div class="row g-4">
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Fabricante</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">Código Interno</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Marca</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold">Designação</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Modelo</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Categoria</label>
+                                    <select class="form-select">
+                                        <option selected disabled>Selecionar categoria</option>
+                                        <option>Suporte de Vida</option>
+                                        <option>Monitorização</option>
+                                        <option>Diagnóstico</option>
+                                        <option>Terapia</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Número de Série</label>
-                                <input type="text" class="form-control">
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Fabricante</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Ano de Fabrico</label>
-                                <input type="number" class="form-control">
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Marca</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Criticidade</label>
-                                <select class="form-select">
-                                    <option>Baixa</option>
-                                    <option>Média</option>
-                                    <option>Alta</option>
-                                    <option>Crítica</option>
-                                </select>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Modelo</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
-                        </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Número de Série</label>
+                                    <input type="text" class="form-control">
+                                </div>
 
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Ano de Fabrico</label>
+                                    <input type="number" class="form-control">
+                                </div>
 
-                        <hr class="my-4">
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-
-                            <h5 class="fw-bold mb-0">
-                                Documentação Técnica
-                            </h5>
-
-                        </div>
-
-                        <div class="row g-3">
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Manual de Utilização
-                                    </h6>
-
-                                    <p class="text-muted small mb-3">
-                                        Documento técnico associado ao equipamento.
-                                    </p>
-
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#modalManualUtilizacao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Criticidade</label>
+                                    <select class="form-select">
+                                        <option>Baixa</option>
+                                        <option>Média</option>
+                                        <option>Alta</option>
+                                        <option>Crítica</option>
+                                    </select>
                                 </div>
 
                             </div>
 
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Manual Técnico
-                                    </h6>
-
-                                    <p class="text-muted small mb-3">
-                                        Manual técnico disponibilizado pelo fabricante.
-                                    </p>
-
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#modalManualTecnico">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- MODAL MANUAL DE UTILIZAÇÃO -->
-
-                        <div class="modal fade" id="modalManualUtilizacao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Manual de Utilização
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="manual_utilizacao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control" name="manual_utilizacao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="manual_utilizacao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- MODAL MANUAL TÉCNICO -->
-
-                        <div class="modal fade" id="modalManualTecnico" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Manual Técnico
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="manual_tecnico"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control" name="manual_tecnico_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control" name="manual_tecnico_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- AQUISIÇÃO -->
-                    <div class="tab-pane fade" id="aquisicaoNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <div class="row g-4">
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-bold">
-                                    Data de Aquisição
-                                </label>
-
-                                <input type="date" class="form-control">
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-bold">
-                                    Custo de Aquisição (€)
-                                </label>
-
-                                <input type="number" class="form-control" placeholder="0.00">
-
-                            </div>
-
-                            <div class="col-md-3">
-
-                                <label class="form-label fw-bold">
-                                    Tipo de Entrada
-                                </label>
-
-                                <select class="form-select">
-
-                                    <option selected disabled>
-                                        Selecionar tipo
-                                    </option>
-
-                                    <option>
-                                        Compra
-                                    </option>
-
-                                    <option>
-                                        Doação
-                                    </option>
-
-                                    <option>
-                                        Aluguer
-                                    </option>
-
-                                    <option>
-                                        Empréstimo
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">
-
-                                    Estado
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm border-0 p-0 ms-1"
-                                        data-bs-toggle="popover"
-                                        data-bs-trigger="hover focus"
-                                        data-bs-html="true"
-                                        title="Estados dos Equipamentos"
-                                        data-bs-content="
-            <b>Ativo</b> - Disponível e operacional.<br>
-            <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
-            <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
-            <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
-
-                                        <i class="fa-solid fa-circle-question text-primary"></i>
-
-                                        </button>
-                                </label>
-                                <select class="form-select">
-                                    <option>Ativo</option>
-                                    <option>Em manutenção</option>
-                                    <option>Inativo</option>
-                                    <option>Em calibração</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-
-                            <h5 class="fw-bold mb-0">
-                                Documentação de Aquisição
-                            </h5>
-
-                        </div>
-
-                        <div class="row g-3">
-
-                            <!-- FATURA DE AQUISIÇÃO -->
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Fatura de Aquisição
-                                    </h6>
-
-                                    <p class="text-muted small mb-3">
-                                        Documento comprovativo da aquisição.
-                                    </p>
-
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#modalFaturaAquisicao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <!-- CONTRATO DE AQUISIÇÃO -->
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Contrato de Aquisição
-                                    </h6>
-
-                                    <p class="text-muted small mb-3">
-                                        Contrato associado à compra ou aquisição do equipamento.
-                                    </p>
-
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                        data-bs-target="#modalContratoAquisicao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- MODAL FATURA DE AQUISIÇÃO -->
-
-                        <div class="modal fade" id="modalFaturaAquisicao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Fatura de Aquisição
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="fatura_aquisicao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control" name="fatura_aquisicao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="fatura_aquisicao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- MODAL CONTRATO DE AQUISIÇÃO -->
-
-                        <div class="modal fade" id="modalContratoAquisicao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Contrato de Aquisição
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="contrato_aquisicao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control" name="contrato_aquisicao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="contrato_aquisicao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                    <!-- ACESSÓRIOS E CONSUMÍVEIS -->
-                    <div class="tab-pane fade" id="acessoriosNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <div class="row g-4">
-
-                            <!-- EXISTEM ACESSÓRIOS -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Existem acessórios associados ao equipamento?
-                                </label>
-
-                                <select class="form-select" id="temAcessorios">
-
-                                    <option selected disabled>
-                                        Selecionar opção
-                                    </option>
-
-                                    <option value="sim">
-                                        Sim
-                                    </option>
-
-                                    <option value="nao">
-                                        Não
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <!-- EXISTEM CONSUMÍVEIS -->
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Existem consumíveis associados ao equipamento?
-                                </label>
-
-                                <select class="form-select" id="temConsumiveis">
-
-                                    <option selected disabled>
-                                        Selecionar opção
-                                    </option>
-
-                                    <option value="sim">
-                                        Sim
-                                    </option>
-
-                                    <option value="nao">
-                                        Não
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <!-- SECÇÃO ACESSÓRIOS -->
-
-                        <div id="secaoAcessorios" style="display:none;">
 
                             <hr class="my-4">
 
-                            <h5 class="fw-bold mb-3">
-                                Acessórios Associados
-                            </h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
 
-                            <div id="listaAcessorios">
+                                <h5 class="fw-bold mb-0">
+                                    Documentação Técnica
+                                </h5>
 
-                                <div class="row g-4 acessorio-item">
+                            </div>
 
-                                    <div class="col-md-6">
+                            <div class="row g-3">
 
-                                        <label class="form-label fw-bold">
-                                            Nome do Acessório
-                                        </label>
+                                <div class="col-md-6">
 
-                                        <input type="text" class="form-control" placeholder="Ex: Sensor de Fluxo">
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Manual de Utilização
+                                        </h6>
+
+                                        <p class="text-muted small mb-3">
+                                            Documento técnico associado ao equipamento.
+                                        </p>
+
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#modalManualUtilizacao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
 
                                     </div>
 
-                                    <div class="col-md-3">
+                                </div>
 
-                                        <label class="form-label fw-bold">
-                                            Quantidade
-                                        </label>
+                                <div class="col-md-6">
 
-                                        <input type="number" class="form-control">
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Manual Técnico
+                                        </h6>
+
+                                        <p class="text-muted small mb-3">
+                                            Manual técnico disponibilizado pelo fabricante.
+                                        </p>
+
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#modalManualTecnico">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
 
                                     </div>
 
-                                    <div class="col-md-3">
+                                </div>
 
-                                        <label class="form-label fw-bold">
-                                            Estado
-                                            <button
-                                                type="button"
-                                                class="btn btn-sm border-0 p-0 ms-1"
-                                                data-bs-toggle="popover"
-                                                data-bs-trigger="hover focus"
-                                                data-bs-html="true"
-                                                title="Estados dos Equipamentos"
-                                                data-bs-content="
+                            </div>
+
+
+                            <!-- MODAL MANUAL DE UTILIZAÇÃO -->
+
+                            <div class="modal fade" id="modalManualUtilizacao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Manual de Utilização
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="manual_utilizacao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control" name="manual_utilizacao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="manual_utilizacao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- MODAL MANUAL TÉCNICO -->
+
+                            <div class="modal fade" id="modalManualTecnico" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Manual Técnico
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="manual_tecnico"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control" name="manual_tecnico_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control" name="manual_tecnico_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- AQUISIÇÃO -->
+                        <div class="tab-pane fade" id="aquisicaoNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="row g-4">
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label fw-bold">
+                                        Data de Aquisição
+                                    </label>
+
+                                    <input type="date" class="form-control">
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label fw-bold">
+                                        Custo de Aquisição (€)
+                                    </label>
+
+                                    <input type="number" class="form-control" placeholder="0.00">
+
+                                </div>
+
+                                <div class="col-md-3">
+
+                                    <label class="form-label fw-bold">
+                                        Tipo de Entrada
+                                    </label>
+
+                                    <select class="form-select">
+
+                                        <option selected disabled>
+                                            Selecionar tipo
+                                        </option>
+
+                                        <option>
+                                            Compra
+                                        </option>
+
+                                        <option>
+                                            Doação
+                                        </option>
+
+                                        <option>
+                                            Aluguer
+                                        </option>
+
+                                        <option>
+                                            Empréstimo
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+
+                                        Estado
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm border-0 p-0 ms-1"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="hover focus"
+                                            data-bs-html="true"
+                                            title="Estados dos Equipamentos"
+                                            data-bs-content="
             <b>Ativo</b> - Disponível e operacional.<br>
             <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
             <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
             <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
 
-                                                <i class="fa-solid fa-circle-question text-primary"></i>
+                                            <i class="fa-solid fa-circle-question text-primary"></i>
 
-                                            </button>
+                                        </button>
+                                    </label>
+                                    <select class="form-select">
+                                        <option>Ativo</option>
+                                        <option>Em manutenção</option>
+                                        <option>Inativo</option>
+                                        <option>Em calibração</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                <h5 class="fw-bold mb-0">
+                                    Documentação de Aquisição
+                                </h5>
+
+                            </div>
+
+                            <div class="row g-3">
+
+                                <!-- FATURA DE AQUISIÇÃO -->
+
+                                <div class="col-md-6">
+
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Fatura de Aquisição
+                                        </h6>
+
+                                        <p class="text-muted small mb-3">
+                                            Documento comprovativo da aquisição.
+                                        </p>
+
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#modalFaturaAquisicao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- CONTRATO DE AQUISIÇÃO -->
+
+                                <div class="col-md-6">
+
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Contrato de Aquisição
+                                        </h6>
+
+                                        <p class="text-muted small mb-3">
+                                            Contrato associado à compra ou aquisição do equipamento.
+                                        </p>
+
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#modalContratoAquisicao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- MODAL FATURA DE AQUISIÇÃO -->
+
+                            <div class="modal fade" id="modalFaturaAquisicao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Fatura de Aquisição
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="fatura_aquisicao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control" name="fatura_aquisicao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="fatura_aquisicao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- MODAL CONTRATO DE AQUISIÇÃO -->
+
+                            <div class="modal fade" id="modalContratoAquisicao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Contrato de Aquisição
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="contrato_aquisicao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control" name="contrato_aquisicao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="contrato_aquisicao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+                        <!-- ACESSÓRIOS E CONSUMÍVEIS -->
+                        <div class="tab-pane fade" id="acessoriosNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="row g-4">
+
+                                <!-- EXISTEM ACESSÓRIOS -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-bold">
+                                        Existem acessórios associados ao equipamento?
+                                    </label>
+
+                                    <select class="form-select" id="temAcessorios">
+
+                                        <option selected disabled>
+                                            Selecionar opção
+                                        </option>
+
+                                        <option value="sim">
+                                            Sim
+                                        </option>
+
+                                        <option value="nao">
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <!-- EXISTEM CONSUMÍVEIS -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-bold">
+                                        Existem consumíveis associados ao equipamento?
+                                    </label>
+
+                                    <select class="form-select" id="temConsumiveis">
+
+                                        <option selected disabled>
+                                            Selecionar opção
+                                        </option>
+
+                                        <option value="sim">
+                                            Sim
+                                        </option>
+
+                                        <option value="nao">
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <!-- SECÇÃO ACESSÓRIOS -->
+
+                            <div id="secaoAcessorios" style="display:none;">
+
+                                <hr class="my-4">
+
+                                <h5 class="fw-bold mb-3">
+                                    Acessórios Associados
+                                </h5>
+
+                                <div id="listaAcessorios">
+
+                                    <div class="row g-4 acessorio-item">
+
+                                        <div class="col-md-6">
+
+                                            <label class="form-label fw-bold">
+                                                Nome do Acessório
+                                            </label>
+
+                                            <input type="text" class="form-control" placeholder="Ex: Sensor de Fluxo">
+
+                                        </div>
+
+                                        <div class="col-md-3">
+
+                                            <label class="form-label fw-bold">
+                                                Quantidade
+                                            </label>
+
+                                            <input type="number" class="form-control">
+
+                                        </div>
+
+                                        <div class="col-md-3">
+
+                                            <label class="form-label fw-bold">
+                                                Estado
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm border-0 p-0 ms-1"
+                                                    data-bs-toggle="popover"
+                                                    data-bs-trigger="hover focus"
+                                                    data-bs-html="true"
+                                                    title="Estados dos Equipamentos"
+                                                    data-bs-content="
+            <b>Ativo</b> - Disponível e operacional.<br>
+            <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
+            <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
+            <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
+
+                                                    <i class="fa-solid fa-circle-question text-primary"></i>
+
+                                                </button>
+                                            </label>
+
+                                            <select class="form-select">
+
+                                                <option>Ativo</option>
+                                                <option>Inativo</option>
+                                                <option>Avariado</option>
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mt-3">
+
+                                    <button type="button" id="btnAdicionarAcessorio" class="btn btn-outline-primary">
+
+                                        <i class="fa-solid fa-plus me-2"></i>
+                                        Adicionar Acessório
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- SECÇÃO CONSUMÍVEIS -->
+
+                            <div id="secaoConsumiveis" style="display:none;">
+
+                                <hr class="my-4">
+
+                                <h5 class="fw-bold mb-3">
+                                    Consumíveis Associados
+                                </h5>
+
+                                <div id="listaConsumiveis">
+
+                                    <div class="row g-4 consumivel-item">
+
+                                        <div class="col-md-8">
+
+                                            <label class="form-label fw-bold">
+                                                Nome do Consumível
+                                            </label>
+
+                                            <input type="text" class="form-control" placeholder="Ex: Filtro Bacteriano">
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <label class="form-label fw-bold">
+                                                Quantidade
+                                            </label>
+
+                                            <input type="number" class="form-control">
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mt-3">
+
+                                    <button type="button" id="btnAdicionarConsumivel" class="btn btn-outline-primary">
+
+                                        <i class="fa-solid fa-plus me-2"></i>
+                                        Adicionar Consumível
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Localização -->
+                        <div class="tab-pane fade" id="localizacaoNovo">
+
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <label class="form-label fw-bold">
+                                Localização Associada
+                            </label>
+
+                            <select class="form-select">
+
+                                <option selected disabled>
+                                    Selecionar localização
+                                </option>
+
+                                <option>
+                                    UCI - Piso 2 - Sala UCI02
+                                </option>
+
+                                <option>
+                                    Urgência - Piso 1
+                                </option>
+
+                                <option>
+                                    Bloco Operatório
+                                </option>
+
+                            </select>
+
+                        </div>
+                        <!-- Fornecedor -->
+                        <div class="tab-pane fade" id="fornecedorNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <label class="form-label fw-bold">
+                                Fornecedor Associado
+                            </label>
+
+                            <select class="form-select">
+
+                                <option selected disabled>
+                                    Selecionar fornecedor
+                                </option>
+
+                                <option>
+                                    MedEquip Portugal
+                                </option>
+
+                                <option>
+                                    SaúdeTec Lda.
+                                </option>
+
+                                <option>
+                                    HospitalCare Solutions
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Garantias e Contratos -->
+                        <div class="tab-pane fade" id="garantiasNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <!-- GARANTIA -->
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-bold">
+                                        Garantia Associada
+                                    </label>
+
+                                    <select class="form-select" id="temGarantia">
+
+                                        <option selected disabled>
+                                            Selecionar opção
+                                        </option>
+
+                                        <option value="sim">
+                                            Sim
+                                        </option>
+
+                                        <option value="nao">
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- CONTRATO -->
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-bold">
+                                        Contrato de Manutenção Associado
+                                    </label>
+
+                                    <select class="form-select" id="temContrato">
+
+                                        <option selected disabled>
+                                            Selecionar opção
+                                        </option>
+
+                                        <option value="sim">
+                                            Sim
+                                        </option>
+
+                                        <option value="nao">
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <!-- SECÇÃO CONTRATO -->
+
+                            <div id="secaoContrato" style="display:none;">
+
+                                <div class="row g-4 mt-2">
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-bold">
+                                            Tipo de Contrato
                                         </label>
 
                                         <select class="form-select">
 
-                                            <option>Ativo</option>
-                                            <option>Inativo</option>
-                                            <option>Avariado</option>
+                                            <option>
+                                                Manutenção Preventiva
+                                            </option>
+
+                                            <option>
+                                                Manutenção Corretiva
+                                            </option>
+
+                                            <option>
+                                                Manutenção Preventiva e Corretiva
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-bold">
+                                            Entidade Responsável
+                                        </label>
+
+                                        <input type="text" class="form-control">
+
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                        <label class="form-label fw-bold">
+                                            Periodicidade
+                                        </label>
+
+                                        <select class="form-select">
+
+                                            <option>
+                                                Mensal
+                                            </option>
+
+                                            <option>
+                                                Trimestral
+                                            </option>
+
+                                            <option>
+                                                Semestral
+                                            </option>
+
+                                            <option>
+                                                Anual
+                                            </option>
 
                                         </select>
 
@@ -805,50 +1133,97 @@
 
                             </div>
 
-                            <div class="mt-3">
-
-                                <button type="button" id="btnAdicionarAcessorio" class="btn btn-outline-primary">
-
-                                    <i class="fa-solid fa-plus me-2"></i>
-                                    Adicionar Acessório
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <!-- SECÇÃO CONSUMÍVEIS -->
-
-                        <div id="secaoConsumiveis" style="display:none;">
-
                             <hr class="my-4">
 
                             <h5 class="fw-bold mb-3">
-                                Consumíveis Associados
+                                Documentos Associados
                             </h5>
 
-                            <div id="listaConsumiveis">
+                            <div class="row g-3">
 
-                                <div class="row g-4 consumivel-item">
+                                <!-- CERTIFICADO DE GARANTIA -->
 
-                                    <div class="col-md-8">
+                                <div class="col-md-6" id="cardGarantia" style="display:none;">
 
-                                        <label class="form-label fw-bold">
-                                            Nome do Consumível
-                                        </label>
+                                    <div class="border rounded-3 p-3">
 
-                                        <input type="text" class="form-control" placeholder="Ex: Filtro Bacteriano">
+                                        <h6 class="fw-bold">
+                                            Certificado de Garantia
+                                        </h6>
+
+                                        <button type="button" class="btn btn-outline-primary mt-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalGarantia">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
 
                                     </div>
 
-                                    <div class="col-md-4">
+                                </div>
 
-                                        <label class="form-label fw-bold">
-                                            Quantidade
-                                        </label>
+                                <!-- CONTRATO DE MANUTENÇÃO -->
 
-                                        <input type="number" class="form-control">
+                                <div class="col-md-6" id="cardContrato" style="display:none;">
+
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Contrato de Manutenção
+                                        </h6>
+
+                                        <button type="button" class="btn btn-outline-primary mt-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalContratoManutencao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- CERTIFICADO DE CALIBRAÇÃO -->
+
+                                <div class="col-md-6">
+
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Certificado de Calibração
+                                        </h6>
+
+                                        <button type="button" class="btn btn-outline-primary mt-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalCertificadoCalibracao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- RELATÓRIO DE CALIBRAÇÃO -->
+
+                                <div class="col-md-6">
+
+                                    <div class="border rounded-3 p-3">
+
+                                        <h6 class="fw-bold">
+                                            Relatório de Calibração
+                                        </h6>
+
+                                        <button type="button" class="btn btn-outline-primary mt-2"
+                                            data-bs-toggle="modal" data-bs-target="#modalRelatorioCalibracao">
+
+                                            <i class="fa-solid fa-file-pdf me-2"></i>
+                                            Adicionar Documento
+
+                                        </button>
 
                                     </div>
 
@@ -856,901 +1231,537 @@
 
                             </div>
 
-                            <div class="mt-3">
+                            <!-- MODAL CERTIFICADO DE GARANTIA -->
 
-                                <button type="button" id="btnAdicionarConsumivel" class="btn btn-outline-primary">
+                            <div class="modal fade" id="modalGarantia" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Certificado de Garantia
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="certificado_garantia"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="certificado_garantia_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="certificado_garantia_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- MODAL CONTRATO DE MANUTENÇÃO -->
+
+                            <div class="modal fade" id="modalContratoManutencao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Contrato de Manutenção
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="contrato_manutencao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control" name="contrato_manutencao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="contrato_manutencao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- MODAL CERTIFICADO DE CALIBRAÇÃO -->
+
+                            <div class="modal fade" id="modalCertificadoCalibracao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Certificado de Calibração
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="certificado_calibracao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="certificado_calibracao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="certificado_calibracao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- MODAL RELATÓRIO DE CALIBRAÇÃO -->
+
+                            <div class="modal fade" id="modalRelatorioCalibracao" tabindex="-1">
+
+                                <div class="modal-dialog">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Relatório de Calibração
+                                            </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control" name="relatorio_calibracao"
+                                                    accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="relatorio_calibracao_data">
+
+                                            </div>
+
+                                            <div>
+
+                                                <label class="form-label fw-bold">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="relatorio_calibracao_validade">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DOCUMENTAÇÃO -->
+                        <div class="tab-pane fade" id="documentacaoNovo">
+
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <h5 class="fw-bold mb-3">
+                                Resumo da Documentação Associada
+                            </h5>
+
+                            <div class="accordion" id="accordionResumoDocumentacao">
+
+                                <!-- DOCUMENTAÇÃO TÉCNICA -->
+
+                                <div class="accordion-item border rounded-3 mb-3">
+
+                                    <h2 class="accordion-header">
+
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnica">
+
+                                            Documentação Técnica
+
+                                        </button>
+
+                                    </h2>
+
+                                    <div id="collapseResumoTecnica" class="accordion-collapse collapse">
+
+                                        <div class="accordion-body">
+
+                                            <ul class="mb-0">
+
+                                                <li>Manual de Utilização</li>
+                                                <li>Manual Técnico</li>
+
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- AQUISIÇÃO -->
+
+                                <div class="accordion-item border rounded-3 mb-3">
+
+                                    <h2 class="accordion-header">
+
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoAquisicao">
+
+                                            Documentação de Aquisição
+
+                                        </button>
+
+                                    </h2>
+
+                                    <div id="collapseResumoAquisicao" class="accordion-collapse collapse">
+
+                                        <div class="accordion-body">
+
+                                            <ul class="mb-0">
+
+                                                <li>Fatura de Aquisição</li>
+                                                <li>Contrato de Aquisição</li>
+
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- GARANTIAS -->
+
+                                <div class="accordion-item border rounded-3">
+
+                                    <h2 class="accordion-header">
+
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoGarantias">
+
+                                            Garantias e Contratos
+
+                                        </button>
+
+                                    </h2>
+
+                                    <div id="collapseResumoGarantias" class="accordion-collapse collapse">
+
+                                        <div class="accordion-body">
+
+                                            <ul class="mb-0">
+
+                                                <li>Certificado de Garantia</li>
+                                                <li>Contrato de Manutenção</li>
+                                                <li>Certificado de Calibração</li>
+                                                <li>Relatório de Calibração</li>
+
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label fw-bold">
+                                        Documentação Adicional Associada
+                                    </label>
+
+                                    <select class="form-select" id="temDocumentacaoAdicional">
+
+                                        <option selected disabled>
+                                            Selecionar opção
+                                        </option>
+
+                                        <option value="sim">
+                                            Sim
+                                        </option>
+
+                                        <option value="nao">
+                                            Não
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div id="secaoDocumentacaoAdicional" style="display:none;">
+
+                                <hr class="my-4">
+
+                                <div id="listaDocumentacaoAdicional">
+
+                                    <!-- DOCUMENTO 1 -->
+
+                                    <div class="border rounded-3 p-3 documento-adicional-item">
+
+                                        <h6 class="fw-bold">
+                                            Documento Adicional
+                                        </h6>
+
+                                        <div class="row g-3">
+
+                                            <div class="col-md-6">
+
+                                                <label class="form-label">
+                                                    Nome do Documento
+                                                </label>
+
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_adicional[]">
+
+                                            </div>
+
+                                            <div class="col-md-6">
+
+                                                <label class="form-label">
+                                                    Ficheiro PDF
+                                                </label>
+
+                                                <input type="file" class="form-control"
+                                                    name="ficheiro_documento_adicional[]" accept="application/pdf">
+
+                                            </div>
+
+                                            <div class="col-md-6">
+
+                                                <label class="form-label">
+                                                    Data do Documento
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="data_documento_adicional[]">
+
+                                            </div>
+
+                                            <div class="col-md-6">
+
+                                                <label class="form-label">
+                                                    Data de Validade
+                                                </label>
+
+                                                <input type="date" class="form-control"
+                                                    name="validade_documento_adicional[]">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <button type="button" class="btn btn-outline-primary mt-3"
+                                    id="btnAdicionarDocumentoAdicional">
 
                                     <i class="fa-solid fa-plus me-2"></i>
-                                    Adicionar Consumível
+                                    Adicionar Documento
 
                                 </button>
 
                             </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="observacoesNovo">
+                            <!-- ALERTAS -->
+                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+
+                                <h6 class="alert-heading mb-2">
+
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <li>Código interno é obrigatório.</li>
+
+                                    <li>Categoria é obrigatória.</li>
+
+                                </ul>
+
+                            </div>
+
+                            <label class="form-label fw-bold">
+                                Observações
+                            </label>
+
+                            <textarea class="form-control" rows="6"></textarea>
 
                         </div>
 
-                    </div>
 
-                    <!-- Localização -->
-                    <div class="tab-pane fade" id="localizacaoNovo">
+                        <div class="d-flex justify-content-end gap-3 mt-4">
 
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <a href="equipamentos.php" class="btn btn-outline-secondary">
+                                Cancelar
+                            </a>
 
-                            <h6 class="alert-heading mb-2">
+                            <button type="submit" class="btn btn-primary-custom">
 
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <label class="form-label fw-bold">
-                            Localização Associada
-                        </label>
-
-                        <select class="form-select">
-
-                            <option selected disabled>
-                                Selecionar localização
-                            </option>
-
-                            <option>
-                                UCI - Piso 2 - Sala UCI02
-                            </option>
-
-                            <option>
-                                Urgência - Piso 1
-                            </option>
-
-                            <option>
-                                Bloco Operatório
-                            </option>
-
-                        </select>
-
-                    </div>
-                    <!-- Fornecedor -->
-                    <div class="tab-pane fade" id="fornecedorNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <label class="form-label fw-bold">
-                            Fornecedor Associado
-                        </label>
-
-                        <select class="form-select">
-
-                            <option selected disabled>
-                                Selecionar fornecedor
-                            </option>
-
-                            <option>
-                                MedEquip Portugal
-                            </option>
-
-                            <option>
-                                SaúdeTec Lda.
-                            </option>
-
-                            <option>
-                                HospitalCare Solutions
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <!-- Garantias e Contratos -->
-                    <div class="tab-pane fade" id="garantiasNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <!-- GARANTIA -->
-
-                        <div class="row g-4">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Garantia Associada
-                                </label>
-
-                                <select class="form-select" id="temGarantia">
-
-                                    <option selected disabled>
-                                        Selecionar opção
-                                    </option>
-
-                                    <option value="sim">
-                                        Sim
-                                    </option>
-
-                                    <option value="nao">
-                                        Não
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <hr class="my-4">
-
-                        <!-- CONTRATO -->
-
-                        <div class="row g-4">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Contrato de Manutenção Associado
-                                </label>
-
-                                <select class="form-select" id="temContrato">
-
-                                    <option selected disabled>
-                                        Selecionar opção
-                                    </option>
-
-                                    <option value="sim">
-                                        Sim
-                                    </option>
-
-                                    <option value="nao">
-                                        Não
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <!-- SECÇÃO CONTRATO -->
-
-                        <div id="secaoContrato" style="display:none;">
-
-                            <div class="row g-4 mt-2">
-
-                                <div class="col-md-4">
-
-                                    <label class="form-label fw-bold">
-                                        Tipo de Contrato
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option>
-                                            Manutenção Preventiva
-                                        </option>
-
-                                        <option>
-                                            Manutenção Corretiva
-                                        </option>
-
-                                        <option>
-                                            Manutenção Preventiva e Corretiva
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                                <div class="col-md-4">
-
-                                    <label class="form-label fw-bold">
-                                        Entidade Responsável
-                                    </label>
-
-                                    <input type="text" class="form-control">
-
-                                </div>
-
-                                <div class="col-md-4">
-
-                                    <label class="form-label fw-bold">
-                                        Periodicidade
-                                    </label>
-
-                                    <select class="form-select">
-
-                                        <option>
-                                            Mensal
-                                        </option>
-
-                                        <option>
-                                            Trimestral
-                                        </option>
-
-                                        <option>
-                                            Semestral
-                                        </option>
-
-                                        <option>
-                                            Anual
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <hr class="my-4">
-
-                        <h5 class="fw-bold mb-3">
-                            Documentos Associados
-                        </h5>
-
-                        <div class="row g-3">
-
-                            <!-- CERTIFICADO DE GARANTIA -->
-
-                            <div class="col-md-6" id="cardGarantia" style="display:none;">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Certificado de Garantia
-                                    </h6>
-
-                                    <button type="button" class="btn btn-outline-primary mt-2"
-                                        data-bs-toggle="modal" data-bs-target="#modalGarantia">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <!-- CONTRATO DE MANUTENÇÃO -->
-
-                            <div class="col-md-6" id="cardContrato" style="display:none;">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Contrato de Manutenção
-                                    </h6>
-
-                                    <button type="button" class="btn btn-outline-primary mt-2"
-                                        data-bs-toggle="modal" data-bs-target="#modalContratoManutencao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <!-- CERTIFICADO DE CALIBRAÇÃO -->
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Certificado de Calibração
-                                    </h6>
-
-                                    <button type="button" class="btn btn-outline-primary mt-2"
-                                        data-bs-toggle="modal" data-bs-target="#modalCertificadoCalibracao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <!-- RELATÓRIO DE CALIBRAÇÃO -->
-
-                            <div class="col-md-6">
-
-                                <div class="border rounded-3 p-3">
-
-                                    <h6 class="fw-bold">
-                                        Relatório de Calibração
-                                    </h6>
-
-                                    <button type="button" class="btn btn-outline-primary mt-2"
-                                        data-bs-toggle="modal" data-bs-target="#modalRelatorioCalibracao">
-
-                                        <i class="fa-solid fa-file-pdf me-2"></i>
-                                        Adicionar Documento
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <!-- MODAL CERTIFICADO DE GARANTIA -->
-
-                        <div class="modal fade" id="modalGarantia" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Certificado de Garantia
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="certificado_garantia"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="certificado_garantia_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="certificado_garantia_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <!-- MODAL CONTRATO DE MANUTENÇÃO -->
-
-                        <div class="modal fade" id="modalContratoManutencao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Contrato de Manutenção
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="contrato_manutencao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control" name="contrato_manutencao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="contrato_manutencao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <!-- MODAL CERTIFICADO DE CALIBRAÇÃO -->
-
-                        <div class="modal fade" id="modalCertificadoCalibracao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Certificado de Calibração
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="certificado_calibracao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="certificado_calibracao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="certificado_calibracao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <!-- MODAL RELATÓRIO DE CALIBRAÇÃO -->
-
-                        <div class="modal fade" id="modalRelatorioCalibracao" tabindex="-1">
-
-                            <div class="modal-dialog">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5 class="modal-title">
-                                            Relatório de Calibração
-                                        </h5>
-
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control" name="relatorio_calibracao"
-                                                accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="mb-3">
-
-                                            <label class="form-label fw-bold">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="relatorio_calibracao_data">
-
-                                        </div>
-
-                                        <div>
-
-                                            <label class="form-label fw-bold">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="relatorio_calibracao_validade">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- DOCUMENTAÇÃO -->
-                    <div class="tab-pane fade" id="documentacaoNovo">
-
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <h5 class="fw-bold mb-3">
-                            Resumo da Documentação Associada
-                        </h5>
-
-                        <div class="accordion" id="accordionResumoDocumentacao">
-
-                            <!-- DOCUMENTAÇÃO TÉCNICA -->
-
-                            <div class="accordion-item border rounded-3 mb-3">
-
-                                <h2 class="accordion-header">
-
-                                    <button class="accordion-button collapsed" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnica">
-
-                                        Documentação Técnica
-
-                                    </button>
-
-                                </h2>
-
-                                <div id="collapseResumoTecnica" class="accordion-collapse collapse">
-
-                                    <div class="accordion-body">
-
-                                        <ul class="mb-0">
-
-                                            <li>Manual de Utilização</li>
-                                            <li>Manual Técnico</li>
-
-                                        </ul>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <!-- AQUISIÇÃO -->
-
-                            <div class="accordion-item border rounded-3 mb-3">
-
-                                <h2 class="accordion-header">
-
-                                    <button class="accordion-button collapsed" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseResumoAquisicao">
-
-                                        Documentação de Aquisição
-
-                                    </button>
-
-                                </h2>
-
-                                <div id="collapseResumoAquisicao" class="accordion-collapse collapse">
-
-                                    <div class="accordion-body">
-
-                                        <ul class="mb-0">
-
-                                            <li>Fatura de Aquisição</li>
-                                            <li>Contrato de Aquisição</li>
-
-                                        </ul>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <!-- GARANTIAS -->
-
-                            <div class="accordion-item border rounded-3">
-
-                                <h2 class="accordion-header">
-
-                                    <button class="accordion-button collapsed" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapseResumoGarantias">
-
-                                        Garantias e Contratos
-
-                                    </button>
-
-                                </h2>
-
-                                <div id="collapseResumoGarantias" class="accordion-collapse collapse">
-
-                                    <div class="accordion-body">
-
-                                        <ul class="mb-0">
-
-                                            <li>Certificado de Garantia</li>
-                                            <li>Contrato de Manutenção</li>
-                                            <li>Certificado de Calibração</li>
-                                            <li>Relatório de Calibração</li>
-
-                                        </ul>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="row g-4">
-
-                            <div class="col-md-6">
-
-                                <label class="form-label fw-bold">
-                                    Documentação Adicional Associada
-                                </label>
-
-                                <select class="form-select" id="temDocumentacaoAdicional">
-
-                                    <option selected disabled>
-                                        Selecionar opção
-                                    </option>
-
-                                    <option value="sim">
-                                        Sim
-                                    </option>
-
-                                    <option value="nao">
-                                        Não
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        <div id="secaoDocumentacaoAdicional" style="display:none;">
-
-                            <hr class="my-4">
-
-                            <div id="listaDocumentacaoAdicional">
-
-                                <!-- DOCUMENTO 1 -->
-
-                                <div class="border rounded-3 p-3 documento-adicional-item">
-
-                                    <h6 class="fw-bold">
-                                        Documento Adicional
-                                    </h6>
-
-                                    <div class="row g-3">
-
-                                        <div class="col-md-6">
-
-                                            <label class="form-label">
-                                                Nome do Documento
-                                            </label>
-
-                                            <input type="text" class="form-control"
-                                                name="nome_documento_adicional[]">
-
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                            <label class="form-label">
-                                                Ficheiro PDF
-                                            </label>
-
-                                            <input type="file" class="form-control"
-                                                name="ficheiro_documento_adicional[]" accept="application/pdf">
-
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                            <label class="form-label">
-                                                Data do Documento
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="data_documento_adicional[]">
-
-                                        </div>
-
-                                        <div class="col-md-6">
-
-                                            <label class="form-label">
-                                                Data de Validade
-                                            </label>
-
-                                            <input type="date" class="form-control"
-                                                name="validade_documento_adicional[]">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <button type="button" class="btn btn-outline-primary mt-3"
-                                id="btnAdicionarDocumentoAdicional">
-
-                                <i class="fa-solid fa-plus me-2"></i>
-                                Adicionar Documento
+                                <i class="fa-solid fa-floppy-disk me-2"></i>
+                                Guardar Equipamento
 
                             </button>
 
                         </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="observacoesNovo">
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
-                            <h6 class="alert-heading mb-2">
-
-                                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                Foram encontrados erros
-
-                            </h6>
-
-                            <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
-                            </ul>
-
-                        </div>
-
-                        <label class="form-label fw-bold">
-                            Observações
-                        </label>
-
-                        <textarea class="form-control" rows="6"></textarea>
 
                     </div>
-
-
-                    <div class="d-flex justify-content-end gap-3 mt-4">
-
-                        <a href="equipamentos.php" class="btn btn-outline-secondary">
-                            Cancelar
-                        </a>
-
-                        <button type="submit" class="btn btn-primary-custom">
-
-                            <i class="fa-solid fa-floppy-disk me-2"></i>
-                            Guardar Equipamento
-
-                        </button>
-
-                    </div>
-
                 </div>
-            </div>
 
-        </div>
+            </div>
+        </form>
     </main>
     </div>
 
