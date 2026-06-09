@@ -248,6 +248,15 @@ $paginaAtiva = 'equipamentos';
 
                                                 <div class="row">
 
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
+
                                                     <div class="col-md-6">
 
                                                         <small class="text-muted d-block">
@@ -300,6 +309,14 @@ $paginaAtiva = 'equipamentos';
                                                 <hr class="my-2">
 
                                                 <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
 
                                                     <div class="col-md-6">
 
@@ -435,6 +452,14 @@ $paginaAtiva = 'equipamentos';
                                                 <hr class="my-2">
 
                                                 <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
 
                                                     <div class="col-md-6">
 
@@ -488,6 +513,15 @@ $paginaAtiva = 'equipamentos';
                                                 <hr class="my-2">
 
                                                 <div class="row">
+
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
 
                                                     <div class="col-md-6">
 
@@ -1080,6 +1114,14 @@ $paginaAtiva = 'equipamentos';
                                                 <hr class="my-2">
 
                                                 <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
 
                                                     <div class="col-md-6">
 
@@ -1134,6 +1176,15 @@ $paginaAtiva = 'equipamentos';
 
                                                 <div class="row">
 
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
+
                                                     <div class="col-md-6">
 
                                                         <small class="text-muted d-block">
@@ -1187,6 +1238,15 @@ $paginaAtiva = 'equipamentos';
 
                                                 <div class="row">
 
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
+
                                                     <div class="col-md-6">
 
                                                         <small class="text-muted d-block">
@@ -1239,6 +1299,14 @@ $paginaAtiva = 'equipamentos';
                                                 <hr class="my-2">
 
                                                 <div class="row">
+                                                    <div class="col-12 mb-2">
+                                                        <small class="text-muted d-block">
+                                                            Nome do Documento
+                                                        </small>
+                                                        <span class="fw-semibold">
+                                                            Manual Dräger V2
+                                                        </span>
+                                                    </div>
 
                                                     <div class="col-md-6">
 
@@ -1506,6 +1574,15 @@ $paginaAtiva = 'equipamentos';
                                         <hr class="my-2">
 
                                         <div class="row">
+
+                                            <div class="col-12 mb-2">
+                                                <small class="text-muted d-block">
+                                                    Nome do Documento
+                                                </small>
+                                                <span class="fw-semibold">
+                                                    Manual Dräger V2
+                                                </span>
+                                            </div>
 
                                             <div class="col-md-6">
 

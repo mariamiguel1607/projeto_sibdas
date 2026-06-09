@@ -78,7 +78,7 @@ $paginaAtiva = 'localizacao';
                                     Código da localização
                                 </label>
 
-                                <input type="text" class="form-control" id="codigo" placeholder="Ex: LOC-0006">
+                                <input type="text" class="form-control" id="codigo" name="codigo_localizacao" placeholder="Ex: LOC-0006">
 
                             </div>
 
@@ -89,7 +89,7 @@ $paginaAtiva = 'localizacao';
                                     Edifício
                                 </label>
 
-                                <input type="text" class="form-control" id="edificio"
+                                <input type="text" class="form-control" id="edificio" name="edificio"
                                     placeholder="Ex: Hospital Central">
 
                             </div>
@@ -101,7 +101,7 @@ $paginaAtiva = 'localizacao';
                                     Piso
                                 </label>
 
-                                <input type="text" class="form-control" id="piso" placeholder="Ex: Piso 2">
+                                <input type="text" class="form-control" id="piso"  name="piso" placeholder="Ex: Piso 2">
 
                             </div>
 
@@ -112,7 +112,7 @@ $paginaAtiva = 'localizacao';
                                     Departamento / Serviço
                                 </label>
 
-                                <input type="text" class="form-control" id="departamento" placeholder="Ex: Cardiologia">
+                                <input type="text" class="form-control" id="departamento"  name="servico_departamento" placeholder="Ex: Cardiologia">
 
                             </div>
 
@@ -123,7 +123,7 @@ $paginaAtiva = 'localizacao';
                                     Sala / Gabinete
                                 </label>
 
-                                <input type="text" class="form-control" id="sala" placeholder="Ex: Sala 2.14">
+                                <input type="text" class="form-control" id="sala" name="sala_gabinete" placeholder="Ex: Sala 2.14">
 
                             </div>
 

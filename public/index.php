@@ -387,10 +387,14 @@
                         CONTACTOS
                     </h5>
 
-                    <p id="footerContactos">
-                        Email: geral@techmedsolutions.pt
-                        <br><br>
-                        Telefone: +351 917 654 321
+                    <p>
+                        <i class="fa-solid fa-phone me-2"></i>
+                        <span id="footerTelefone">+351 917 654 321</span>
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-envelope me-2"></i>
+                        <span id="footerEmail">geral@techmedsolutions.pt</span>
                     </p>
 
                 </div>

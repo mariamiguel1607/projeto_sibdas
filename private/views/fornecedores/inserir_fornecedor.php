@@ -86,7 +86,7 @@ $paginaAtiva = 'fornecedores';
                                     Código
                                 </label>
 
-                                <input type="text" id="codigoFornecedor" class="form-control"
+                                <input type="text" id="codigoFornecedor" class="form-control" name="codigo_fornecedor"
                                     placeholder="Ex: FOR-0005">
 
                             </div>
@@ -98,7 +98,7 @@ $paginaAtiva = 'fornecedores';
                                     Nome da empresa
                                 </label>
 
-                                <input type="text" id="nomeFornecedor" class="form-control" placeholder="Ex: Dräger">
+                                <input type="text" id="nomeFornecedor" class="form-control"  name="nome_empresa" placeholder="Ex: Dräger">
 
                             </div>
 
@@ -109,7 +109,7 @@ $paginaAtiva = 'fornecedores';
                                     Tipo de fornecedor
                                 </label>
 
-                                <select id="tipoFornecedor" class="form-select">
+                                <select id="tipoFornecedor" class="form-select" name="tipo_fornecedor">
 
                                     <option selected disabled>
                                         Selecionar tipo
@@ -142,7 +142,7 @@ $paginaAtiva = 'fornecedores';
                                     NIF
                                 </label>
 
-                                <input type="text" id="nifFornecedor" class="form-control" placeholder="Ex: 509123456"
+                                <input type="text" id="nifFornecedor" class="form-control" name="nif" placeholder="Ex: 509123456"
                                      inputmode="numeric">
 
                             </div>
@@ -154,7 +154,7 @@ $paginaAtiva = 'fornecedores';
                                     Contacto telefónico
                                 </label>
 
-                                <input type="text" id="telefoneFornecedor" class="form-control"
+                                <input type="text" id="telefoneFornecedor" class="form-control" name="telefone"
                                     placeholder="Ex: +351 220 000 000"  inputmode="tel">
 
                             </div>
@@ -166,7 +166,7 @@ $paginaAtiva = 'fornecedores';
                                     Email
                                 </label>
 
-                                <input type="email" id="emailFornecedor" class="form-control"
+                                <input type="email" id="emailFornecedor" class="form-control" name="email"
                                     placeholder="Ex: geral@empresa.pt">
 
                             </div>
@@ -178,7 +178,7 @@ $paginaAtiva = 'fornecedores';
                                     Morada
                                 </label>
 
-                                <input type="text" id="moradaFornecedor" class="form-control"
+                                <input type="text" id="moradaFornecedor" class="form-control" name="morada"
                                     placeholder="Ex: Rua da Tecnologia, Porto">
 
                             </div>
@@ -190,7 +190,7 @@ $paginaAtiva = 'fornecedores';
                                     Website
                                 </label>
 
-                                <input type="url" id="websiteFornecedor" class="form-control"
+                                <input type="url" id="websiteFornecedor" class="form-control" name="website"
                                     placeholder="Ex: www.empresa.pt">
 
                             </div>
@@ -217,7 +217,7 @@ $paginaAtiva = 'fornecedores';
                                     Nome da pessoa de contacto
                                 </label>
 
-                                <input type="text" id="pessoaContacto" class="form-control"
+                                <input type="text" id="pessoaContacto" class="form-control" name="pessoa_contacto"
                                     placeholder="Ex: João Silva">
 
                             </div>
@@ -229,7 +229,7 @@ $paginaAtiva = 'fornecedores';
                                     Telefone da pessoa de contacto
                                 </label>
 
-                                <input type="text" id="telefoneContacto" class="form-control"
+                                <input type="text" id="telefoneContacto" class="form-control" name="telefone_contacto"
                                     placeholder="Ex: +351 912 000 000">
 
                             </div>
@@ -300,7 +300,7 @@ $paginaAtiva = 'fornecedores';
 
                         <div class="mb-4">
 
-                            <textarea class="form-control" rows="5"
+                            <textarea class="form-control" rows="5" name="observacoes"
                                 placeholder="Observações adicionais sobre o fornecedor..."></textarea>
 
                         </div>

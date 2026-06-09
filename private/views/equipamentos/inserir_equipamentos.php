@@ -8,10 +8,10 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
 ?>
 <?php include '../../includes/header.php';
-    $paginaAtiva = 'equipamentos';
-    ?>
+$paginaAtiva = 'equipamentos';
+?>
 
-    <div class="private-layout">
+<div class="private-layout">
 
     <?php include '../../includes/sidebar.php'; ?>
 
@@ -126,17 +126,17 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Código Interno</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="codigo_interno">
                                 </div>
 
                                 <div class="col-md-8">
                                     <label class="form-label fw-bold">Designação</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="designacao">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Categoria</label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="id_categoria">
                                         <option selected disabled>Selecionar categoria</option>
                                         <option>Suporte de Vida</option>
                                         <option>Monitorização</option>
@@ -147,32 +147,32 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Fabricante</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="fabricante">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Marca</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="marca">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Modelo</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="modelo">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Número de Série</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="num_serie">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Ano de Fabrico</label>
-                                    <input type="number" class="form-control">
+                                    <input type="number" class="form-control" name="ano_fabrico">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Criticidade</label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="criticidade">
                                         <option>Baixa</option>
                                         <option>Média</option>
                                         <option>Alta</option>
@@ -267,35 +267,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="manual_utilizacao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_manual_utilizacao"
+                                                    placeholder="Ex: Manual de Utilização Dräger V2">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="manual_utilizacao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="manual_utilizacao_data">
-
+                                                <input type="date" class="form-control"
+                                                    name="manual_utilizacao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="manual_utilizacao_validade">
-
                                             </div>
 
                                         </div>
@@ -328,34 +329,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="manual_tecnico"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_manual_tecnico"
+                                                    placeholder="Ex: Manual Técnico Fabricante 2023">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="manual_tecnico" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="manual_tecnico_data">
-
+                                                <input type="date" class="form-control"
+                                                    name="manual_tecnico_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
-                                                <input type="date" class="form-control" name="manual_tecnico_validade">
-
+                                                <input type="date" class="form-control"
+                                                    name="manual_tecnico_validade">
                                             </div>
 
                                         </div>
@@ -398,7 +401,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         Data de Aquisição
                                     </label>
 
-                                    <input type="date" class="form-control">
+                                    <input type="date" class="form-control" name="data_aquisicao">
 
                                 </div>
 
@@ -408,7 +411,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         Custo de Aquisição (€)
                                     </label>
 
-                                    <input type="number" class="form-control" placeholder="0.00">
+                                    <input type="number" class="form-control"  name="custo_aquisicao" placeholder="0.00">
 
                                 </div>
 
@@ -418,7 +421,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         Tipo de Entrada
                                     </label>
 
-                                    <select class="form-select">
+                                    <select class="form-select" name="tipo_entrada">
 
                                         <option selected disabled>
                                             Selecionar tipo
@@ -466,7 +469,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
 
                                         </button>
                                     </label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="id_estado">
                                         <option>Ativo</option>
                                         <option>Em manutenção</option>
                                         <option>Inativo</option>
@@ -563,35 +566,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="fatura_aquisicao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_fatura_aquisicao"
+                                                    placeholder="Ex: Fatura MedEquip 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="fatura_aquisicao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="fatura_aquisicao_data">
-
+                                                <input type="date" class="form-control"
+                                                    name="fatura_aquisicao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="fatura_aquisicao_validade">
-
                                             </div>
 
                                         </div>
@@ -624,35 +628,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="contrato_aquisicao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_contrato_aquisicao"
+                                                    placeholder="Ex: Contrato Aquisição 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="contrato_aquisicao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="contrato_aquisicao_data">
-
+                                                <input type="date" class="form-control"
+                                                    name="contrato_aquisicao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="contrato_aquisicao_validade">
-
                                             </div>
 
                                         </div>
@@ -765,7 +770,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                                 Nome do Acessório
                                             </label>
 
-                                            <input type="text" class="form-control" placeholder="Ex: Sensor de Fluxo">
+                                            <input type="text" class="form-control" name="acessorio_nome[]" placeholder="Ex: Sensor de Fluxo">
 
                                         </div>
 
@@ -775,7 +780,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                                 Quantidade
                                             </label>
 
-                                            <input type="number" class="form-control">
+                                            <input type="number" class="form-control" name="acessorio_quantidade[]">
 
                                         </div>
 
@@ -801,7 +806,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                                 </button>
                                             </label>
 
-                                            <select class="form-select">
+                                            <select class="form-select" name="acessorio_estado[]">
 
                                                 <option>Ativo</option>
                                                 <option>Inativo</option>
@@ -848,7 +853,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                                 Nome do Consumível
                                             </label>
 
-                                            <input type="text" class="form-control" placeholder="Ex: Filtro Bacteriano">
+                                            <input type="text" class="form-control" name="consumivel_nome[]" placeholder="Ex: Filtro Bacteriano">
 
                                         </div>
 
@@ -858,7 +863,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                                 Quantidade
                                             </label>
 
-                                            <input type="number" class="form-control">
+                                            <input type="number" class="form-control" name="consumivel_quantidade[]">
 
                                         </div>
 
@@ -908,7 +913,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                 Localização Associada
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" name="id_localizacao">
 
                                 <option selected disabled>
                                     Selecionar localização
@@ -955,7 +960,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                 Fornecedor Associado
                             </label>
 
-                            <select class="form-select">
+                            <select class="form-select" name="id_fornecedor">
 
                                 <option selected disabled>
                                     Selecionar fornecedor
@@ -1073,7 +1078,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                             Tipo de Contrato
                                         </label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="tipo_contrato">
 
                                             <option>
                                                 Manutenção Preventiva
@@ -1097,7 +1102,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                             Entidade Responsável
                                         </label>
 
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" name="entidade_responsavel">
 
                                     </div>
 
@@ -1107,7 +1112,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                             Periodicidade
                                         </label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="periodicidade">
 
                                             <option>
                                                 Mensal
@@ -1252,36 +1257,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="certificado_garantia"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_certificado_garantia"
+                                                    placeholder="Ex: Certificado de Garantia 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="certificado_garantia" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="certificado_garantia_data">
-
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="certificado_garantia_validade">
-
                                             </div>
 
                                         </div>
@@ -1313,35 +1318,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="contrato_manutencao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_contrato_manutencao"
+                                                    placeholder="Ex: Contrato Manutenção Preventiva 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="contrato_manutencao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="contrato_manutencao_data">
-
+                                                <input type="date" class="form-control"
+                                                    name="contrato_manutencao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="contrato_manutencao_validade">
-
                                             </div>
 
                                         </div>
@@ -1373,36 +1379,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="certificado_calibracao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_certificado_calibracao"
+                                                    placeholder="Ex: Certificado Calibração IPQ 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="certificado_calibracao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="certificado_calibracao_data">
-
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="certificado_calibracao_validade">
-
                                             </div>
 
                                         </div>
@@ -1434,36 +1440,36 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="relatorio_calibracao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_relatorio_calibracao"
+                                                    placeholder="Ex: Relatório Calibração Anual 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="relatorio_calibracao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="relatorio_calibracao_data">
-
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="relatorio_calibracao_validade">
-
                                             </div>
 
                                         </div>
@@ -1737,7 +1743,7 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
                                 Observações
                             </label>
 
-                            <textarea class="form-control" rows="6"></textarea>
+                            <textarea class="form-control" name="observacoes" rows="6"></textarea>
 
                         </div>
 
@@ -1763,6 +1769,6 @@ redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o u
             </div>
         </form>
     </main>
-    </div>
+</div>
 
-    <?php include '../../includes/footer.php'; ?>
+<?php include '../../includes/footer.php'; ?>

@@ -90,7 +90,7 @@ $paginaAtiva = 'localizacao';
 
                                 </label>
 
-                                <input type="text" id="codigoLocalizacao" class="form-control" value="LOC-001">
+                                <input type="text" id="codigoLocalizacao" class="form-control" name="codigo_localizacao" value="LOC-001">
 
                             </div>
 
@@ -103,7 +103,7 @@ $paginaAtiva = 'localizacao';
 
                                 </label>
 
-                                <select id="edificio" class="form-select">
+                                <select id="edificio" class="form-select" name="edificio">
 
                                     <option selected>
                                         Hospital Central
@@ -130,7 +130,7 @@ $paginaAtiva = 'localizacao';
 
                                 </label>
 
-                                <select id="piso" class="form-select">
+                                <select id="piso" class="form-select" name="piso">
 
                                     <option>
                                         Piso 0
@@ -161,7 +161,7 @@ $paginaAtiva = 'localizacao';
 
                                 </label>
 
-                                <select id="departamento" class="form-select">
+                                <select id="departamento" class="form-select" name="servico_departamento">
 
                                     <option selected>
                                         Unidade de Cuidados Intensivos
@@ -188,7 +188,7 @@ $paginaAtiva = 'localizacao';
 
                                 </label>
 
-                                <input type="text" id="sala" class="form-control" value="UCI-02">
+                                <input type="text" id="sala" class="form-control"  name="sala_gabinete" value="UCI-02">
 
                             </div>
 

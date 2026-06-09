@@ -348,6 +348,9 @@ const inicioInicial = {
     botao:
         "Conhecer Serviços",
 
+    linkBotao:
+        "#servicos",
+
     imagem:
         "../assets/images/imagem_inicio.png"
 };
@@ -419,10 +422,12 @@ function mostrarInicioPublico() {
         inicio.botao +
         ' <i class="fa-solid fa-arrow-right ms-2"></i>';
 
+    botao.href =
+        inicio.linkBotao || "#servicos";
+
     imagem.src =
         inicio.imagem;
 }
-
 
 // Carregar gestão
 function carregarInicioGestao() {
@@ -435,6 +440,9 @@ function carregarInicioGestao() {
 
     const botao =
         document.getElementById("inicioBotao");
+
+    const linkBotao =
+        document.getElementById("inicioBotaoLink");
 
     if (
         !titulo ||
@@ -455,8 +463,12 @@ function carregarInicioGestao() {
 
     botao.value =
         inicio.botao;
-}
 
+    if (linkBotao) {
+        linkBotao.value =
+            inicio.linkBotao || "#servicos";
+    }
+}
 
 // Guardar alterações
 function guardarAlteracoesInicio() {
@@ -469,6 +481,9 @@ function guardarAlteracoesInicio() {
 
     const botao =
         document.getElementById("inicioBotao");
+
+    const linkBotao =
+        document.getElementById("inicioBotaoLink");
 
     const imagemInput =
         document.getElementById("inicioImagem");
@@ -510,6 +525,9 @@ function guardarAlteracoesInicio() {
         botao:
             botao.value.trim(),
 
+        linkBotao:
+            linkBotao ? linkBotao.value.trim() : "#servicos",
+
         imagem:
             imagemFinal
     };
@@ -524,7 +542,6 @@ function guardarAlteracoesInicio() {
         "Página inicial atualizada com sucesso."
     );
 }
-
 
 
 // =======================================================
@@ -1112,8 +1129,9 @@ const rodapeInicial = {
     horario:
         "2º a 6º Feira - 09h00 às 18h00\n\nSábado: Encerrado\n\nDomingo: Encerrado",
 
-    contactos:
-        "geral@techmedsolutions.pt | +351 912 345 678"
+    telefone: "+351 912 345 678",
+
+    email: "geral@techmedsolutions.pt"
 
 };
 
@@ -1151,43 +1169,40 @@ function guardarRodape(rodape) {
 function mostrarRodapePublico() {
 
     const logo = document.getElementById("footerLogo");
-
     const texto = document.getElementById("footerTexto");
-
-    const localizacao =
-        document.getElementById("footerLocalizacao");
-
-    const horario =
-        document.getElementById("footerHorario");
-
-    const contactos =
-        document.getElementById("footerContactos");
+    const localizacao = document.getElementById("footerLocalizacao");
+    const horario = document.getElementById("footerHorario");
+    const telefone = document.getElementById("footerTelefone");
+    const email = document.getElementById("footerEmail");
 
     if (
         !logo ||
         !texto ||
         !localizacao ||
-        !horario ||
-        !contactos
+        !horario
     ) return;
 
-
     const rodape = obterRodape();
-
 
     if (rodape.logo) {
         logo.src = rodape.logo;
     }
 
     texto.innerText = rodape.texto;
+
     localizacao.innerHTML =
         rodape.localizacao.replace(/\n/g, "<br>");
 
     horario.innerHTML =
         rodape.horario.replace(/\n/g, "<br>");
 
-    contactos.innerText =
-        rodape.contactos;
+    if (telefone) {
+        telefone.innerText = rodape.telefone || "";
+    }
+
+    if (email) {
+        email.innerText = rodape.email || "";
+    }
 }
 
 
@@ -1196,78 +1211,59 @@ function carregarRodapeGestao() {
 
     const texto =
         document.getElementById("rodapeTexto");
-
     const localizacao =
         document.getElementById("rodapeLocalizacao");
-
     const horario =
         document.getElementById("rodapeHorario");
+    const telefone =
+        document.getElementById("rodapeTelefone");
+    const email =
+        document.getElementById("rodapeEmail");
 
-    const contactos =
-        document.getElementById("rodapeContactos");
-
-    if (
-        !texto ||
-        !localizacao ||
-        !horario ||
-        !contactos
-    ) return;
-
+    if (!texto || !localizacao || !horario) return;
 
     const rodape = obterRodape();
 
-
     texto.value = rodape.texto;
+    localizacao.value = rodape.localizacao;
+    horario.value = rodape.horario;
 
-    localizacao.value =
-        rodape.localizacao;
-
-    horario.value =
-        rodape.horario;
-
-    contactos.value =
-        rodape.contactos;
+    if (telefone) {
+        telefone.value = rodape.telefone || "";
+    }
+    if (email) {
+        email.value = rodape.email || "";
+    }
 }
-
 
 // Guardar alterações do rodapé
 function guardarAlteracoesRodape() {
 
     const logoInput =
         document.getElementById("rodapeLogoInput");
-
     const texto =
         document.getElementById("rodapeTexto");
-
     const localizacao =
         document.getElementById("rodapeLocalizacao");
-
     const horario =
         document.getElementById("rodapeHorario");
+    const telefone =
+        document.getElementById("rodapeTelefone");
+    const email =
+        document.getElementById("rodapeEmail");
 
-    const contactos =
-        document.getElementById("rodapeContactos");
-
-    if (
-        !texto ||
-        !localizacao ||
-        !horario ||
-        !contactos
-    ) {
+    if (!texto || !localizacao || !horario) {
         return;
     }
 
     const rodapeAtual = obterRodape();
-
     let logoFinal = rodapeAtual.logo;
 
-    // Só altera o logo se existir imagem nova
     if (
         logoInput &&
         logoInput.files &&
         logoInput.files.length > 0
     ) {
-
         logoFinal =
             URL.createObjectURL(logoInput.files[0]);
     }
@@ -1275,20 +1271,15 @@ function guardarAlteracoesRodape() {
     const novoRodape = {
 
         logo: logoFinal,
-
         texto: texto.value,
-
         localizacao: localizacao.value,
-
         horario: horario.value,
-
-        contactos: contactos.value
+        telefone: telefone ? telefone.value.trim() : "",
+        email: email ? email.value.trim() : ""
     };
 
     guardarRodape(novoRodape);
-
     mostrarRodapePublico();
-
     alert("Rodapé atualizado com sucesso.");
 }
 

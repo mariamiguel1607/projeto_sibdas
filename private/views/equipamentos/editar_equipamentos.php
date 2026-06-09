@@ -179,17 +179,17 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Código Interno</label>
-                                    <input type="text" class="form-control" value="EQ-0001">
+                                    <input type="text" class="form-control" value="EQ-0001" name="codigo_interno">
                                 </div>
 
                                 <div class="col-md-8">
                                     <label class="form-label fw-semibold">Designação</label>
-                                    <input type="text" class="form-control" value="Ventilador Pulmonar">
+                                    <input type="text" class="form-control" value="Ventilador Pulmonar" name="designacao">
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Categoria</label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="id_categoria">
                                         <option selected>Suporte de Vida</option>
                                         <option>Diagnóstico</option>
                                         <option>Monitorização</option>
@@ -199,28 +199,28 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Marca</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="marca">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Modelo</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="modelo">
                                 </div>
 
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Número de Série</label>
-                                    <input type="text" class="form-control" value="SN-2026-001">
+                                    <input type="text" class="form-control" value="SN-2026-001" name="numero_serie">
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Ano Fabrico</label>
-                                    <input type="number" class="form-control" value="2023">
+                                    <input type="number" class="form-control"  value="2023" name="ano_fabrico">
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Criticidade</label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="criticidade">
                                         <option>Baixa</option>
                                         <option>Média</option>
                                         <option>Alta</option>
@@ -230,7 +230,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-semibold">Estado</label>
-                                    <select class="form-select">
+                                    <select class="form-select" name="estado">
                                         <option>Ativo</option>
                                         <option>Em manutenção</option>
                                         <option>Inativo</option>
@@ -329,36 +329,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Nome do Documento
+                                                </label>
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_manual_utilizacao"
+                                                    placeholder="Ex: Manual de Utilização Dräger V2">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Ficheiro PDF
                                                 </label>
-
-                                                <input type="file" class="form-control" name="manual_utilizacao"
-                                                    accept="application/pdf">
-
+                                                <input type="file" class="form-control"
+                                                    name="manual_utilizacao" accept="application/pdf">
                                             </div>
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="manual_utilizacao_data" value="2023-03-15">
-
+                                                    name="manual_utilizacao_data">
                                             </div>
 
-                                            <div class="mb-3">
-
+                                            <div>
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="manual_utilizacao_validade">
-
                                             </div>
 
                                         </div>
@@ -408,36 +408,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Nome do Documento
+                                                </label>
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_manual_tecnico"
+                                                    placeholder="Ex: Manual Técnico Fabricante 2023">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Ficheiro PDF
                                                 </label>
-
-                                                <input type="file" class="form-control" name="manual_tecnico"
-                                                    accept="application/pdf">
-
+                                                <input type="file" class="form-control"
+                                                    name="manual_tecnico" accept="application/pdf">
                                             </div>
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" name="manual_tecnico_data"
-                                                    value="2023-03-20">
-
+                                                <input type="date" class="form-control"
+                                                    name="manual_tecnico_data">
                                             </div>
 
-                                            <div class="mb-3">
-
+                                            <div>
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
                                                     name="manual_tecnico_validade">
-
                                             </div>
 
                                         </div>
@@ -496,7 +496,7 @@ $paginaAtiva = 'equipamentos';
                                         Data de Aquisição
                                     </label>
 
-                                    <input type="date" class="form-control" value="2024-03-12">
+                                    <input type="date" class="form-control" value="2024-03-12" name="data_aquisicao">
 
                                 </div>
 
@@ -506,7 +506,7 @@ $paginaAtiva = 'equipamentos';
                                         Custo de Aquisição
                                     </label>
 
-                                    <input type="number" class="form-control" placeholder="0.00">
+                                    <input type="number" class="form-control" placeholder="0.00" name="custo_aquisicao">
 
                                 </div>
 
@@ -516,7 +516,7 @@ $paginaAtiva = 'equipamentos';
                                         Tipo de Entrada
                                     </label>
 
-                                    <select class="form-select">
+                                    <select class="form-select" name="tipo_entrada">
 
                                         <option selected>
                                             Compra
@@ -562,7 +562,7 @@ $paginaAtiva = 'equipamentos';
 
                                     </label>
 
-                                    <select class="form-select">
+                                    <select class="form-select" name="estado">
 
                                         <option selected>
                                             Ativo
@@ -675,33 +675,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Substituir PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_fatura_aquisicao"
+                                                    placeholder="Ex: Fatura MedEquip 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="fatura_aquisicao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" value="2024-03-12">
-
+                                                <input type="date" class="form-control"
+                                                    name="fatura_aquisicao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
-                                                <input type="date" class="form-control">
-
+                                                <input type="date" class="form-control"
+                                                    name="fatura_aquisicao_validade">
                                             </div>
 
                                         </div>
@@ -735,33 +738,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Substituir PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_contrato_aquisicao"
+                                                    placeholder="Ex: Contrato Aquisição 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="contrato_aquisicao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
-                                                <input type="date" class="form-control" value="2024-03-12">
-
+                                                <input type="date" class="form-control"
+                                                    name="contrato_aquisicao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
-                                                <input type="date" class="form-control" value="2034-03-12">
-
+                                                <input type="date" class="form-control"
+                                                    name="contrato_aquisicao_validade">
                                             </div>
 
                                         </div>
@@ -863,7 +869,7 @@ $paginaAtiva = 'equipamentos';
                                                     Nome do Acessório
                                                 </label>
 
-                                                <input type="text" class="form-control" value="Sensor de Fluxo">
+                                                <input type="text" class="form-control"  value="Sensor de Fluxo" name="nome_acessorio[]">
 
                                             </div>
 
@@ -873,7 +879,7 @@ $paginaAtiva = 'equipamentos';
                                                     Quantidade
                                                 </label>
 
-                                                <input type="number" class="form-control" value="2">
+                                                <input type="number" class="form-control" value="2" name="quantidade_acessorio[]">
 
                                             </div>
 
@@ -902,7 +908,7 @@ $paginaAtiva = 'equipamentos';
 
                                                 </label>
 
-                                                <select class="form-select">
+                                                <select class="form-select" name="estado_acessorio[]">
 
                                                     <option selected>
                                                         Ativo
@@ -974,7 +980,7 @@ $paginaAtiva = 'equipamentos';
                                                     Nome do Consumível
                                                 </label>
 
-                                                <input type="text" class="form-control" value="Filtro Bacteriano">
+                                                <input type="text" class="form-control" value="Filtro Bacteriano" name="nome_consumivel[]">
 
                                             </div>
 
@@ -984,7 +990,7 @@ $paginaAtiva = 'equipamentos';
                                                     Quantidade
                                                 </label>
 
-                                                <input type="number" class="form-control" value="10">
+                                                <input type="number" class="form-control" value="10" name="quantidade_consumivel[]">
 
                                             </div>
 
@@ -1046,7 +1052,7 @@ $paginaAtiva = 'equipamentos';
                                         Localização Associada
                                     </label>
 
-                                    <select class="form-select">
+                                    <select class="form-select" name="id_localizacao">
 
                                         <option selected>
                                             UCI - Piso 2 - Sala UCI02
@@ -1125,7 +1131,7 @@ $paginaAtiva = 'equipamentos';
                                         Fornecedor Associado
                                     </label>
 
-                                    <select class="form-select">
+                                    <select class="form-select" name="id_fornecedor">
 
                                         <option selected>
                                             MedEquip Portugal
@@ -1257,7 +1263,7 @@ $paginaAtiva = 'equipamentos';
                                             Tipo de Contrato
                                         </label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="tipo_contrato">
 
                                             <option>
                                                 Manutenção Preventiva
@@ -1281,7 +1287,7 @@ $paginaAtiva = 'equipamentos';
                                             Entidade Responsável
                                         </label>
 
-                                        <input type="text" class="form-control" value="Philips Healthcare">
+                                        <input type="text" class="form-control " value="Philips Healthcare" name="entidade_responsavel">
 
                                     </div>
 
@@ -1291,7 +1297,7 @@ $paginaAtiva = 'equipamentos';
                                             Periodicidade
                                         </label>
 
-                                        <select class="form-select">
+                                        <select class="form-select" name="periodicidade">
 
                                             <option>
                                                 Mensal
@@ -1437,36 +1443,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="certificado_garantia"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_certificado_garantia"
+                                                    placeholder="Ex: Certificado de Garantia 2024">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="certificado_garantia" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="certificado_garantia_data" value="2024-03-12">
-
+                                                    name="certificado_garantia_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="certificado_garantia_validade" value="2024-03-12">
-
+                                                    name="certificado_garantia_validade">
                                             </div>
 
                                         </div>
@@ -1499,36 +1505,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="contrato_manutencao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_contrato_manutencao"
+                                                    placeholder="Ex: Contrato Manutenção Preventiva 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="contrato_manutencao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="contrato_manutencao_data" value="2024-03-12">
-
+                                                    name="contrato_manutencao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="contrato_manutencao_validade" value="2024-03-12">
-
+                                                    name="contrato_manutencao_validade">
                                             </div>
 
                                         </div>
@@ -1561,36 +1567,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control"
-                                                    name="certificado_calibracao" accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_certificado_calibracao"
+                                                    placeholder="Ex: Certificado Calibração IPQ 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="certificado_calibracao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="certificado_calibracao_data" value="2024-03-12">
-
+                                                    name="certificado_calibracao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="certificado_calibracao_validade" value="2024-03-12">
-
+                                                    name="certificado_calibracao_validade">
                                             </div>
 
                                         </div>
@@ -1623,36 +1629,36 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-
                                                 <label class="form-label fw-bold">
-                                                    Ficheiro PDF
+                                                    Nome do Documento
                                                 </label>
-
-                                                <input type="file" class="form-control" name="relatorio_calibracao"
-                                                    accept="application/pdf">
-
+                                                <input type="text" class="form-control"
+                                                    name="nome_documento_relatorio_calibracao"
+                                                    placeholder="Ex: Relatório Calibração Anual 2025">
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label fw-bold">
+                                                    Ficheiro PDF
+                                                </label>
+                                                <input type="file" class="form-control"
+                                                    name="relatorio_calibracao" accept="application/pdf">
+                                            </div>
 
+                                            <div class="mb-3">
                                                 <label class="form-label fw-bold">
                                                     Data do Documento
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_data" value="2024-03-12">
-
+                                                    name="relatorio_calibracao_data">
                                             </div>
 
                                             <div>
-
                                                 <label class="form-label fw-bold">
                                                     Data de Validade
                                                 </label>
-
                                                 <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_validade" value="2024-03-12">
-
+                                                    name="relatorio_calibracao_validade">
                                             </div>
 
                                         </div>
@@ -1936,7 +1942,7 @@ $paginaAtiva = 'equipamentos';
                                 Observações
                             </label>
 
-                            <textarea class="form-control"
+                            <textarea class="form-control"  name="observacoes"
                                 rows="6">Equipamento em funcionamento regular. Deve ser dada prioridade à manutenção preventiva devido à sua criticidade.</textarea>
 
                         </div>

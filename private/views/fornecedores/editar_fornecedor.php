@@ -70,7 +70,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="codigoFornecedor" class="form-label fw-bold">
                                     Código
                                 </label>
-                                <input type="text" id="codigoFornecedor" class="form-control" value="FOR-0005" disabled>
+                                <input type="text" id="codigoFornecedor" class="form-control" value="FOR-0005" name="codigo_fornecedor" disabled>
                                 <small class="text-muted">O código não pode ser alterado.</small>
                             </div>
 
@@ -78,7 +78,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="nomeFornecedor" class="form-label fw-bold">
                                     Nome da empresa
                                 </label>
-                                <input type="text" id="nomeFornecedor" class="form-control"
+                                <input type="text" id="nomeFornecedor" class="form-control" name="nome_empresa"
                                     value="Dräger Portugal Lda.">
                             </div>
 
@@ -86,7 +86,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="tipoFornecedor" class="form-label fw-bold">
                                     Tipo de fornecedor
                                 </label>
-                                <select id="tipoFornecedor" class="form-select">
+                                <select id="tipoFornecedor" class="form-select" name="tipo_fornecedor">
                                     <option disabled>Selecionar tipo</option>
                                     <option selected>Fabricante</option>
                                     <option>Distribuidor / Fornecedor Comercial</option>
@@ -99,7 +99,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="nifFornecedor" class="form-label fw-bold">
                                     NIF
                                 </label>
-                                <input type="text" id="nifFornecedor" class="form-control" value="509123456"
+                                <input type="text" id="nifFornecedor" class="form-control" value="509123456" name="nif"
                                    inputmode="numeric">
                             </div>
 
@@ -107,7 +107,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="telefoneFornecedor" class="form-label fw-bold">
                                     Contacto telefónico
                                 </label>
-                                <input type="text" id="telefoneFornecedor" class="form-control" value="+351 220 123 456"
+                                <input type="text" id="telefoneFornecedor" class="form-control" name="telefone" value="+351 220 123 456"
                                     inputmode="tel">
                             </div>
 
@@ -123,7 +123,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="moradaFornecedor" class="form-label fw-bold">
                                     Morada
                                 </label>
-                                <input type="text" id="moradaFornecedor" class="form-control"
+                                <input type="text" id="moradaFornecedor" class="form-control" name="morada"
                                     value="Avenida da Tecnologia, n.º 45, 4000-000 Porto">
                             </div>
 
@@ -131,7 +131,7 @@ $paginaAtiva = 'fornecedores';
                                 <label for="websiteFornecedor" class="form-label fw-bold">
                                     Website
                                 </label>
-                                <input type="url" id="websiteFornecedor" class="form-control"
+                                <input type="url" id="websiteFornecedor" class="form-control" name="website"
                                     value="https://www.draeger.com">
                             </div>
 
@@ -151,14 +151,14 @@ $paginaAtiva = 'fornecedores';
                                 <label for="pessoaContacto" class="form-label fw-bold">
                                     Nome da pessoa de contacto
                                 </label>
-                                <input type="text" id="pessoaContacto" class="form-control" value="Eng. Carlos Silva">
+                                <input type="text" id="pessoaContacto" class="form-control" name="pessoa_contacto" value="Eng. Carlos Silva">
                             </div>
 
                             <div class="col-md-6">
                                 <label for="telefoneContacto" class="form-label fw-bold">
                                     Telefone da pessoa de contacto
                                 </label>
-                                <input type="text" id="telefoneContacto" class="form-control" value="+351 912 345 678">
+                                <input type="text" id="telefoneContacto" class="form-control" name="telefone_contacto" value="+351 912 345 678">
                             </div>
 
                         </div>
@@ -219,7 +219,7 @@ $paginaAtiva = 'fornecedores';
                         </h4>
 
                         <div class="mb-4">
-                            <textarea class="form-control" rows="5"
+                            <textarea class="form-control" rows="5" name="observacoes"
                                 placeholder="Observações adicionais sobre o fornecedor...">Contrato de manutenção preventiva ativo válido até Dezembro de 2026. Tempo de resposta premium em menos de 24 horas.</textarea>
                         </div>
 
