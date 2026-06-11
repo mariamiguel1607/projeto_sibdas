@@ -2313,5 +2313,70 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 });
 
+// -------------------------------------------------------
+// FORNECEDORES ASSOCIADOS — Adicionar / Remover linhas
+// -------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const btnAdicionar = document.getElementById('btnAdicionarFornecedor');
+    const lista = document.getElementById('lista-fornecedores');
+
+    if (!btnAdicionar || !lista) return;
+
+    const tiposRelacao = [
+        'Fabricante',
+        'Distribuidor',
+        'Assistência Técnica',
+        'Consumíveis / Acessórios'
+    ];
+
+    btnAdicionar.addEventListener('click', function () {
+
+        // Construir opções de fornecedores
+        let opcoesForncedor = '<option value="">Selecionar fornecedor</option>';
+        fornecedoresDisponiveis.forEach(function (f) {
+            opcoesForncedor += `<option value="${f.id}">${f.nome}</option>`;
+        });
+
+        // Construir opções de tipo
+        let opcoesTipo = '<option value="">Tipo de relação</option>';
+        tiposRelacao.forEach(function (t) {
+            opcoesTipo += `<option value="${t}">${t}</option>`;
+        });
+
+        const novaLinha = document.createElement('div');
+        novaLinha.className = 'row g-2 mb-2 linha-fornecedor';
+        novaLinha.innerHTML = `
+            <div class="col-md-7">
+                <select class="form-select" name="id_fornecedor[]">
+                    ${opcoesForncedor}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" name="tipo_relacao[]">
+                    ${opcoesTipo}
+                </select>
+            </div>
+            <div class="col-md-1 d-flex align-items-center">
+                <button type="button" class="btn btn-sm btn-outline-danger remover-fornecedor">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+        lista.appendChild(novaLinha);
+    });
+
+    // Remover linha
+    lista.addEventListener('click', function (e) {
+        const btn = e.target.closest('.remover-fornecedor');
+        if (btn) {
+            btn.closest('.linha-fornecedor').remove();
+        }
+    });
+
+});
+
 
 

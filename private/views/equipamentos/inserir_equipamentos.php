@@ -1,11 +1,383 @@
 <?php
-// --------------------------------------------------------------------
-// SEGURANÇA: Proteção de acesso à página de edição
-// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
-// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
-// --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+redirect_if_not_logged();
+
+$erros = [];
+$erro_sistema = "";
+
+try {
+    $ligacao = ligar_bd();
+
+    $categorias   = $ligacao->query("SELECT * FROM categorias ORDER BY nome_categoria")->fetchAll(PDO::FETCH_OBJ);
+    $estados      = $ligacao->query("SELECT * FROM estados ORDER BY nome_estado")->fetchAll(PDO::FETCH_OBJ);
+    $localizacoes = $ligacao->query("SELECT * FROM localizacoes ORDER BY codigo_localizacao")->fetchAll(PDO::FETCH_OBJ);
+    $fornecedores = $ligacao->query("SELECT * FROM fornecedores ORDER BY nome_empresa")->fetchAll(PDO::FETCH_OBJ);
+    $ultimo = $ligacao->query(" SELECT codigo_interno FROM equipamentos ORDER BY id DESC LIMIT 1 ")->fetchColumn();
+
+    if ($ultimo) {
+        // Extrai o número do último código (ex: EQ-0025 → 25)
+        $numero = (int) preg_replace('/[^0-9]/', '', $ultimo);
+        $proximo_numero = $numero + 1;
+    } else {
+        // Se não houver nenhum equipamento ainda
+        $proximo_numero = 1;
+    }
+
+    // Formata com zeros à esquerda (ex: 1 → EQ-0001, 26 → EQ-0026)
+    $proximo_codigo = 'EQ-' . str_pad($proximo_numero, 4, '0', STR_PAD_LEFT);
+} catch (PDOException $err) {
+    $categorias = $estados = $localizacoes = $fornecedores = [];
+    $erro_sistema = "Erro ao carregar dados.";
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. RECOLHER DADOS
+    $codigo_interno       = $_POST['codigo_interno']       ?? '';
+    $designacao           = $_POST['designacao']           ?? '';
+    $id_categoria         = $_POST['id_categoria']         ?? '';
+    $fabricante           = $_POST['fabricante']           ?? '';
+    $marca                = $_POST['marca']                ?? '';
+    $modelo               = $_POST['modelo']               ?? '';
+    $num_serie            = $_POST['num_serie']            ?? '';
+    $ano_fabrico          = $_POST['ano_fabrico']          ?? '';
+    $criticidade          = $_POST['criticidade']          ?? '';
+    $data_aquisicao       = $_POST['data_aquisicao']       ?? '';
+    $custo_aquisicao      = $_POST['custo_aquisicao']      ?? '';
+    $tipo_entrada         = $_POST['tipo_entrada']         ?? '';
+    $id_estado            = $_POST['id_estado']            ?? '';
+    $acessorio_nome       = $_POST['acessorio_nome']       ?? [];
+    $acessorio_quantidade = $_POST['acessorio_quantidade'] ?? [];
+    $acessorio_estado     = $_POST['acessorio_estado']     ?? [];
+    $consumivel_nome      = $_POST['consumivel_nome']       ?? [];
+    $consumivel_quantidade = $_POST['consumivel_quantidade'] ?? [];
+    $id_localizacao       = $_POST['id_localizacao']       ?? '';
+    $ids_fornecedor = $_POST['id_fornecedor'] ?? [];
+    $tipos_relacao  = $_POST['tipo_relacao']  ?? [];
+    $tipo_contrato        = $_POST['tipo_contrato']        ?? '';
+    $entidade_responsavel = $_POST['entidade_responsavel'] ?? '';
+    $periodicidade        = $_POST['periodicidade']        ?? '';
+    $observacoes          = $_POST['observacoes']          ?? '';
+    $tem_garantia = $_POST['tem_garantia'] ?? '';
+    $tem_contrato = $_POST['tem_contrato'] ?? '';
+
+    // Documentos fixos — cada um tem nome, ficheiro, data e validade
+    $documentos_fixos = [
+        ['nome' => $_POST['nome_documento_manual_utilizacao']   ?? '', 'ficheiro' => $_FILES['manual_utilizacao']   ?? null, 'data' => $_POST['manual_utilizacao_data']   ?? '', 'validade' => $_POST['manual_utilizacao_validade']   ?? '', 'id_tipo' => 1],
+        ['nome' => $_POST['nome_documento_manual_tecnico']      ?? '', 'ficheiro' => $_FILES['manual_tecnico']      ?? null, 'data' => $_POST['manual_tecnico_data']      ?? '', 'validade' => $_POST['manual_tecnico_validade']      ?? '', 'id_tipo' => 2],
+        ['nome' => $_POST['nome_documento_fatura_aquisicao']    ?? '', 'ficheiro' => $_FILES['fatura_aquisicao']    ?? null, 'data' => $_POST['fatura_aquisicao_data']    ?? '', 'validade' => $_POST['fatura_aquisicao_validade']    ?? '', 'id_tipo' => 3],
+        ['nome' => $_POST['nome_documento_contrato_aquisicao']  ?? '', 'ficheiro' => $_FILES['contrato_aquisicao']  ?? null, 'data' => $_POST['contrato_aquisicao_data']  ?? '', 'validade' => $_POST['contrato_aquisicao_validade']  ?? '', 'id_tipo' => 4],
+        ['nome' => $_POST['nome_documento_certificado_garantia'] ?? '', 'ficheiro' => $_FILES['certificado_garantia'] ?? null, 'data' => $_POST['certificado_garantia_data'] ?? '', 'validade' => $_POST['certificado_garantia_validade'] ?? '', 'id_tipo' => 5],
+        ['nome' => $_POST['nome_documento_contrato_manutencao'] ?? '', 'ficheiro' => $_FILES['contrato_manutencao'] ?? null, 'data' => $_POST['contrato_manutencao_data'] ?? '', 'validade' => $_POST['contrato_manutencao_validade'] ?? '', 'id_tipo' => 6],
+        ['nome' => $_POST['nome_documento_certificado_calibracao'] ?? '', 'ficheiro' => $_FILES['certificado_calibracao'] ?? null, 'data' => $_POST['certificado_calibracao_data'] ?? '', 'validade' => $_POST['certificado_calibracao_validade'] ?? '', 'id_tipo' => 7],
+        ['nome' => $_POST['nome_documento_relatorio_calibracao'] ?? '', 'ficheiro' => $_FILES['relatorio_calibracao'] ?? null, 'data' => $_POST['relatorio_calibracao_data'] ?? '', 'validade' => $_POST['relatorio_calibracao_validade'] ?? '', 'id_tipo' => 8],
+    ];
+
+    // Documentos adicionais
+    $nomes_adicionais    = $_POST['nome_documento_adicional']      ?? [];
+    $ficheiros_adicionais = $_FILES['ficheiro_documento_adicional'] ?? [];
+    $datas_adicionais    = $_POST['data_documento_adicional']      ?? [];
+    $validades_adicionais = $_POST['validade_documento_adicional'] ?? [];
+
+    // 2. VALIDAR
+    $designacao      = trim($designacao);
+    $ano_fabrico     = trim($ano_fabrico);
+    $data_aquisicao  = trim($data_aquisicao);
+    $custo_aquisicao = trim($custo_aquisicao);
+
+
+    if (empty($designacao))      $erros[] = "A designação é obrigatória.";
+    if (empty($id_categoria))    $erros[] = "A categoria é obrigatória.";
+    if (empty($id_estado))       $erros[] = "O estado é obrigatório.";
+    if (empty($id_localizacao))  $erros[] = "A localização é obrigatória.";
+
+    if (!empty($ano_fabrico)) {
+        if (!preg_match('/^\d{4}$/', $ano_fabrico) || (int)$ano_fabrico < 1900 || (int)$ano_fabrico > (int)date('Y')) {
+            $erros[] = "O ano de fabrico é inválido.";
+        }
+    }
+
+    if (!empty($data_aquisicao)) {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data_aquisicao)) {
+            $erros[] = "Formato de data de aquisição inválido.";
+        } else {
+            $partes = explode('-', $data_aquisicao);
+            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                $erros[] = "Data de aquisição inválida.";
+            }
+        }
+    }
+
+    if (!empty($custo_aquisicao) && !is_numeric($custo_aquisicao)) {
+        $erros[] = "O custo de aquisição deve ser um valor numérico.";
+    }
+
+    $fornecedor_valido = false;
+    foreach ($ids_fornecedor as $i => $id_forn) {
+        if (!empty($id_forn) && !empty($tipos_relacao[$i])) {
+            $fornecedor_valido = true;
+            break;
+        }
+    }
+    if (!$fornecedor_valido) {
+        $erros[] = "É obrigatório associar pelo menos um fornecedor com tipo de relação.";
+    }
+
+    // Documentos sempre obrigatórios
+    $docs_obrigatorios = [
+        'manual_utilizacao'       => ['nome' => 'Manual de Utilização',      'id_tipo' => 1],
+        'manual_tecnico'          => ['nome' => 'Manual Técnico',            'id_tipo' => 2],
+        'fatura_aquisicao'        => ['nome' => 'Fatura de Aquisição',       'id_tipo' => 3],
+        'contrato_aquisicao'      => ['nome' => 'Contrato de Aquisição',     'id_tipo' => 4],
+        'certificado_calibracao'  => ['nome' => 'Certificado de Calibração', 'id_tipo' => 7],
+        'relatorio_calibracao'    => ['nome' => 'Relatório de Calibração',   'id_tipo' => 8],
+    ];
+
+    foreach ($docs_obrigatorios as $chave => $info) {
+        $doc = null;
+        foreach ($documentos_fixos as $d) {
+            if ($d['id_tipo'] === $info['id_tipo']) {
+                $doc = $d;
+                break;
+            }
+        }
+        $sem_nome     = empty($doc['nome']);
+        $sem_ficheiro = empty($doc['ficheiro']) || $doc['ficheiro']['error'] === UPLOAD_ERR_NO_FILE;
+        if ($sem_nome && $sem_ficheiro) {
+            $erros[] = $info['nome'] . " é obrigatório.";
+        }
+    }
+
+    // Condicionais
+    if ($tem_garantia === 'sim') {
+        $doc_garantia = null;
+        foreach ($documentos_fixos as $d) {
+            if ($d['id_tipo'] === 5) {
+                $doc_garantia = $d;
+                break;
+            }
+        }
+        if ((empty($doc_garantia['nome'])) && ($doc_garantia['ficheiro']['error'] === UPLOAD_ERR_NO_FILE)) {
+            $erros[] = "O Certificado de Garantia é obrigatório quando tem garantia associada.";
+        }
+    }
+
+    if ($tem_contrato === 'sim') {
+        $doc_contrato = null;
+        foreach ($documentos_fixos as $d) {
+            if ($d['id_tipo'] === 6) {
+                $doc_contrato = $d;
+                break;
+            }
+        }
+        if ((empty($doc_contrato['nome'])) && ($doc_contrato['ficheiro']['error'] === UPLOAD_ERR_NO_FILE)) {
+            $erros[] = "O Contrato de Manutenção é obrigatório quando tem contrato associado.";
+        }
+    }
+
+    // 3. NORMALIZAR
+    $designacao           = ucwords(strtolower($designacao));
+    $fabricante           = ucwords(strtolower(trim($fabricante)));
+    $marca                = ucwords(strtolower(trim($marca)));
+    $modelo               = trim($modelo);
+    $num_serie            = trim($num_serie);
+    $entidade_responsavel = ucwords(strtolower(trim($entidade_responsavel)));
+    $observacoes          = trim($observacoes);
+
+    // 4. GUARDAR NA BD
+    if (empty($erros)) {
+        try {
+            $ligacao = ligar_bd();
+
+            // INSERT equipamento
+            $sql = "INSERT INTO equipamentos (
+                    codigo_interno, designacao, id_categoria,
+                    fabricante, marca, modelo, num_serie, ano_fabrico,
+                    criticidade, data_aquisicao, custo_aquisicao,
+                    tipo_entrada, id_estado, id_localizacao,
+                    observacoes
+                ) VALUES (
+                    :codigo_interno, :designacao, :id_categoria,
+                    :fabricante, :marca, :modelo, :num_serie, :ano_fabrico,
+                    :criticidade, :data_aquisicao, :custo_aquisicao,
+                    :tipo_entrada, :id_estado, :id_localizacao,
+                    :observacoes
+                )";
+            $stmt = $ligacao->prepare($sql);
+            $stmt->execute([
+                ':codigo_interno'  => $codigo_interno,
+                ':designacao'      => $designacao,
+                ':id_categoria'    => $id_categoria    ?: null,
+                ':fabricante'      => $fabricante      ?: null,
+                ':marca'           => $marca           ?: null,
+                ':modelo'          => $modelo          ?: null,
+                ':num_serie'       => $num_serie       ?: null,
+                ':ano_fabrico'     => $ano_fabrico     ?: null,
+                ':criticidade'     => $criticidade     ?: null,
+                ':data_aquisicao'  => $data_aquisicao  ?: null,
+                ':custo_aquisicao' => $custo_aquisicao ?: null,
+                ':tipo_entrada'    => $tipo_entrada    ?: null,
+                ':id_estado'       => $id_estado       ?: null,
+                ':id_localizacao'  => $id_localizacao  ?: null,
+                ':observacoes'     => $observacoes     ?: null,
+            ]);
+
+            $id_equipamento = $ligacao->lastInsertId();
+
+            // INSERT fornecedores
+            $sql_forn = "INSERT INTO equipamentos_fornecedores (id_equipamento, id_fornecedor, tipo_relacao)
+                     VALUES (:id_equipamento, :id_fornecedor, :tipo_relacao)";
+            $stmt_forn = $ligacao->prepare($sql_forn);
+            foreach ($ids_fornecedor as $i => $id_forn) {
+                if (!empty($id_forn) && !empty($tipos_relacao[$i])) {
+                    $stmt_forn->execute([
+                        ':id_equipamento' => $id_equipamento,
+                        ':id_fornecedor'  => $id_forn,
+                        ':tipo_relacao'   => $tipos_relacao[$i],
+                    ]);
+                }
+            }
+
+            // Pasta de destino dos PDFs
+            $pasta_uploads    = __DIR__ . '/../../../assets/uploads/documentos/';
+            $caminho_relativo = BASE_URL . '/assets/uploads/documentos/';
+
+            // Preparar query de documentos
+            $sql_doc = "INSERT INTO documentacao (
+                        nome_documento, data_documento, data_validade,
+                        estado, caminho_ficheiro, id_tipo_documento, id_equipamento
+                    ) VALUES (
+                        :nome_documento, :data_documento, :data_validade,
+                        :estado, :caminho_ficheiro, :id_tipo_documento, :id_equipamento
+                    )";
+            $stmt_doc = $ligacao->prepare($sql_doc);
+
+            // variável para guardar o id do documento do contrato
+            $id_doc_contrato = null;
+
+            // Inserir documentos fixos
+            foreach ($documentos_fixos as $doc) {
+                if (empty($doc['nome']) && (empty($doc['ficheiro']) || $doc['ficheiro']['error'] === UPLOAD_ERR_NO_FILE)) {
+                    continue;
+                }
+
+                $caminho = null;
+                if (!empty($doc['ficheiro']) && $doc['ficheiro']['error'] !== UPLOAD_ERR_NO_FILE) {
+                    $resultado_upload = fazer_upload_pdf($doc['ficheiro'], $pasta_uploads);
+                    if ($resultado_upload) {
+                        $caminho = $caminho_relativo . $resultado_upload;
+                    } elseif ($resultado_upload === false) {
+                        $erro_sistema = "Erro no upload do ficheiro. Certifica-te que é um PDF.";
+                        break;
+                    }
+                }
+
+                $stmt_doc->execute([
+                    ':nome_documento'    => $doc['nome']     ?: null,
+                    ':data_documento'    => $doc['data']     ?: null,
+                    ':data_validade'     => $doc['validade'] ?: null,
+                    ':estado'            => 'Ativo',
+                    ':caminho_ficheiro'  => $caminho,
+                    ':id_tipo_documento' => $doc['id_tipo'],
+                    ':id_equipamento'    => $id_equipamento,
+                ]);
+
+                // ← NOVO: se for o contrato de manutenção, guarda o id
+                if ($doc['id_tipo'] === 6) {
+                    $id_doc_contrato = $ligacao->lastInsertId();
+                }
+            }
+
+            // Inserir documentos adicionais
+            if (empty($erro_sistema)) {
+                foreach ($nomes_adicionais as $i => $nome_add) {
+                    if (empty($nome_add)) continue;
+
+                    $caminho_add = null;
+                    $ficheiro_add = [
+                        'name'     => $ficheiros_adicionais['name'][$i]     ?? '',
+                        'type'     => $ficheiros_adicionais['type'][$i]     ?? '',
+                        'tmp_name' => $ficheiros_adicionais['tmp_name'][$i] ?? '',
+                        'error'    => $ficheiros_adicionais['error'][$i]    ?? UPLOAD_ERR_NO_FILE,
+                        'size'     => $ficheiros_adicionais['size'][$i]     ?? 0,
+                    ];
+
+                    if ($ficheiro_add['error'] !== UPLOAD_ERR_NO_FILE) {
+                        $resultado_add = fazer_upload_pdf($ficheiro_add, $pasta_uploads);
+                        if ($resultado_add) {
+                            $caminho_add = $caminho_relativo . $resultado_add;
+                        }
+                    }
+
+                    $stmt_doc->execute([
+                        ':nome_documento'    => $nome_add,
+                        ':data_documento'    => $datas_adicionais[$i]    ?: null,
+                        ':data_validade'     => $validades_adicionais[$i] ?: null,
+                        ':estado'            => 'Ativo',
+                        ':caminho_ficheiro'  => $caminho_add,
+                        ':id_tipo_documento' => 12,
+                        ':id_equipamento'    => $id_equipamento,
+                    ]);
+                }
+            }
+
+            //  INSERT na tabela contratos (só se tiver contrato)
+            if ($tem_contrato === 'sim' && !empty($id_doc_contrato)) {
+                $sql_contrato = "INSERT INTO contratos (
+                                tipo_contrato, periodicidade, entidade_responsavel,
+                                observacoes, id_fornecedor, id_documento
+                            ) VALUES (
+                                :tipo_contrato, :periodicidade, :entidade_responsavel,
+                                :observacoes, :id_fornecedor, :id_documento
+                            )";
+                $stmt_contrato = $ligacao->prepare($sql_contrato);
+                $stmt_contrato->execute([
+                    ':tipo_contrato'        => $tipo_contrato        ?: null,
+                    ':periodicidade'        => $periodicidade         ?: null,
+                    ':entidade_responsavel' => $entidade_responsavel  ?: null,
+                    ':observacoes'          => $observacoes           ?: null,
+                    ':id_fornecedor'        => $ids_fornecedor[0]     ?: null,
+                    ':id_documento'         => $id_doc_contrato,
+                ]);
+            }
+
+            // INSERT acessórios
+            $sql_acessorio = "INSERT INTO acessorios (nome, quantidade, id_estado, id_equipamento)
+                  VALUES (:nome, :quantidade, :id_estado, :id_equipamento)";
+            $stmt_acessorio = $ligacao->prepare($sql_acessorio);
+
+            foreach ($acessorio_nome as $i => $nome) {
+                if (empty($nome)) continue;
+                $stmt_acessorio->execute([
+                    ':nome'          => $nome,
+                    ':quantidade'    => $acessorio_quantidade[$i] ?: null,
+                    ':id_estado'     => $acessorio_estado[$i]     ?: null,
+                    ':id_equipamento' => $id_equipamento,
+                ]);
+            }
+
+            // INSERT consumíveis
+            $sql_consumivel = "INSERT INTO consumiveis (nome, quantidade, id_equipamento)
+                   VALUES (:nome, :quantidade, :id_equipamento)";
+            $stmt_consumivel = $ligacao->prepare($sql_consumivel);
+
+            foreach ($consumivel_nome as $i => $nome) {
+                if (empty($nome)) continue;
+                $stmt_consumivel->execute([
+                    ':nome'           => $nome,
+                    ':quantidade'     => $consumivel_quantidade[$i] ?: null,
+                    ':id_equipamento' => $id_equipamento,
+                ]);
+            }
+
+            $ligacao = null;
+            header('Location: equipamentos.php');
+            exit;
+        } catch (PDOException $err) {
+            $erro_sistema = "Erro ao gravar os dados: " . $err->getMessage();
+        }
+    }
+}
 ?>
 <?php include '../../includes/header.php';
 $paginaAtiva = 'equipamentos';
@@ -32,7 +404,7 @@ $paginaAtiva = 'equipamentos';
             </a>
         </div>
 
-        <form action="inserir_equipamento.php" method="post" novalidate enctype="multipart/form-data">
+        <form action="#" method="post" novalidate enctype="multipart/form-data">
             <!-- TABS -->
             <div class="card border-0 shadow-sm rounded-4">
 
@@ -102,81 +474,101 @@ $paginaAtiva = 'equipamentos';
 
                         <div class="tab-pane fade show active" id="dadosGeraisNovo">
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
-
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="row g-4">
 
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Código Interno</label>
-                                    <input type="text" class="form-control" name="codigo_interno">
+                                    <input type="text" class="form-control" name="codigo_interno"
+                                        value="<?= htmlspecialchars($proximo_codigo ?? '') ?>"
+                                        readonly>
                                 </div>
 
                                 <div class="col-md-8">
                                     <label class="form-label fw-bold">Designação</label>
-                                    <input type="text" class="form-control" name="designacao">
+                                    <input type="text" class="form-control" name="designacao" value="<?= $_POST['designacao'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Categoria</label>
                                     <select class="form-select" name="id_categoria">
-                                        <option selected disabled>Selecionar categoria</option>
-                                        <option>Suporte de Vida</option>
-                                        <option>Monitorização</option>
-                                        <option>Diagnóstico</option>
-                                        <option>Terapia</option>
+                                        <option value="">Selecione uma categoria</option>
+                                        <?php foreach ($categorias as $categoria): ?>
+                                            <option value="<?= $categoria->id ?>"
+                                                <?= (($_POST['id_categoria'] ?? '') == $categoria->id) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($categoria->nome_categoria) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Fabricante</label>
-                                    <input type="text" class="form-control" name="fabricante">
+                                    <input type="text" class="form-control" name="fabricante" value="<?= $_POST['fabricante'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Marca</label>
-                                    <input type="text" class="form-control" name="marca">
+                                    <input type="text" class="form-control" name="marca" value="<?= $_POST['marca'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Modelo</label>
-                                    <input type="text" class="form-control" name="modelo">
+                                    <input type="text" class="form-control" name="modelo" value="<?= $_POST['modelo'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Número de Série</label>
-                                    <input type="text" class="form-control" name="num_serie">
+                                    <input type="text" class="form-control" name="num_serie" value="<?= $_POST['num_serie'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Ano de Fabrico</label>
-                                    <input type="number" class="form-control" name="ano_fabrico">
+                                    <input type="number" class="form-control" name="ano_fabrico" value="<?= $_POST['ano_fabrico'] ?? '' ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Criticidade</label>
                                     <select class="form-select" name="criticidade">
-                                        <option>Baixa</option>
-                                        <option>Média</option>
-                                        <option>Alta</option>
-                                        <option>Crítica</option>
+
+                                        <option value="">Selecione a criticidade</option>
+                                        <option value="Baixa"
+                                            <?= (($_POST['criticidade'] ?? '') == 'Baixa') ? 'selected' : '' ?>>
+                                            Baixa
+                                        </option>
+                                        <option value="Média"
+                                            <?= (($_POST['criticidade'] ?? '') == 'Média') ? 'selected' : '' ?>>
+                                            Média
+                                        </option>
+                                        <option value="Alta"
+                                            <?= (($_POST['criticidade'] ?? '') == 'Alta') ? 'selected' : '' ?>>
+                                            Alta
+                                        </option>
+                                        <option value="Suporte de Vida"
+                                            <?= (($_POST['criticidade'] ?? '') == 'Suporte de Vida') ? 'selected' : '' ?>>
+                                            Suporte de Vida
+                                        </option>
+
                                     </select>
                                 </div>
 
@@ -374,24 +766,26 @@ $paginaAtiva = 'equipamentos';
                         <!-- AQUISIÇÃO -->
                         <div class="tab-pane fade" id="aquisicaoNovo">
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="row g-4">
 
@@ -401,7 +795,7 @@ $paginaAtiva = 'equipamentos';
                                         Data de Aquisição
                                     </label>
 
-                                    <input type="date" class="form-control" name="data_aquisicao">
+                                    <input type="date" class="form-control" name="data_aquisicao" value="<?= $_POST['data_aquisicao'] ?? '' ?>">
 
                                 </div>
 
@@ -411,7 +805,7 @@ $paginaAtiva = 'equipamentos';
                                         Custo de Aquisição (€)
                                     </label>
 
-                                    <input type="number" class="form-control"  name="custo_aquisicao" placeholder="0.00">
+                                    <input type="number" class="form-control" name="custo_aquisicao" placeholder="0.00" value="<?= $_POST['custo_aquisicao'] ?? '' ?>">
 
                                 </div>
 
@@ -470,10 +864,13 @@ $paginaAtiva = 'equipamentos';
                                         </button>
                                     </label>
                                     <select class="form-select" name="id_estado">
-                                        <option>Ativo</option>
-                                        <option>Em manutenção</option>
-                                        <option>Inativo</option>
-                                        <option>Em calibração</option>
+                                        <option value="">Selecione uma estado</option>
+                                        <?php foreach ($estados as $estado): ?>
+                                            <option value="<?= $estado->id ?>"
+                                                <?= (($_POST['id_estado'] ?? '') == $estado->id) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($estado->nome_estado) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -675,24 +1072,26 @@ $paginaAtiva = 'equipamentos';
                         <!-- ACESSÓRIOS E CONSUMÍVEIS -->
                         <div class="tab-pane fade" id="acessoriosNovo">
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="row g-4">
 
@@ -770,7 +1169,7 @@ $paginaAtiva = 'equipamentos';
                                                 Nome do Acessório
                                             </label>
 
-                                            <input type="text" class="form-control" name="acessorio_nome[]" placeholder="Ex: Sensor de Fluxo">
+                                            <input type="text" class="form-control" name="acessorio_nome[]" value="<?= $_POST['acessorio_nome[]'] ?? '' ?>" placeholder="Ex: Sensor de Fluxo">
 
                                         </div>
 
@@ -780,7 +1179,7 @@ $paginaAtiva = 'equipamentos';
                                                 Quantidade
                                             </label>
 
-                                            <input type="number" class="form-control" name="acessorio_quantidade[]">
+                                            <input type="number" class="form-control" name="acessorio_quantidade[]" value="<?= $_POST['acessorio_quantidade[]'] ?? '' ?>">
 
                                         </div>
 
@@ -805,13 +1204,13 @@ $paginaAtiva = 'equipamentos';
 
                                                 </button>
                                             </label>
-
                                             <select class="form-select" name="acessorio_estado[]">
-
-                                                <option>Ativo</option>
-                                                <option>Inativo</option>
-                                                <option>Avariado</option>
-
+                                                <option value="">Selecione um estado</option>
+                                                <?php foreach ($estados as $estado): ?>
+                                                    <option value="<?= $estado->id ?>">
+                                                        <?= htmlspecialchars($estado->nome_estado) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
                                             </select>
 
                                         </div>
@@ -853,7 +1252,7 @@ $paginaAtiva = 'equipamentos';
                                                 Nome do Consumível
                                             </label>
 
-                                            <input type="text" class="form-control" name="consumivel_nome[]" placeholder="Ex: Filtro Bacteriano">
+                                            <input type="text" class="form-control" name="consumivel_nome[]" value="<?= $_POST['consumivel_nome[]'] ?? '' ?>" placeholder="Ex: Filtro Bacteriano">
 
                                         </div>
 
@@ -863,7 +1262,7 @@ $paginaAtiva = 'equipamentos';
                                                 Quantidade
                                             </label>
 
-                                            <input type="number" class="form-control" name="consumivel_quantidade[]">
+                                            <input type="number" class="form-control" name="consumivel_quantidade[]" value="<?= $_POST['consumivel_quantidade[]'] ?? '' ?>">
 
                                         </div>
 
@@ -890,119 +1289,127 @@ $paginaAtiva = 'equipamentos';
                         <div class="tab-pane fade" id="localizacaoNovo">
 
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <label class="form-label fw-bold">
                                 Localização Associada
                             </label>
 
                             <select class="form-select" name="id_localizacao">
-
-                                <option selected disabled>
-                                    Selecionar localização
-                                </option>
-
-                                <option>
-                                    UCI - Piso 2 - Sala UCI02
-                                </option>
-
-                                <option>
-                                    Urgência - Piso 1
-                                </option>
-
-                                <option>
-                                    Bloco Operatório
-                                </option>
-
+                                <option value="">Selecionar localização</option>
+                                <?php foreach ($localizacoes as $loc): ?>
+                                    <option value="<?= $loc->id ?>"
+                                        <?= (($_POST['id_localizacao'] ?? '') == $loc->id) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($loc->edificio . ' - Piso ' . $loc->piso . ' - ' . $loc->sala_gabinete) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
 
                         </div>
+
                         <!-- Fornecedor -->
                         <div class="tab-pane fade" id="fornecedorNovo">
-                            <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
 
-                                <h6 class="alert-heading mb-2">
+                            <!-- Alertas -->
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="fw-bold mb-0">Fornecedores Associados</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAdicionarFornecedor">
+                                    <i class="fa-solid fa-plus me-1"></i>
+                                    Adicionar Fornecedor
+                                </button>
+                            </div>
 
-                                </h6>
+                            <div id="lista-fornecedores">
 
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
+                                <div class="row g-2 mb-2 linha-fornecedor">
+                                    <div class="col-md-7">
+                                        <select class="form-select" name="id_fornecedor[]">
+                                            <option value="">Selecionar fornecedor</option>
+                                            <?php foreach ($fornecedores as $f): ?>
+                                                <option value="<?= $f->id ?>">
+                                                    <?= htmlspecialchars($f->nome_empresa) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <select class="form-select" name="tipo_relacao[]">
+                                            <option value="">Tipo de relação</option>
+                                            <option value="Fabricante">Fabricante</option>
+                                            <option value="Distribuidor">Distribuidor</option>
+                                            <option value="Assistência Técnica">Assistência Técnica</option>
+                                            <option value="Consumíveis / Acessórios">Consumíveis / Acessórios</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                             </div>
 
-                            <label class="form-label fw-bold">
-                                Fornecedor Associado
-                            </label>
-
-                            <select class="form-select" name="id_fornecedor">
-
-                                <option selected disabled>
-                                    Selecionar fornecedor
-                                </option>
-
-                                <option>
-                                    MedEquip Portugal
-                                </option>
-
-                                <option>
-                                    SaúdeTec Lda.
-                                </option>
-
-                                <option>
-                                    HospitalCare Solutions
-                                </option>
-
-                            </select>
+                            <!-- JSON com fornecedores para o JS usar -->
+                            <script>
+                                const fornecedoresDisponiveis = <?= json_encode(
+                                                                    array_map(fn($f) => ['id' => $f->id, 'nome' => $f->nome_empresa], $fornecedores)
+                                                                ) ?>;
+                            </script>
 
                         </div>
 
                         <!-- Garantias e Contratos -->
                         <div class="tab-pane fade" id="garantiasNovo">
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <!-- GARANTIA -->
 
@@ -1014,7 +1421,7 @@ $paginaAtiva = 'equipamentos';
                                         Garantia Associada
                                     </label>
 
-                                    <select class="form-select" id="temGarantia">
+                                    <select class="form-select" id="temGarantia" name="tem_garantia">
 
                                         <option selected disabled>
                                             Selecionar opção
@@ -1046,7 +1453,7 @@ $paginaAtiva = 'equipamentos';
                                         Contrato de Manutenção Associado
                                     </label>
 
-                                    <select class="form-select" id="temContrato">
+                                    <select class="form-select" id="temContrato" name="tem_contrato">
 
                                         <option selected disabled>
                                             Selecionar opção
@@ -1486,24 +1893,26 @@ $paginaAtiva = 'equipamentos';
                         <div class="tab-pane fade" id="documentacaoNovo">
 
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <h5 class="fw-bold mb-3">
                                 Resumo da Documentação Associada
@@ -1720,24 +2129,26 @@ $paginaAtiva = 'equipamentos';
 
                         <div class="tab-pane fade" id="observacoesNovo">
                             <!-- ALERTAS -->
-                            <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+                            <?php if (!empty($erros)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <h6 class="alert-heading mb-2">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        Foram encontrados erros
+                                    </h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
 
-                                <h6 class="alert-heading mb-2">
-
-                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
-                                    Foram encontrados erros
-
-                                </h6>
-
-                                <ul class="mb-0">
-
-                                    <li>Código interno é obrigatório.</li>
-
-                                    <li>Categoria é obrigatória.</li>
-
-                                </ul>
-
-                            </div>
+                            <?php if (!empty($erro_sistema)): ?>
+                                <div class="alert alert-danger mb-4">
+                                    <strong>Erro do sistema:</strong>
+                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                </div>
+                            <?php endif; ?>
 
                             <label class="form-label fw-bold">
                                 Observações
