@@ -6,7 +6,85 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+$pesquisa = trim($_GET['pesquisa'] ?? '');
+$categoria = trim($_GET['categoria'] ?? '');
+$estado = trim($_GET['estado'] ?? '');
+
+try {
+
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST .
+            ";port=" . MYSQL_PORT .
+            ";dbname=" . MYSQL_DATABASE .
+            ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql = "
+    SELECT
+        equipamentos.*,
+        categorias.nome_categoria,
+        localizacoes.servico_departamento,
+        estados.nome_estado
+
+    FROM equipamentos
+
+    INNER JOIN categorias
+        ON equipamentos.id_categoria = categorias.id
+
+    INNER JOIN localizacoes
+        ON equipamentos.id_localizacao = localizacoes.id
+
+    INNER JOIN estados
+        ON equipamentos.id_estado = estados.id
+
+    WHERE 1=1
+    ";
+
+    if (!empty($pesquisa)) {
+
+        $sql .= "
+        AND (
+            equipamentos.codigo_interno LIKE '%$pesquisa%'
+            OR equipamentos.designacao LIKE '%$pesquisa%'
+            OR equipamentos.marca LIKE '%$pesquisa%'
+            OR equipamentos.modelo LIKE '%$pesquisa%'
+        )
+        ";
+    }
+    if (!empty($categoria) && $categoria != 'Todas') {
+
+        $sql .= "
+    AND categorias.nome_categoria = '$categoria'
+    ";
+    }
+    if (!empty($estado) && $estado != 'Todos') {
+
+        $sql .= "
+    AND estados.nome_estado = '$estado'
+    ";
+    }
+
+    $sql .= "
+    ORDER BY equipamentos.codigo_interno ASC
+    ";
+
+    $resultados = $ligacao->query($sql)
+        ->fetchAll(PDO::FETCH_OBJ);
+
+    $erro = '';
+} catch (PDOException $err) {
+
+    $erro = "Aconteceu um erro na ligação à base de dados.";
+    $resultados = [];
+}
+
+$ligacao = null;
 ?>
+
 <?php include '../../includes/header.php';
 $paginaAtiva = 'equipamentos';
 ?>
@@ -34,239 +112,202 @@ $paginaAtiva = 'equipamentos';
         <!-- FILTROS -->
         <section class="card filter-card mb-4">
             <div class="card-body">
-                <div class="row g-3 align-items-end">
+                <form method="GET">
+                    <div class="row g-3 align-items-end">
 
-                    <div class="col-md-4">
-                        <label for="pesquisa" class="form-label">Pesquisar equipamento</label>
-                        <input type="text" id="pesquisa" class="form-control"
-                            placeholder="Código, designação, marca ou modelo">
-                    </div>
+                        <div class="col-md-4">
+                            <label for="pesquisa" class="form-label">Pesquisar equipamento</label>
+                            <input
+                                type="text"
+                                id="pesquisa"
+                                name="pesquisa"
+                                class="form-control"
+                                placeholder="Código, designação, marca ou modelo"
+                                value="<?= htmlspecialchars($_GET['pesquisa'] ?? '') ?>">
+                        </div>
 
-                    <div class="col-md-3">
-                        <label for="categoria" class="form-label">Categoria</label>
-                        <select id="categoria" class="form-select">
-                            <option selected>Todas</option>
-                            <option>Monitorização</option>
-                            <option>Suporte de vida</option>
-                            <option>Diagnóstico</option>
-                            <option>Terapia</option>
-                            <option>Laboratório</option>
-                        </select>
-                    </div>
+                        <div class="col-md-3">
+                            <label for="categoria" class="form-label">Categoria</label>
+                            <select id="categoria" name="categoria" class="form-select">
 
-                    <div class="col-md-3">
-                        <label for="estado" class="form-label">Estado atual
-                            <button
-                                type="button"
-                                class="btn btn-sm border-0 p-0 ms-1"
-                                data-bs-toggle="popover"
-                                data-bs-trigger="hover focus"
-                                data-bs-html="true"
-                                title="Estados dos Equipamentos"
-                                data-bs-content="
+                                <option <?= ($categoria == '' || $categoria == 'Todas') ? 'selected' : '' ?>>
+                                    Todas
+                                </option>
+
+                                <option <?= ($categoria == 'Monitorização') ? 'selected' : '' ?>>
+                                    Monitorização
+                                </option>
+
+                                <option <?= ($categoria == 'Suporte de Vida') ? 'selected' : '' ?>>
+                                    Suporte de Vida
+                                </option>
+
+                                <option <?= ($categoria == 'Diagnóstico') ? 'selected' : '' ?>>
+                                    Diagnóstico
+                                </option>
+
+                                <option <?= ($categoria == 'Terapia') ? 'selected' : '' ?>>
+                                    Terapia
+                                </option>
+
+                                <option <?= ($categoria == 'Laboratório') ? 'selected' : '' ?>>
+                                    Laboratório
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="estado" class="form-label">Estado atual
+                                <button
+                                    type="button"
+                                    class="btn btn-sm border-0 p-0 ms-1"
+                                    data-bs-toggle="popover"
+                                    data-bs-trigger="hover focus"
+                                    data-bs-html="true"
+                                    title="Estados dos Equipamentos"
+                                    data-bs-content="
             <b>Ativo</b> - Disponível e operacional.<br>
             <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
             <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
             <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
 
-                                <i class="fa-solid fa-circle-question text-primary"></i>
+                                    <i class="fa-solid fa-circle-question text-primary"></i>
 
+                                </button>
+                            </label>
+                            <select id="estado" name="estado" class="form-select">
+
+                                <option <?= ($estado == '' || $estado == 'Todos') ? 'selected' : '' ?>>
+                                    Todos
+                                </option>
+
+                                <option <?= ($estado == 'Ativo') ? 'selected' : '' ?>>
+                                    Ativo
+                                </option>
+
+                                <option <?= ($estado == 'Em manutenção') ? 'selected' : '' ?>>
+                                    Em manutenção
+                                </option>
+
+                                <option <?= ($estado == 'Inativo') ? 'selected' : '' ?>>
+                                    Inativo
+                                </option>
+
+                                <option <?= ($estado == 'Em calibração') ? 'selected' : '' ?>>
+                                    Em calibração
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-secondary w-100">
+                                <i class="fa-solid fa-filter me-2"></i>
+                                Filtrar
                             </button>
-                        </label>
-                        <select id="estado" class="form-select">
-                            <option selected>Todos</option>
-                            <option>Ativo</option>
-                            <option>Em manutenção</option>
-                            <option>Inativo</option>
-                            <option>Em calibração</option>
-                        </select>
-                    </div>
+                        </div>
 
-                    <div class="col-md-2">
-                        <button class="btn btn-outline-secondary w-100">
-                            <i class="fa-solid fa-filter me-2"></i>
-                            Filtrar
-                        </button>
                     </div>
-
-                </div>
+                </form>
             </div>
         </section>
 
         <!-- TABELA -->
         <section class="card table-card">
             <div class="card-body">
+                <?php if (!empty($erro)) : ?>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Designação</th>
-                                <th>Categoria</th>
-                                <th>Marca/Modelo</th>
-                                <th>Localização</th>
-                                <th>Estado</th>
-                                <th>Criticidade</th>
-                                <th class="text-end">Ações</th>
-                            </tr>
-                        </thead>
+                    <div class="alert alert-danger">
+                        <?= $erro ?>
+                    </div>
 
-                        <tbody>
-                            <tr data-categoria="Suporte de vida" data-estado="Ativo">
-                                <td>EQ-0001</td>
-                                <td>Ventilador Pulmonar</td>
-                                <td>Suporte de vida</td>
-                                <td>Philips VX-200</td>
-                                <td>Hospital Central • Piso 2</td>
-                                <td>
-                                    <span class="badge bg-success">Ativo</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-danger">Crítica</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="ficha_equipamento.php" class="btn btn-sm btn-outline-primary">
-                                        Ver
-                                    </a>
-                                    <a href="editar_equipamentos.php" class="btn btn-sm btn-outline-warning">
-                                        Editar
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#eliminarDocumentoModal">
+                <?php elseif (count($resultados) == 0) : ?>
 
-                                        Eliminar
+                    <p class="text-muted">
+                        Não existem equipamentos registados.
+                    </p>
+                <?php else : ?>
+                    <div class="table-responsive">
+                        <table id="tabela-equipamentos" class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Designação</th>
+                                    <th>Categoria</th>
+                                    <th>Marca/Modelo</th>
+                                    <th>Localização</th>
+                                    <th>Estado</th>
+                                    <th>Criticidade</th>
+                                    <th class="text-end">Ações</th>
+                                </tr>
+                            </thead>
 
-                                    </button>
-                                </td>
-                            </tr>
+                            <tbody>
 
-                            <tr data-categoria="Monitorização" data-estado="Em manutenção">
-                                <td>EQ-0002</td>
-                                <td>Monitor Multiparamétrico</td>
-                                <td>Monitorização</td>
-                                <td>Mindray BeneVision N12</td>
-                                <td>Hospital Central • Piso 1</td>
-                                <td>
-                                    <span class="badge bg-warning text-dark">Em manutenção</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-danger">Crítica</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="ficha_equipamento.php" class="btn btn-sm btn-outline-primary">
-                                        Ver
-                                    </a>
-                                    <a href="editar_equipamentos.php" class="btn btn-sm btn-outline-warning">
-                                        Editar
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#eliminarDocumentoModal">
+                                <?php foreach ($resultados as $equipamento) : ?>
+                                    <tr>
+                                        <td class="codigo-equipamento"><?= htmlspecialchars($equipamento->codigo_interno) ?></td>
+                                        <td><?= htmlspecialchars($equipamento->designacao) ?></td>
+                                        <td><?= htmlspecialchars($equipamento->nome_categoria) ?></td>
+                                        <td><?= htmlspecialchars($equipamento->marca) ?> <?= htmlspecialchars($equipamento->modelo) ?></td>
+                                        <td><?= htmlspecialchars($equipamento->servico_departamento) ?></td>
+                                        <td>
+                                            <?php
+                                            $estado = $equipamento->nome_estado;
+                                            if ($estado == 'Ativo') echo '<span class="badge bg-success">Ativo</span>';
+                                            elseif ($estado == 'Em manutenção') echo '<span class="badge bg-warning text-dark">Em manutenção</span>';
+                                            elseif ($estado == 'Inativo') echo '<span class="badge bg-secondary">Inativo</span>';
+                                            elseif ($estado == 'Em calibração') echo '<span class="badge bg-info text-dark">Em calibração</span>';
+                                            elseif ($estado == 'Avariado') echo '<span class="badge bg-danger">Avariado</span>';
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $criticidade = $equipamento->criticidade;
+                                            if ($criticidade == 'Suporte de Vida') echo '<span class="badge bg-danger">Suporte de Vida</span>';
+                                            elseif ($criticidade == 'Alta') echo '<span class="badge bg-warning text-dark">Alta</span>';
+                                            elseif ($criticidade == 'Média') echo '<span class="badge bg-primary">Média</span>';
+                                            elseif ($criticidade == 'Baixa') echo '<span class="badge bg-secondary">Baixa</span>';
+                                            ?>
+                                        </td>
+                                        <td class="text-end acoes-nowrap">
+                                            <a href="ficha_equipamento.php?id=<?= $equipamento->id ?>"
+                                                class="btn btn-sm btn-outline-primary">
+                                                Ver
+                                            </a>
 
-                                        Eliminar
+                                            <a href="editar_equipamentos.php?id=<?= $equipamento->id ?>"
+                                                class="btn btn-sm btn-outline-warning">
+                                                Editar
+                                            </a>
 
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr data-categoria="Terapia" data-estado="Em calibração">
-                                <td>EQ-0003</td>
-                                <td>Bomba de Infusão</td>
-                                <td>Terapia</td>
-                                <td>B. Braun Infusomat Space</td>
-                                <td>Clínica Norte • Piso 0</td>
-                                <td>
-                                    <span class="badge bg-info text-dark">Em calibração</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-warning text-dark">Alta</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="ficha_equipamento.php" class="btn btn-sm btn-outline-primary">
-                                        Ver
-                                    </a>
-                                    <a href="editar_equipamentos.php" class="btn btn-sm btn-outline-warning">
-                                        Editar
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#eliminarDocumentoModal">
-
-                                        Eliminar
-
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr data-categoria="Suporte de vida" data-estado="Ativo">
-                                <td>EQ-0004</td>
-                                <td>Desfibrilhador</td>
-                                <td>Suporte de vida</td>
-                                <td>Zoll R Series</td>
-                                <td>Urgência • Piso 2</td>
-                                <td>
-                                    <span class="badge bg-success">Ativo</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-danger">Crítica</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="ficha_equipamento.php" class="btn btn-sm btn-outline-primary">
-                                        Ver
-                                    </a>
-                                    <a href="editar_equipamentos.php" class="btn btn-sm btn-outline-warning">
-                                        Editar
-                                    </a>
-                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#eliminarDocumentoModal">
-
-                                        Eliminar
-
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <tr data-categoria="Diagnóstico" data-estado="Inativo">
-                                <td>EQ-0005</td>
-                                <td>Eletrocardiógrafo</td>
-                                <td>Diagnóstico</td>
-                                <td>GE MAC 2000</td>
-                                <td>Hospital Central • Piso -1</td>
-                                <td>
-                                    <span class="badge bg-secondary">Inativo</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-primary">Média</span>
-                                </td>
-                                <td class="text-end">
-                                    <div class="d-flex gap-2 justify-content-end flex-nowrap">
-                                        <a href="ficha_equipamento.php" class="btn btn-sm btn-outline-primary">
-                                            Ver
-                                        </a>
-                                        <a href="editar_equipamentos.php" class="btn btn-sm btn-outline-warning">
-                                            Editar
-                                        </a>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                            data-bs-target="#eliminarDocumentoModal">
-
-                                            Eliminar
-
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                </div>
-
+                                            <button
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#eliminarEquipamentoModal"
+                                                data-id="<?= $equipamento->id ?>">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <p class="mb-5">Total: <strong> <?= count($resultados) ?> </strong></p>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
 
     </main>
 
 </div>
-<!-- MODAL ELIMINAR DOCUMENTO -->
-<div class="modal fade" id="eliminarDocumentoModal" tabindex="-1" aria-labelledby="eliminarDocumentoModalLabel"
+<!-- MODAL ELIMINAR EQUIPAMENTO -->
+<div class="modal fade" id="eliminarEquipamentoModal" tabindex="-1"
+    aria-labelledby="eliminarEquipamentoModalLabel"
     aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
@@ -276,14 +317,16 @@ $paginaAtiva = 'equipamentos';
             <!-- HEADER -->
             <div class="modal-header">
 
-                <h5 class="modal-title" id="eliminarDocumentoModalLabel">
+                <h5 class="modal-title" id="eliminarEquipamentoModalLabel">
 
                     Confirmar eliminação
 
                 </h5>
 
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
                 </button>
 
             </div>
@@ -306,13 +349,16 @@ $paginaAtiva = 'equipamentos';
             <!-- FOOTER -->
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <button type="button"
+                    class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal">
 
                     Cancelar
 
                 </button>
 
-                <button type="button" class="btn btn-danger">
+                <button type="button"
+                    class="btn btn-danger">
 
                     Eliminar
 
@@ -325,5 +371,25 @@ $paginaAtiva = 'equipamentos';
     </div>
 
 </div>
+<script>
+    $(document).ready(function() {
+        $('#tabela-equipamentos').DataTable({
+            paging: true,
+            searching: false,
+            lengthChange: false,
+            info: false,
+            ordering: false,
+            language: {
+                emptyTable: "Sem dados disponíveis na tabela.",
+                zeroRecords: "Nenhum registo encontrado.",
+                paginate: {
+                    next: "Seguinte",
+                    previous: "Anterior"
+                }
+            }
+        });
+    });
+</script>
+
 
 <?php include '../../includes/footer.php'; ?>

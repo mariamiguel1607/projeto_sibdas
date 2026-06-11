@@ -6,46 +6,113 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+
+$pesquisa = trim($_GET['pesquisa'] ?? '');
+$tipo = trim($_GET['tipo'] ?? '');
+
+try {
+
+    $ligacao = new PDO(
+        "mysql:host=" . MYSQL_HOST .
+            ";port=" . MYSQL_PORT .
+            ";dbname=" . MYSQL_DATABASE .
+            ";charset=utf8",
+        MYSQL_USERNAME,
+        MYSQL_PASSWORD
+    );
+
+    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql = "
+    SELECT
+        fornecedores.*,
+        COUNT(equipamentos_fornecedores.id_equipamento) AS total_equipamentos
+
+    FROM fornecedores
+
+    LEFT JOIN equipamentos_fornecedores
+        ON fornecedores.id = equipamentos_fornecedores.id_fornecedor
+
+    WHERE 1=1
+    ";
+
+    if (!empty($pesquisa)) {
+
+        $sql .= "
+        AND (
+            fornecedores.codigo_fornecedor LIKE '%$pesquisa%'
+            OR fornecedores.nome_empresa LIKE '%$pesquisa%'
+            OR fornecedores.email LIKE '%$pesquisa%'
+            OR fornecedores.telefone LIKE '%$pesquisa%'
+        )
+        ";
+    }
+
+    if (!empty($tipo) && $tipo != 'Todos') {
+
+        $sql .= "
+        AND fornecedores.tipo_fornecedor = '$tipo'
+        ";
+    }
+
+    $sql .= "
+    GROUP BY fornecedores.id
+
+    ORDER BY fornecedores.codigo_fornecedor ASC
+    ";
+
+    $resultados = $ligacao->query($sql)
+        ->fetchAll(PDO::FETCH_OBJ);
+
+    $erro = '';
+} catch (PDOException $err) {
+
+    $erro = "Aconteceu um erro na ligação à base de dados.";
+    $resultados = [];
+}
+
+$ligacao = null;
+
 ?>
-<?php include '../../includes/header.php'; 
+<?php include '../../includes/header.php';
 $paginaAtiva = 'fornecedores';
 ?>
 
-    <div class="private-layout">
+<div class="private-layout">
 
-        <?php include '../../includes/sidebar.php'; ?> 
+    <?php include '../../includes/sidebar.php'; ?>
 
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="private-main">
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="private-main">
 
-            <!-- TOPO -->
-            <header class="private-topbar">
+        <!-- TOPO -->
+        <header class="private-topbar">
 
-                <div>
+            <div>
 
-                    <h1>Fornecedores</h1>
+                <h1>Fornecedores</h1>
 
-                    <p>
-                        Gestão de fornecedores associados aos equipamentos médicos da plataforma.
-                    </p>
+                <p>
+                    Gestão de fornecedores associados aos equipamentos médicos da plataforma.
+                </p>
 
-                </div>
+            </div>
 
-                <a href="inserir_fornecedor.php" class="btn btn-primary-custom">
+            <a href="inserir_fornecedor.php" class="btn btn-primary-custom">
 
-                    <i class="fa-solid fa-plus me-2"></i>
-                    Adicionar Fornecedor
+                <i class="fa-solid fa-plus me-2"></i>
+                Adicionar Fornecedor
 
-                </a>
+            </a>
 
-            </header>
+        </header>
 
 
-            <!-- FILTROS -->
-            <section class="card filter-card mb-4">
+        <!-- FILTROS -->
+        <section class="card filter-card mb-4">
 
-                <div class="card-body">
-
+            <div class="card-body">
+                <form method="GET">
                     <div class="row g-3 align-items-end">
 
                         <!-- Pesquisa -->
@@ -55,8 +122,12 @@ $paginaAtiva = 'fornecedores';
                                 Pesquisa
                             </label>
 
-                            <input type="text" class="form-control" placeholder="Pesquisar fornecedor...">
-
+                            <input
+                                type="text"
+                                name="pesquisa"
+                                class="form-control"
+                                placeholder="Pesquisar fornecedor..."
+                                value="<?= htmlspecialchars($pesquisa) ?>">
                         </div>
 
                         <!-- Tipo -->
@@ -66,25 +137,25 @@ $paginaAtiva = 'fornecedores';
                                 Tipo de fornecedor
                             </label>
 
-                            <select class="form-select">
+                            <select name="tipo" class="form-select">
 
-                                <option selected>
+                                <option <?= ($tipo == '' || $tipo == 'Todos') ? 'selected' : '' ?>>
                                     Todos
                                 </option>
 
-                                <option>
+                                <option <?= ($tipo == 'Fabricante') ? 'selected' : '' ?>>
                                     Fabricante
                                 </option>
 
-                                <option>
+                                <option <?= ($tipo == 'Distribuidor') ? 'selected' : '' ?>>
                                     Distribuidor
                                 </option>
 
-                                <option>
+                                <option <?= ($tipo == 'Assistência Técnica') ? 'selected' : '' ?>>
                                     Assistência Técnica
                                 </option>
 
-                                <option>
+                                <option <?= ($tipo == 'Consumíveis / Acessórios') ? 'selected' : '' ?>>
                                     Consumíveis / Acessórios
                                 </option>
 
@@ -95,7 +166,7 @@ $paginaAtiva = 'fornecedores';
                         <!-- Botão -->
                         <div class="col-md-2">
 
-                            <button class="btn btn-outline-secondary w-100">
+                            <button type="submit" class="btn btn-outline-secondary w-100">
 
                                 <i class="fa-solid fa-filter me-2"></i>
                                 Filtrar
@@ -104,21 +175,38 @@ $paginaAtiva = 'fornecedores';
 
                         </div>
 
+
                     </div>
 
-                </div>
-
-            </section>
+                </form>
 
 
-            <!-- TABELA -->
-            <section class="card table-card">
+            </div>
 
-                <div class="card-body">
+        </section>
+
+
+        <!-- TABELA -->
+        <section class="card table-card">
+
+            <div class="card-body">
+
+                <?php if (!empty($erro)) : ?>
+
+                    <div class="alert alert-danger">
+                        <?= $erro ?>
+                    </div>
+
+                <?php elseif (count($resultados) == 0) : ?>
+
+                    <p class="text-muted">
+                        Não existem fornecedores registados.
+                    </p>
+                <?php else : ?>
 
                     <div class="table-responsive">
 
-                        <table class="table table-hover align-middle">
+                        <table id="tabela-fornecedores" class="table table-hover align-middle">
 
                             <thead>
 
@@ -146,199 +234,183 @@ $paginaAtiva = 'fornecedores';
 
                             <tbody>
 
-                                <!-- FORNECEDOR 1 -->
-                                <tr>
+                                <?php foreach ($resultados as $fornecedor) : ?>
 
-                                    <td>FOR-0001</td>
+                                    <tr>
 
-                                    <td>Dräger</td>
+                                        <td><?= htmlspecialchars($fornecedor->codigo_fornecedor) ?></td>
 
-                                    <td class="text-nowrap">
-                                        +351 220 000 001
-                                    </td>
+                                        <td><?= htmlspecialchars($fornecedor->nome_empresa) ?></td>
 
-                                    <td>info@draeger.pt</td>
+                                        <td class="text-nowrap">
+                                            <?= htmlspecialchars($fornecedor->telefone) ?>
+                                        </td>
 
-                                    <td>
+                                        <td><?= htmlspecialchars($fornecedor->email) ?></td>
 
-                                        <span class="badge rounded-pill bg-light text-dark border px-2 py-1">
+                                        <td>
 
-                                            5 equipamentos
+                                            <span class="badge rounded-pill bg-light text-dark border px-2 py-1">
 
-                                        </span>
+                                                <?= $fornecedor->total_equipamentos ?> equipamentos
 
-                                    </td>
+                                            </span>
 
-                                    <td>
+                                        </td>
 
-                                        <span class="badge rounded-pill bg-primary-subtle text-primary px-2 py-1">
+                                        <td>
 
-                                            Fabricante
+                                            <?php
+                                            $tipo = $fornecedor->tipo_fornecedor;
 
-                                        </span>
+                                            if ($tipo == 'Fabricante') {
+                                                echo '<span class="badge rounded-pill bg-primary-subtle text-primary px-2 py-1">Fabricante</span>';
+                                            } elseif ($tipo == 'Distribuidor') {
+                                                echo '<span class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-2 py-1">Distribuidor</span>';
+                                            } elseif ($tipo == 'Assistência Técnica') {
+                                                echo '<span class="badge rounded-pill bg-success-subtle text-success px-2 py-1">Assistência Técnica</span>';
+                                            } elseif ($tipo == 'Consumíveis / Acessórios') {
+                                                echo '<span class="badge rounded-pill bg-info-subtle text-info px-2 py-1">Consumíveis / Acessórios</span>';
+                                            }
+                                            ?>
 
-                                    </td>
+                                        </td>
 
-                                    <td class="text-end">
+                                        <td class="text-end">
 
-                                        <div class="d-flex gap-2 justify-content-end flex-nowrap">
+                                            <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                            <a href="ficha_fornecedor.php" class="btn btn-sm btn-outline-primary">
+                                                <a href="ficha_fornecedor.php?id=<?= $fornecedor->id ?>"
+                                                    class="btn btn-sm btn-outline-primary">
 
-                                                Ver
+                                                    Ver
 
-                                            </a>
+                                                </a>
 
-                                            <a href="editar_fornecedor.php" class="btn btn-sm btn-outline-warning">
+                                                <a href="editar_fornecedor.php?id=<?= $fornecedor->id ?>"
+                                                    class="btn btn-sm btn-outline-warning">
 
-                                                Editar
+                                                    Editar
 
-                                            </a>
+                                                </a>
 
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                                data-bs-target="#eliminarGarantiaModal">
+                                                <button
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#eliminarFornecedorModal"
+                                                    data-id="<?= $fornecedor->id ?>">
 
-                                                Eliminar
+                                                    Eliminar
 
-                                            </button>
+                                                </button>
 
-                                        </div>
+                                            </div>
 
-                                    </td>
+                                        </td>
 
-                                </tr>
+                                    </tr>
 
-
-                                <!-- FORNECEDOR 2 -->
-                                <tr>
-
-                                    <td>FOR-0002</td>
-
-                                    <td>MedEquip Portugal</td>
-
-                                    <td class="text-nowrap">
-                                        +351 220 000 002
-                                    </td>
-
-                                    <td>geral@medequip.pt</td>
-
-                                    <td>
-
-                                        <span class="badge rounded-pill bg-light text-dark border px-2 py-1">
-
-                                            12 equipamentos
-
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <span
-                                            class="badge rounded-pill bg-warning-subtle text-warning-emphasis px-2 py-1">
-
-                                            Distribuidor
-
-                                        </span>
-
-                                    </td>
-
-                                    <td class="text-end">
-
-                                        <div class="d-flex gap-2 justify-content-end flex-nowrap">
-
-                                            <a href="ficha_fornecedor.php" class="btn btn-sm btn-outline-primary">
-
-                                                Ver
-
-                                            </a>
-
-                                            <a href="editar_fornecedor.php" class="btn btn-sm btn-outline-warning">
-
-                                                Editar
-
-                                            </a>
-
-                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                                data-bs-target="#eliminarGarantiaModal">
-
-                                                Eliminar
-
-                                            </button>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
+                                <?php endforeach; ?>
 
                             </tbody>
-
                         </table>
 
                     </div>
 
+
+
+                <?php endif; ?>
+            </div>
+
+
+        </section>
+
+    </main>
+    <!-- MODAL ELIMINAR FORNECEDOR -->
+    <div class="modal fade"
+        id="eliminarFornecedorModal"
+        tabindex="-1"
+        aria-labelledby="eliminarFornecedorModalLabel"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="eliminarFornecedorModalLabel">
+
+                        Confirmar eliminação
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
                 </div>
 
-            </section>
+                <div class="modal-body">
 
-        </main>
-        <!-- MODAL ELIMINAR -->
-        <div class="modal fade" id="eliminarGarantiaModal" tabindex="-1" aria-labelledby="eliminarGarantiaModalLabel"
-            aria-hidden="true">
+                    Tem a certeza que pretende eliminar este fornecedor?
 
-            <div class="modal-dialog modal-dialog-centered">
+                    <br><br>
 
-                <div class="modal-content">
+                    <small class="text-muted">
 
-                    <div class="modal-header">
+                        Esta ação não pode ser revertida.
 
-                        <h5 class="modal-title" id="eliminarGarantiaModalLabel">
+                    </small>
 
-                            Confirmar eliminação
+                </div>
 
-                        </h5>
+                <div class="modal-footer">
 
-                        <button type="button" class="btn-close" data-bs-dismiss="modal">
-                        </button>
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
 
-                    </div>
+                        Cancelar
 
-                    <div class="modal-body">
+                    </button>
 
-                        Tem a certeza que pretende eliminar este fornecedor?
+                    <button
+                        type="button"
+                        class="btn btn-danger">
 
-                        <br><br>
+                        Eliminar
 
-                        <small class="text-muted">
-
-                            Esta ação não pode ser revertida.
-
-                        </small>
-
-                    </div>
-
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-
-                            Cancelar
-
-                        </button>
-
-                        <button type="button" class="btn btn-danger">
-
-                            Eliminar
-
-                        </button>
-
-                    </div>
+                    </button>
 
                 </div>
 
             </div>
 
         </div>
-    </div>
 
-    <?php include '../../includes/footer.php'; ?> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#tabela-fornecedores').DataTable({
+                paging: true,
+                searching: false,
+                lengthChange: false,
+                info: false,
+                ordering: false,
+                language: {
+                    emptyTable: "Sem dados disponíveis na tabela.",
+                    zeroRecords: "Nenhum registo encontrado.",
+                    paginate: {
+                        next: "Seguinte",
+                        previous: "Anterior"
+                    }
+                }
+            });
+        });
+    </script>
+
+    <?php include '../../includes/footer.php'; ?>

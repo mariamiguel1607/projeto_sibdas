@@ -4,3 +4,9 @@ define('BASE_URL', '/projeto_sibdas');
 define('APP_NAME', 'TechMed Solutions');
 define('APP_VERSION', '1.0.0');
 define('APP_COPYRIGHT', '© 2025 TechMed Solutions');
+// Base de Dados
+define('MYSQL_HOST', 'vsgate-s1.dei.isep.ipp.pt');
+define('MYSQL_PORT', '10464');
+define('MYSQL_DATABASE', 'db1241375');
+define('MYSQL_USERNAME', '1241375');
+define('MYSQL_PASSWORD', 'ferreira_375');

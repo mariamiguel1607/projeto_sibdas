@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
-?> 
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo APP_NAME; ?></title> 
+    <title><?php echo APP_NAME; ?></title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="/projeto_sibdas/assets/images/imagem_logo1-semfundo.png" type="image/png">
@@ -26,6 +26,13 @@ require_once __DIR__ . '/../../config/config.php';
 
     <!-- CSS -->
     <link rel="stylesheet" href="/projeto_sibdas/assets/css/1241375.css">
+
+    <!-- jQuery -->
+    <script src="/projeto_sibdas/assets/jquery/jquery-3.6.0.min.js"></script>
+    <!-- DataTables CSS + JS -->
+    <link rel="stylesheet" href="/projeto_sibdas/assets/datatables/datatables.min.css">
+    <script src="/projeto_sibdas/assets/datatables/datatables.min.js"></script>
+
 </head>
 
 <body class="private-body">
