@@ -250,7 +250,10 @@ $paginaAtiva = 'equipamentos';
                                         <td class="codigo-equipamento"><?= htmlspecialchars($equipamento->codigo_interno) ?></td>
                                         <td><?= htmlspecialchars($equipamento->designacao) ?></td>
                                         <td><?= htmlspecialchars($equipamento->nome_categoria) ?></td>
-                                        <td><?= htmlspecialchars($equipamento->marca) ?> <?= htmlspecialchars($equipamento->modelo) ?></td>
+                                        <td style="white-space: nowrap;">
+                                            <?= htmlspecialchars($equipamento->marca) ?>
+                                            <?= htmlspecialchars($equipamento->modelo) ?>
+                                        </td>
                                         <td><?= htmlspecialchars($equipamento->servico_departamento) ?></td>
                                         <td>
                                             <?php
@@ -375,6 +378,7 @@ $paginaAtiva = 'equipamentos';
     $(document).ready(function() {
         $('#tabela-equipamentos').DataTable({
             paging: true,
+            pageLength: 5,
             searching: false,
             lengthChange: false,
             info: false,

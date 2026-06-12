@@ -1628,22 +1628,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (temAcessorios) {
 
-        temAcessorios.addEventListener("change", function () {
+        const secaoAcessorios = document.getElementById("secaoAcessorios");
 
-            const secaoAcessorios =
-                document.getElementById("secaoAcessorios");
+        function atualizarAcessorios() {
+            secaoAcessorios.style.display = (temAcessorios.value === "sim") ? "block" : "none";
+        }
 
-            if (this.value === "sim") {
+        // Estado inicial — espera um pouco para garantir que o browser já aplicou o valor selecionado
+        setTimeout(atualizarAcessorios, 0);
 
-                secaoAcessorios.style.display = "block";
-
-            } else {
-
-                secaoAcessorios.style.display = "none";
-
-            }
-
-        });
+        temAcessorios.addEventListener("change", atualizarAcessorios);
 
     }
 
@@ -1653,22 +1647,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (temConsumiveis) {
 
-        temConsumiveis.addEventListener("change", function () {
+        const secaoConsumiveis = document.getElementById("secaoConsumiveis");
 
-            const secaoConsumiveis =
-                document.getElementById("secaoConsumiveis");
+        function atualizarConsumiveis() {
+            secaoConsumiveis.style.display = (temConsumiveis.value === "sim") ? "block" : "none";
+        }
 
-            if (this.value === "sim") {
+        setTimeout(atualizarConsumiveis, 0);
 
-                secaoConsumiveis.style.display = "block";
-
-            } else {
-
-                secaoConsumiveis.style.display = "none";
-
-            }
-
-        });
+        temConsumiveis.addEventListener("change", atualizarConsumiveis);
 
     }
 
@@ -1678,88 +1665,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (btnAdicionarAcessorio) {
 
-        btnAdicionarAcessorio
-            .addEventListener("click", function () {
+        btnAdicionarAcessorio.addEventListener("click", function () {
 
-                document.getElementById("listaAcessorios")
-                    .insertAdjacentHTML(
-                        "beforeend",
-                        `
+            document.getElementById("listaAcessorios")
+                .insertAdjacentHTML(
+                    "beforeend",
+                    `
         <div class="row g-4 mt-3 acessorio-item">
 
             <div class="col-md-6">
-
-                <input type="text"
-                    class="form-control"
-                    placeholder="Nome do Acessório">
-
+                <input type="text" class="form-control" name="acessorio_nome[]" placeholder="Nome do Acessório">
             </div>
 
             <div class="col-md-3">
-
-                <input type="number"
-                    class="form-control"
-                    min="1"
-                    placeholder="Quantidade">
-
+                <input type="number" class="form-control" name="acessorio_quantidade[]" min="1" placeholder="Quantidade">
             </div>
 
             <div class="col-md-3">
-
-                <select class="form-select">
-
-                    <option>Ativo</option>
-                    <option>Inativo</option>
-                    <option>Avariado</option>
-
+                <select class="form-select" name="acessorio_estado[]">
+                    ${opcoesEstados}
                 </select>
-
             </div>
 
         </div>
         `
-                    );
+                );
 
-            });
+        });
 
-        // ADICIONAR CONSUMÍVEL
+    }
 
-        const btnAdicionarConsumivel = document.getElementById("btnAdicionarConsumivel");
+    // ADICIONAR CONSUMÍVEL
 
-        if (btnAdicionarConsumivel) {
+    const btnAdicionarConsumivel = document.getElementById("btnAdicionarConsumivel");
 
-            btnAdicionarConsumivel.addEventListener("click", function () {
+    if (btnAdicionarConsumivel) {
 
-                document.getElementById("listaConsumiveis")
-                    .insertAdjacentHTML(
-                        "beforeend",
-                        `
+        btnAdicionarConsumivel.addEventListener("click", function () {
+
+            document.getElementById("listaConsumiveis")
+                .insertAdjacentHTML(
+                    "beforeend",
+                    `
         <div class="row g-4 mt-3 consumivel-item">
 
             <div class="col-md-8">
-
-                <input type="text"
-                    class="form-control"
-                    placeholder="Nome do Consumível">
-
+                <input type="text" class="form-control" name="consumivel_nome[]" placeholder="Nome do Consumível">
             </div>
 
             <div class="col-md-4">
-
-                <input type="number"
-                    class="form-control"
-                    min="1"
-                    placeholder="Quantidade">
-
+                <input type="number" class="form-control" name="consumivel_quantidade[]" min="1" placeholder="Quantidade">
             </div>
 
         </div>
         `
-                    );
+                );
 
-            });
-
-        }
+        });
 
     }
 
@@ -1928,64 +1890,45 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // GARANTIAS
+    // GARANTIAS (Inserir)
 
-    const temGarantia =
-        document.getElementById("temGarantia");
+    const temGarantia = document.getElementById("temGarantia");
 
     if (temGarantia) {
 
-        temGarantia.addEventListener("change", function () {
+        const cardGarantia = document.getElementById("cardGarantia");
 
-            const cardGarantia =
-                document.getElementById("cardGarantia");
+        function atualizarGarantia() {
+            cardGarantia.style.display = (temGarantia.value === "sim") ? "block" : "none";
+        }
 
-            if (this.value === "sim") {
+        setTimeout(atualizarGarantia, 0);
 
-                cardGarantia.style.display = "block";
-
-            } else {
-
-                cardGarantia.style.display = "none";
-
-            }
-
-        });
+        temGarantia.addEventListener("change", atualizarGarantia);
 
     }
 
 
-    // CONTRATOS
+    // CONTRATOS (Inserir)
 
-    const temContrato =
-        document.getElementById("temContrato");
+    const temContrato = document.getElementById("temContrato");
 
     if (temContrato) {
 
-        temContrato.addEventListener("change", function () {
+        const secaoContrato = document.getElementById("secaoContrato");
+        const cardContrato = document.getElementById("cardContrato");
 
-            const secaoContrato =
-                document.getElementById("secaoContrato");
+        function atualizarContrato() {
+            const visivel = (temContrato.value === "sim") ? "block" : "none";
+            secaoContrato.style.display = visivel;
+            cardContrato.style.display = visivel;
+        }
 
-            const cardContrato =
-                document.getElementById("cardContrato");
+        setTimeout(atualizarContrato, 0);
 
-            if (this.value === "sim") {
-
-                secaoContrato.style.display = "block";
-                cardContrato.style.display = "block";
-
-            } else {
-
-                secaoContrato.style.display = "none";
-                cardContrato.style.display = "none";
-
-            }
-
-        });
+        temContrato.addEventListener("change", atualizarContrato);
 
     }
-
     // ======================================
     // EDITAR EQUIPAMENTO - GARANTIAS
     // ======================================
@@ -2077,7 +2020,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     }
-
     // ======================================
     // INSERIR EQUIPAMENTO - DOCUMENTAÇÃO ADICIONAL
     // ======================================
@@ -2087,22 +2029,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (temDocumentacaoAdicional) {
 
-        temDocumentacaoAdicional.addEventListener("change", function () {
+        const secao = document.getElementById("secaoDocumentacaoAdicional");
 
-            const secao =
-                document.getElementById("secaoDocumentacaoAdicional");
+        function atualizarDocumentacaoAdicional() {
+            secao.style.display = (temDocumentacaoAdicional.value === "sim") ? "block" : "none";
+        }
 
-            if (this.value === "sim") {
+        setTimeout(atualizarDocumentacaoAdicional, 0);
 
-                secao.style.display = "block";
-
-            } else {
-
-                secao.style.display = "none";
-
-            }
-
-        });
+        temDocumentacaoAdicional.addEventListener("change", atualizarDocumentacaoAdicional);
 
     }
 
@@ -2377,6 +2312,185 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+// ======================================
+// NAVEGAÇÃO ENTRE ABAS - SEGUINTE / ANTERIOR
+// ======================================
+
+const ordemAbas = [
+    "dadosGeraisNovo",
+    "aquisicaoNovo",
+    "acessoriosNovo",
+    "localizacaoNovo",
+    "fornecedorNovo",
+    "garantiasNovo",
+    "documentacaoNovo",
+    "observacoesNovo"
+];
+
+function irParaAba(idAba) {
+    const botaoAba = document.querySelector(`[data-bs-target="#${idAba}"]`);
+    if (botaoAba) {
+        const tab = new bootstrap.Tab(botaoAba);
+        tab.show();
+    }
+}
+
+function abaAtual() {
+    const ativa = document.querySelector(".tab-pane.active");
+    return ativa ? ativa.id : null;
+}
+
+// Botões "Anterior"
+document.querySelectorAll(".btn-anterior").forEach(function (botao) {
+    botao.addEventListener("click", function () {
+        const atual = abaAtual();
+        const index = ordemAbas.indexOf(atual);
+
+        if (index > 0) {
+            irParaAba(ordemAbas[index - 1]);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+});
+
+// ======================================
+// VALIDAÇÃO POR ABA (antes de avançar)
+// ======================================
+
+function mostrarErrosAba(idDivAlertas, mensagens) {
+    const div = document.getElementById(idDivAlertas);
+    if (!div) return;
+
+    const lista = div.querySelector("ul");
+    lista.innerHTML = "";
+
+    mensagens.forEach(function (msg) {
+        const li = document.createElement("li");
+        li.textContent = msg;
+        lista.appendChild(li);
+    });
+
+    div.style.display = mensagens.length > 0 ? "block" : "none";
+}
+
+// Desativa todas as abas exceto a atual e as já validadas
+function atualizarEstadoAbas() {
+    const atual = abaAtual();
+    const indexAtual = ordemAbas.indexOf(atual);
+
+    ordemAbas.forEach(function (idAba, index) {
+        const botaoTab = document.querySelector(`[data-bs-target="#${idAba}"]`);
+        if (!botaoTab) return;
+
+        if (index > indexAtual) {
+            botaoTab.classList.add("disabled");
+        } else {
+            botaoTab.classList.remove("disabled");
+        }
+    });
+}
+
+// Chamar no carregamento da página
+atualizarEstadoAbas();
+
+// ======================================
+// AO CARREGAR: ABRIR A PRIMEIRA ABA COM ERROS PHP
+// ======================================
+
+if (typeof errosPorAba !== 'undefined') {
+    for (const idAba of ordemAbas) {
+        if (errosPorAba[idAba]) {
+            irParaAba(idAba);
+            atualizarEstadoAbas();
+            break;
+        }
+    }
+}
+
+// ======================================
+// FLATPICKR
+// ======================================
+
+document.querySelectorAll('input[type="date"]').forEach(function (campo) {
+    flatpickr(campo, {
+        dateFormat: "Y-m-d"
+    });
+});
+
+// ======================================
+// REPOPULAR FORNECEDORES GUARDADOS NA SESSÃO
+// ======================================
+
+if (typeof fornecedoresGuardados !== 'undefined' && fornecedoresGuardados.length > 0) {
+
+    const lista = document.getElementById('lista-fornecedores');
+
+    if (lista) {
+
+        lista.innerHTML = '';
+
+        const tiposRelacao = [
+            'Fabricante',
+            'Distribuidor',
+            'Assistência Técnica',
+            'Consumíveis / Acessórios'
+        ];
+
+        fornecedoresGuardados.forEach(function (forn) {
+
+            let opcoesFornecedor = '<option value="">Selecionar fornecedor</option>';
+
+            fornecedoresDisponiveis.forEach(function (f) {
+
+                const sel = (f.id == forn.id_fornecedor)
+                    ? 'selected'
+                    : '';
+
+                opcoesFornecedor += `
+                    <option value="${f.id}" ${sel}>
+                        ${f.nome}
+                    </option>
+                `;
+            });
+
+            let opcoesTipo = '<option value="">Tipo de relação</option>';
+
+            tiposRelacao.forEach(function (t) {
+
+                const sel = (t === forn.tipo_relacao)
+                    ? 'selected'
+                    : '';
+
+                opcoesTipo += `
+                    <option value="${t}" ${sel}>
+                        ${t}
+                    </option>
+                `;
+            });
+
+            const novaLinha = document.createElement('div');
+
+            novaLinha.className = 'row g-2 mb-2 linha-fornecedor';
+
+            novaLinha.innerHTML = `
+                <div class="col-md-7">
+                    <select class="form-select" name="id_fornecedor[]">
+                        ${opcoesFornecedor}
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <select class="form-select" name="tipo_relacao[]">
+                        ${opcoesTipo}
+                    </select>
+                </div>
+            `;
+
+            lista.appendChild(novaLinha);
+        });
+    }
+}
 
 
 

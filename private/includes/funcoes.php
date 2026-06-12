@@ -37,9 +37,9 @@ function ligar_bd()
 {
     $ligacao = new PDO(
         "mysql:host=" . MYSQL_HOST .
-        ";port=" . MYSQL_PORT .
-        ";dbname=" . MYSQL_DATABASE .
-        ";charset=utf8",
+            ";port=" . MYSQL_PORT .
+            ";dbname=" . MYSQL_DATABASE .
+            ";charset=utf8",
         MYSQL_USERNAME,
         MYSQL_PASSWORD
     );
@@ -75,4 +75,70 @@ function fazer_upload_pdf($ficheiro, $pasta_destino)
     }
 
     return false; // falhou o upload
+}
+
+function inserirDocumento($ligacao, $idEquipamento, $idTipoDocumento, $documento)
+{
+    if (empty($documento['nome']) && empty($documento['caminho'])) {
+        return null;
+    }
+
+    $stmt = $ligacao->prepare("
+        INSERT INTO documentacao
+        (
+            nome_documento,
+            data_documento,
+            data_validade,
+            estado,
+            caminho_ficheiro,
+            observacoes,
+            id_tipo_documento,
+            id_equipamento
+        )
+        VALUES
+        (
+            ?, ?, ?, ?, ?, ?, ?, ?
+        )
+    ");
+
+    $stmt->execute([
+        $documento['nome'],
+        $documento['data'] ?: null,
+        $documento['validade'] ?: null,
+        'Ativo',
+        $documento['caminho'],
+        null,
+        $idTipoDocumento,
+        $idEquipamento
+    ]);
+
+    return $ligacao->lastInsertId();
+}
+function validar_datas_documento(
+    $data_documento,
+    $data_validade,
+    &$erros,
+    $nome_documento
+) {
+
+    $hoje = date('Y-m-d');
+
+    if (!empty($data_documento) && $data_documento > $hoje) {
+        $erros[] =
+            "A data do documento '{$nome_documento}' não pode ser futura.";
+    }
+
+    if (!empty($data_validade) && $data_validade < $hoje) {
+        $erros[] =
+            "A validade do documento '{$nome_documento}' já expirou.";
+    }
+
+    if (
+        !empty($data_documento)
+        && !empty($data_validade)
+        && $data_validade < $data_documento
+    ) {
+        $erros[] =
+            "A validade do documento '{$nome_documento}' não pode ser anterior à data do documento.";
+    }
 }

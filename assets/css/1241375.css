@@ -972,22 +972,20 @@ section {
 
 }
 .table {
-    font-size: 0.9rem;
+    font-size: 0.80rem;
 }
 
 .table th,
 .table td {
-    padding: 0.5rem 0.4rem;
+    padding: 0.35rem 0.25rem;
+    vertical-align: middle;
 }
 
 .btn-sm {
-    padding: 0.2rem 0.5rem;
-    font-size: 0.8rem;
-}
-
-.codigo-equipamento {
-    white-space: nowrap;
+    padding: 0.15rem 0.35rem;
+    font-size: 0.75rem;
 }
 .acoes-nowrap {
     white-space: nowrap;
+    width: 1%;
 }
