@@ -1,0 +1,268 @@
+<?php
+
+// ============================================================
+// Validações genéricas reutilizáveis
+// ============================================================
+
+function validar_nome(string $nome): array {
+    $erros = [];
+    if (empty(trim($nome))) {
+        $erros[] = "O campo Nome é obrigatório.";
+    } elseif (preg_match('/\d/', $nome)) {
+        $erros[] = "O campo Nome não pode conter números.";
+    }
+    return $erros;
+}
+
+function validar_email(string $email): array {
+    $erros = [];
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros[] = "O email tem um formato inválido.";
+    }
+    return $erros;
+}
+
+function validar_nif(string $nif): array {
+    $erros = [];
+    if (!empty($nif) && !preg_match('/^\d{9}$/', $nif)) {
+        $erros[] = "O NIF deve conter exatamente 9 números.";
+    }
+    return $erros;
+}
+
+function validar_preco(string $valor, string $nome_campo = "O valor"): array {
+    $erros = [];
+    if ($valor !== '') {
+        if (!is_numeric($valor)) {
+            $erros[] = "$nome_campo deve ser numérico.";
+        } elseif ((float)$valor < 0) {
+            $erros[] = "$nome_campo não pode ser negativo.";
+        }
+    }
+    return $erros;
+}
+
+function validar_data(string $data, string $nome_campo = "A data"): array {
+    $erros = [];
+    if (!empty($data)) {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data)) {
+            $erros[] = "$nome_campo tem um formato inválido.";
+        } else {
+            $partes = explode('-', $data);
+            if (!checkdate((int)$partes[1], (int)$partes[2], (int)$partes[0])) {
+                $erros[] = "$nome_campo é inválida.";
+            }
+        }
+    }
+    return $erros;
+}
+
+function validar_ano(string $ano): array {
+    $erros = [];
+    if (!empty($ano)) {
+        if (!preg_match('/^\d{4}$/', $ano) || (int)$ano < 1900 || (int)$ano > (int)date('Y')) {
+            $erros[] = "O ano de fabrico é inválido.";
+        }
+    }
+    return $erros;
+}
+
+
+// ============================================================
+// Validações de datas de documentos (independente do contexto)
+// ============================================================
+
+function validar_datas_documento_simples(string $data_documento, string $data_validade, string $nome_documento): array {
+    $erros = [];
+    $hoje = date('Y-m-d');
+
+    if (!empty($data_documento) && $data_documento > $hoje) {
+        $erros[] = "A data do documento '{$nome_documento}' não pode ser futura.";
+    }
+
+    if (!empty($data_validade) && $data_validade < $hoje) {
+        $erros[] = "A validade do documento '{$nome_documento}' já expirou.";
+    }
+
+    if (!empty($data_documento) && !empty($data_validade) && $data_validade < $data_documento) {
+        $erros[] = "A validade do documento '{$nome_documento}' não pode ser anterior à data do documento.";
+    }
+
+    return $erros;
+}
+
+
+// ============================================================
+// Validação completa de um documento: nome, data, validade e ficheiro
+// (obriga TODOS os campos)
+//
+// $ficheiro            -> entrada de $_FILES correspondente (array com 'name', 'error', etc.) ou []
+// $caminho_existente   -> caminho já guardado na sessão/BD (no editar); null no inserir
+// $nome_documento      -> nome legível usado nas mensagens de erro
+// ============================================================
+
+function validar_documento_completo(
+    string $nome,
+    string $data,
+    string $validade,
+    array $ficheiro,
+    ?string $caminho_existente,
+    string $nome_documento
+): array {
+    $erros = [];
+
+    $tem_ficheiro = !empty($ficheiro['name']) || !empty($caminho_existente);
+
+    if (empty(trim($nome)))   $erros[] = "O nome do documento '{$nome_documento}' é obrigatório.";
+    if (empty($data))         $erros[] = "A data do documento '{$nome_documento}' é obrigatória.";
+    if (empty($validade))     $erros[] = "A validade do documento '{$nome_documento}' é obrigatória.";
+    if (!$tem_ficheiro)       $erros[] = "O ficheiro PDF do documento '{$nome_documento}' é obrigatório.";
+
+    if (!empty($data) && !empty($validade)) {
+        $erros = array_merge($erros, validar_datas_documento_simples($data, $validade, $nome_documento));
+    }
+
+    return $erros;
+}
+
+
+// ============================================================
+// Validações específicas dos steps de equipamentos
+// (usadas no inserir_equipamentos.php e editar_equipamentos.php)
+//
+// $caminhos_existentes -> $_SESSION['equipamento'] ou $_SESSION['equipamento_edit']
+//                          (passar [] no inserir caso ainda não existam documentos)
+// ============================================================
+
+function validar_step_dados_gerais(array $dados, array $files, array $caminhos_existentes = []): array {
+    $erros = [];
+
+    if (empty(trim($dados['designacao'] ?? '')))   $erros[] = "A designação é obrigatória.";
+    if (empty($dados['id_categoria'] ?? ''))       $erros[] = "A categoria é obrigatória.";
+
+    $erros = array_merge($erros, validar_ano($dados['ano_fabrico'] ?? ''));
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_manual_utilizacao'] ?? '',
+        $dados['manual_utilizacao_data'] ?? '',
+        $dados['manual_utilizacao_validade'] ?? '',
+        $files['manual_utilizacao'] ?? [],
+        $caminhos_existentes['doc_manual_utilizacao']['caminho'] ?? null,
+        'Manual de Utilização'
+    ));
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_manual_tecnico'] ?? '',
+        $dados['manual_tecnico_data'] ?? '',
+        $dados['manual_tecnico_validade'] ?? '',
+        $files['manual_tecnico'] ?? [],
+        $caminhos_existentes['doc_manual_tecnico']['caminho'] ?? null,
+        'Manual Técnico'
+    ));
+
+    return $erros;
+}
+
+function validar_step_aquisicao(array $dados, array $files, array $caminhos_existentes = []): array {
+    $erros = [];
+
+    if (empty($dados['id_estado'] ?? '')) $erros[] = "O estado é obrigatório.";
+
+    $erros = array_merge($erros, validar_data($dados['data_aquisicao'] ?? '', "A data de aquisição"));
+    $erros = array_merge($erros, validar_preco($dados['custo_aquisicao'] ?? '', "O custo de aquisição"));
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_fatura_aquisicao'] ?? '',
+        $dados['fatura_aquisicao_data'] ?? '',
+        $dados['fatura_aquisicao_validade'] ?? '',
+        $files['fatura_aquisicao'] ?? [],
+        $caminhos_existentes['doc_fatura_aquisicao']['caminho'] ?? null,
+        'Fatura de Aquisição'
+    ));
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_contrato_aquisicao'] ?? '',
+        $dados['contrato_aquisicao_data'] ?? '',
+        $dados['contrato_aquisicao_validade'] ?? '',
+        $files['contrato_aquisicao'] ?? [],
+        $caminhos_existentes['doc_contrato_aquisicao']['caminho'] ?? null,
+        'Contrato de Aquisição'
+    ));
+
+    return $erros;
+}
+
+function validar_step_localizacao(array $dados): array {
+    $erros = [];
+    if (empty($dados['id_localizacao'] ?? '')) $erros[] = "A localização é obrigatória.";
+    return $erros;
+}
+
+function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao): array {
+    $erros = [];
+    $valido = false;
+
+    foreach ($ids_fornecedor as $i => $id_forn) {
+        if (!empty($id_forn) && !empty($tipos_relacao[$i])) {
+            $valido = true;
+            break;
+        }
+    }
+
+    if (!$valido) $erros[] = "É obrigatório associar pelo menos um fornecedor com tipo de relação.";
+    return $erros;
+}
+
+function validar_step_garantias(array $dados, array $files, array $caminhos_existentes = []): array {
+    $erros = [];
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_certificado_calibracao'] ?? '',
+        $dados['certificado_calibracao_data'] ?? '',
+        $dados['certificado_calibracao_validade'] ?? '',
+        $files['certificado_calibracao'] ?? [],
+        $caminhos_existentes['doc_certificado_calibracao']['caminho'] ?? null,
+        'Certificado de Calibração'
+    ));
+
+    $erros = array_merge($erros, validar_documento_completo(
+        $dados['nome_documento_relatorio_calibracao'] ?? '',
+        $dados['relatorio_calibracao_data'] ?? '',
+        $dados['relatorio_calibracao_validade'] ?? '',
+        $files['relatorio_calibracao'] ?? [],
+        $caminhos_existentes['doc_relatorio_calibracao']['caminho'] ?? null,
+        'Relatório de Calibração'
+    ));
+
+    if (($dados['tem_garantia'] ?? '') === 'sim') {
+        $erros = array_merge($erros, validar_documento_completo(
+            $dados['nome_documento_certificado_garantia'] ?? '',
+            $dados['certificado_garantia_data'] ?? '',
+            $dados['certificado_garantia_validade'] ?? '',
+            $files['certificado_garantia'] ?? [],
+            $caminhos_existentes['doc_certificado_garantia']['caminho'] ?? null,
+            'Certificado de Garantia'
+        ));
+    }
+
+    if (($dados['tem_contrato'] ?? '') === 'sim') {
+        $erros = array_merge($erros, validar_documento_completo(
+            $dados['nome_documento_contrato_manutencao'] ?? '',
+            $dados['contrato_manutencao_data'] ?? '',
+            $dados['contrato_manutencao_validade'] ?? '',
+            $files['contrato_manutencao'] ?? [],
+            $caminhos_existentes['doc_contrato_manutencao']['caminho'] ?? null,
+            'Contrato de Manutenção'
+        ));
+    }
+
+    return $erros;
+}
+
+function validar_step_observacoes(string $observacoes): array {
+    $erros = [];
+    if (strlen($observacoes) > 5000) {
+        $erros[] = "As observações não podem exceder 5000 caracteres.";
+    }
+    return $erros;
+}

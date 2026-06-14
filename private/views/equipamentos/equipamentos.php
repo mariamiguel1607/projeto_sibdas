@@ -280,7 +280,7 @@ $paginaAtiva = 'equipamentos';
                                                 Ver
                                             </a>
 
-                                            <a href="editar_equipamentos.php?id=<?= $equipamento->id ?>"
+                                            <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
                                                 class="btn btn-sm btn-outline-warning">
                                                 Editar
                                             </a>

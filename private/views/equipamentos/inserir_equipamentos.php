@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
+require_once __DIR__ . '/../../includes/validacoes.php';
 redirect_if_not_logged();
 
 if (!isset($_SESSION['equip_step'])) $_SESSION['equip_step'] = 1;
@@ -15,6 +16,7 @@ $erros_localizacao  = [];
 $erros_fornecedor   = [];
 $erros_garantias    = [];
 $erros_documentacao = [];
+$erros_observacoes  = [];
 
 try {
     $ligacao = ligar_bd();
@@ -912,8 +914,8 @@ $paginaAtiva = 'equipamentos';
                                     <select class="form-select" name="id_categoria">
                                         <option value="">Selecione uma categoria</option>
                                         <?php foreach ($categorias as $categoria): ?>
-                                            <option value="<?= $categoria->id ?>"
-                                                <?= (($_POST['id_categoria'] ?? '') == $categoria->id) ? 'selected' : '' ?>>
+                                            <option value="<?= $categoria->id ?>">
+                                                <?= (($_SESSION['equipamento']['id_categoria'] ?? '') == $categoria->id) ? 'selected' : '' ?>
                                                 <?= htmlspecialchars($categoria->nome_categoria) ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -922,28 +924,28 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Fabricante</label>
-                                    <input type="text" class="form-control" name="fabricante" value="<?= $_POST['fabricante'] ?? '' ?>">
+                                    <input type="text" class="form-control" name="fabricante" value="<?= htmlspecialchars($_SESSION['equipamento']['fabricante'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Marca</label>
-                                    <input type="text" class="form-control" name="marca" value="<?= $_POST['marca'] ?? '' ?>">
+                                    <input type="text" class="form-control" name="marca" value="<?= htmlspecialchars($_SESSION['equipamento']['marca'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Modelo</label>
-                                    <input type="text" class="form-control" name="modelo" value="<?= $_POST['modelo'] ?? '' ?>">
+                                    <input type="text" class="form-control" name="modelo" value="<?= htmlspecialchars($_SESSION['equipamento']['modelo'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Número de Série</label>
-                                    <input type="text" class="form-control" name="num_serie" value="<?= $_POST['num_serie'] ?? '' ?>">
+                                    <input type="text" class="form-control" name="num_serie" value="<?= htmlspecialchars($_SESSION['equipamento']['num_serie'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Ano de Fabrico</label>
                                     <input type="number" class="form-control" min="1900"
-                                        max="<?= date('Y') ?>" name="ano_fabrico" value="<?= $_POST['ano_fabrico'] ?? '' ?>">
+                                        max="<?= date('Y') ?>" name="ano_fabrico" value="<?= htmlspecialchars($_SESSION['equipamento']['ano_fabrico'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
@@ -952,19 +954,19 @@ $paginaAtiva = 'equipamentos';
 
                                         <option value="">Selecione a criticidade</option>
                                         <option value="Baixa"
-                                            <?= (($_POST['criticidade'] ?? '') == 'Baixa') ? 'selected' : '' ?>>
+                                            <?= (($_SESSION['equipamento']['criticidade'] ?? '') == 'Baixa') ? 'selected' : '' ?>>
                                             Baixa
                                         </option>
                                         <option value="Média"
-                                            <?= (($_POST['criticidade'] ?? '') == 'Média') ? 'selected' : '' ?>>
+                                            <?= (($_SESSION['equipamento']['criticidade'] ?? '') == 'Média') ? 'selected' : '' ?>>
                                             Média
                                         </option>
                                         <option value="Alta"
-                                            <?= (($_POST['criticidade'] ?? '') == 'Alta') ? 'selected' : '' ?>>
+                                            <?= (($_SESSION['equipamento']['criticidade'] ?? '') == 'Alta') ? 'selected' : '' ?>>
                                             Alta
                                         </option>
                                         <option value="Suporte de Vida"
-                                            <?= (($_POST['criticidade'] ?? '') == 'Suporte de Vida') ? 'selected' : '' ?>>
+                                            <?= (($_SESSION['equipamento']['criticidade'] ?? '') == 'Suporte de Vida') ? 'selected' : '' ?>>
                                             Suporte de Vida
                                         </option>
 
@@ -1064,7 +1066,7 @@ $paginaAtiva = 'equipamentos';
                                                 <input type="text" class="form-control"
                                                     name="nome_documento_manual_utilizacao"
                                                     placeholder="Ex: Manual de Utilização Dräger V2"
-                                                    value="<?= htmlspecialchars($_POST['nome_documento_manual_utilizacao'] ?? '') ?>">
+                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_utilizacao']['nome'] ?? '') ?>">
                                             </div>
 
                                             <div class="mb-3">
@@ -1081,7 +1083,7 @@ $paginaAtiva = 'equipamentos';
                                                 </label>
                                                 <input type="date" class="form-control"
                                                     name="manual_utilizacao_data"
-                                                    value="<?= htmlspecialchars($_POST['manual_utilizacao_data'] ?? '') ?>">
+                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_utilizacao']['data'] ?? '') ?>">
                                             </div>
 
                                             <div>
@@ -1090,7 +1092,8 @@ $paginaAtiva = 'equipamentos';
                                                 </label>
                                                 <input type="date" class="form-control"
                                                     name="manual_utilizacao_validade"
-                                                    value="<?= htmlspecialchars($_POST['manual_utilizacao_validade'] ?? '') ?>">
+                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_utilizacao']['validade'] ?? '') ?>">
+
                                             </div>
 
                                         </div>
@@ -1099,63 +1102,63 @@ $paginaAtiva = 'equipamentos';
 
                                 </div>
 
-                            </div>
 
+                                <!-- MODAL MANUAL TÉCNICO -->
 
-                            <!-- MODAL MANUAL TÉCNICO -->
+                                <div class="modal fade" id="modalManualTecnico" tabindex="-1">
 
-                            <div class="modal fade" id="modalManualTecnico" tabindex="-1">
+                                    <div class="modal-dialog">
 
-                                <div class="modal-dialog">
+                                        <div class="modal-content">
 
-                                    <div class="modal-content">
+                                            <div class="modal-header">
 
-                                        <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    Manual Técnico
+                                                </h5>
 
-                                            <h5 class="modal-title">
-                                                Manual Técnico
-                                            </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_manual_tecnico"
-                                                    placeholder="Ex: Manual Técnico Fabricante 2023"
-                                                    value="<?= htmlspecialchars($_POST['nome_documento_manual_tecnico'] ?? '') ?>">
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="manual_tecnico" accept="application/pdf">
-                                            </div>
+                                            <div class="modal-body">
 
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="manual_tecnico_data"
-                                                    value="<?= htmlspecialchars($_POST['manual_tecnico_data'] ?? '') ?>">
-                                            </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_manual_tecnico"
+                                                        placeholder="Ex: Manual Técnico Fabricante 2023"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_tecnico']['nome'] ?? '') ?>">
+                                                </div>
 
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="manual_tecnico_validade"
-                                                    value="<?= htmlspecialchars($_POST['manual_tecnico_validade'] ?? '') ?>">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="manual_tecnico" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="manual_tecnico_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_tecnico']['data'] ?? '') ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="manual_tecnico_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_manual_tecnico']['validade'] ?? '') ?>">
+                                                </div>
+
                                             </div>
 
                                         </div>
@@ -1163,468 +1166,754 @@ $paginaAtiva = 'equipamentos';
                                     </div>
 
                                 </div>
-
-                            </div>
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step1" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-                        </div>
-
-                        <!-- AQUISIÇÃO -->
-                        <div class="tab-pane fade <?= ($step_atual == 2) ? 'show active' : '' ?>" id="aquisicaoNovo">
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-aquisicao" <?= empty($erros_aquisicao) ? 'style="display:none;"' : '' ?>>
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0">
-                                    <?php foreach ($erros_aquisicao as $erro): ?>
-                                        <li><?= htmlspecialchars($erro) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step1" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
                             </div>
 
-                            <?php if (!empty($erro_sistema)): ?>
-                                <div class="alert alert-danger mb-4">
-                                    <strong>Erro do sistema:</strong>
-                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="row g-4">
-
-                                <div class="col-md-3">
-
-                                    <label class="form-label fw-bold">
-                                        Data de Aquisição
-                                    </label>
-
-                                    <input type="date" class="form-control" name="data_aquisicao" value="<?= $_POST['data_aquisicao'] ?? '' ?>">
-
+                            <!-- AQUISIÇÃO -->
+                            <div class="tab-pane fade <?= ($step_atual == 2) ? 'show active' : '' ?>" id="aquisicaoNovo">
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-aquisicao" <?= empty($erros_aquisicao) ? 'style="display:none;"' : '' ?>>
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros_aquisicao as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 </div>
 
-                                <div class="col-md-3">
+                                <?php if (!empty($erro_sistema)): ?>
+                                    <div class="alert alert-danger mb-4">
+                                        <strong>Erro do sistema:</strong>
+                                        <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                    </div>
+                                <?php endif; ?>
 
-                                    <label class="form-label fw-bold">
-                                        Custo de Aquisição (€)
-                                    </label>
+                                <div class="row g-4">
 
-                                    <input type="number" class="form-control" name="custo_aquisicao" placeholder="0.00" value="<?= $_POST['custo_aquisicao'] ?? '' ?>">
+                                    <div class="col-md-3">
 
-                                </div>
+                                        <label class="form-label fw-bold">
+                                            Data de Aquisição
+                                        </label>
 
-                                <div class="col-md-3">
+                                        <input type="date" class="form-control" name="data_aquisicao" value="<?= htmlspecialchars($_SESSION['equipamento']['data_aquisicao'] ?? '') ?>">
 
-                                    <label class="form-label fw-bold">
-                                        Tipo de Entrada
-                                    </label>
+                                    </div>
 
-                                    <select class="form-select" name="tipo_entrada">
+                                    <div class="col-md-3">
 
-                                        <option value="" disabled <?= empty($_POST['tipo_entrada'] ?? '') ? 'selected' : '' ?>>
-                                            Selecionar tipo
-                                        </option>
+                                        <label class="form-label fw-bold">
+                                            Custo de Aquisição (€)
+                                        </label>
 
-                                        <option <?= (($_POST['tipo_entrada'] ?? '') == 'Compra') ? 'selected' : '' ?>>
-                                            Compra
-                                        </option>
+                                        <input type="number" class="form-control" name="custo_aquisicao" placeholder="0.00" value="<?= htmlspecialchars($_SESSION['equipamento']['custo_aquisicao'] ?? '') ?>">
 
-                                        <option <?= (($_POST['tipo_entrada'] ?? '') == 'Doação') ? 'selected' : '' ?>>
-                                            Doação
-                                        </option>
+                                    </div>
 
-                                        <option <?= (($_POST['tipo_entrada'] ?? '') == 'Aluguer') ? 'selected' : '' ?>>
-                                            Aluguer
-                                        </option>
+                                    <div class="col-md-3">
 
-                                        <option <?= (($_POST['tipo_entrada'] ?? '') == 'Empréstimo') ? 'selected' : '' ?>>
-                                            Empréstimo
-                                        </option>
+                                        <label class="form-label fw-bold">
+                                            Tipo de Entrada
+                                        </label>
 
-                                    </select>
+                                        <select class="form-select" name="tipo_entrada">
 
-                                </div>
+                                            <option value="" disabled <?= empty($_SESSION['equipamento']['tipo_entrada'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar tipo
+                                            </option>
 
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold">
+                                            <option <?= (($_SESSION['equipamento']['tipo_entrada'] ?? '') == 'Compra') ?>>
+                                                Compra
+                                            </option>
 
-                                        Estado
+                                            <option <?= (($_SESSION['equipamento']['tipo_entrada'] ?? '') == 'Doação') ?>>
+                                                Doação
+                                            </option>
 
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm border-0 p-0 ms-1"
-                                            data-bs-toggle="popover"
-                                            data-bs-trigger="hover focus"
-                                            data-bs-html="true"
-                                            title="Estados dos Equipamentos"
-                                            data-bs-content="
+                                            <option <?= (($_SESSION['equipamento']['tipo_entrada'] ?? '') == 'Aluguer') ?>>
+                                                Aluguer
+                                            </option>
+
+                                            <option <?= (($_SESSION['equipamento']['tipo_entrada'] ?? '') == 'Empréstimo') ?>>
+                                                Empréstimo
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">
+
+                                            Estado
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm border-0 p-0 ms-1"
+                                                data-bs-toggle="popover"
+                                                data-bs-trigger="hover focus"
+                                                data-bs-html="true"
+                                                title="Estados dos Equipamentos"
+                                                data-bs-content="
             <b>Ativo</b> - Disponível e operacional.<br>
             <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
             <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
             <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
 
-                                            <i class="fa-solid fa-circle-question text-primary"></i>
+                                                <i class="fa-solid fa-circle-question text-primary"></i>
 
-                                        </button>
-                                    </label>
-                                    <select class="form-select" name="id_estado">
-                                        <option value="">Selecione uma estado</option>
-                                        <?php foreach ($estados as $estado): ?>
-                                            <option value="<?= $estado->id ?>"
-                                                <?= (($_POST['id_estado'] ?? '') == $estado->id) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($estado->nome_estado) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <hr class="my-4">
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <h5 class="fw-bold mb-0">
-                                    Documentação de Aquisição
-                                </h5>
-
-                            </div>
-
-                            <div class="row g-3">
-
-                                <!-- FATURA DE AQUISIÇÃO -->
-
-                                <div class="col-md-6">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Fatura de Aquisição
-                                        </h6>
-
-                                        <p class="text-muted small mb-3">
-                                            Documento comprovativo da aquisição.
-                                        </p>
-
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalFaturaAquisicao">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
+                                            </button>
+                                        </label>
+                                        <select class="form-select" name="id_estado">
+                                            <option value="">Selecione uma estado</option>
+                                            <?php foreach ($estados as $estado): ?>
+                                                <option value="<?= $estado->id ?>"
+                                                    <?= (($_SESSION['equipamento']['id_estado'] ?? '') == $estado->id)? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($estado->nome_estado) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
-
                                 </div>
-
-                                <!-- CONTRATO DE AQUISIÇÃO -->
-
-                                <div class="col-md-6">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Contrato de Aquisição
-                                        </h6>
-
-                                        <p class="text-muted small mb-3">
-                                            Contrato associado à compra ou aquisição do equipamento.
-                                        </p>
-
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#modalContratoAquisicao">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- MODAL FATURA DE AQUISIÇÃO -->
-
-                            <div class="modal fade" id="modalFaturaAquisicao" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
-                                                Fatura de Aquisição
-                                            </h5>
-
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_fatura_aquisicao"
-                                                    placeholder="Ex: Fatura MedEquip 2024"
-                                                    value="<?= htmlspecialchars($_POST['nome_documento_fatura_aquisicao'] ?? '') ?>">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="fatura_aquisicao" accept="application/pdf">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="fatura_aquisicao_data"
-                                                    value="<?= htmlspecialchars($_POST['fatura_aquisicao_data'] ?? '') ?>">
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="fatura_aquisicao_validade"
-                                                    value="<?= htmlspecialchars($_POST['fatura_aquisicao_validade'] ?? '') ?>">
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- MODAL CONTRATO DE AQUISIÇÃO -->
-
-                            <div class="modal fade" id="modalContratoAquisicao" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
-                                                Contrato de Aquisição
-                                            </h5>
-
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                                        </div>
-
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_contrato_aquisicao"
-                                                    placeholder="Ex: Contrato Aquisição 2024"
-                                                    value="<?= htmlspecialchars($_POST['nome_documento_contrato_aquisicao'] ?? '') ?>">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="contrato_aquisicao" accept="application/pdf">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="contrato_aquisicao_data"
-                                                    value="<?= htmlspecialchars($_POST['contrato_aquisicao_data'] ?? '') ?>">
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="contrato_aquisicao_validade"
-                                                    value="<?= htmlspecialchars($_POST['contrato_aquisicao_validade'] ?? '') ?>">
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="d-flex justify-content-between mt-4">
-                                <button type="submit" name="submeter_step2" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-
-                        </div>
-
-                        <!-- ACESSÓRIOS E CONSUMÍVEIS -->
-                        <div class="tab-pane fade <?= ($step_atual == 3) ? 'show active' : '' ?>" id="acessoriosNovo">
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-acessorios" style="display:none;">
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0"></ul>
-                            </div>
-
-                            <?php if (!empty($erro_sistema)): ?>
-                                <div class="alert alert-danger mb-4">
-                                    <strong>Erro do sistema:</strong>
-                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="row g-4">
-
-                                <!-- EXISTEM ACESSÓRIOS -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-bold">
-                                        Existem acessórios associados ao equipamento?
-                                    </label>
-
-                                    <select class="form-select" id="temAcessorios" name="tem_acessorios">
-
-                                        <option disabled <?= empty($_POST['tem_acessorios'] ?? '') ? 'selected' : '' ?>>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim" <?= (($_POST['tem_acessorios'] ?? '') == 'sim') ? 'selected' : '' ?>>
-                                            Sim
-                                        </option>
-
-                                        <option value="nao" <?= (($_POST['tem_acessorios'] ?? '') == 'nao') ? 'selected' : '' ?>>
-                                            Não
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                                <!-- EXISTEM CONSUMÍVEIS -->
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-bold">
-                                        Existem consumíveis associados ao equipamento?
-                                    </label>
-
-                                    <select class="form-select" id="temConsumiveis" name="tem_consumiveis">
-
-                                        <option disabled <?= empty($_POST['tem_consumiveis'] ?? '') ? 'selected' : '' ?>>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim" <?= (($_POST['tem_consumiveis'] ?? '') == 'sim') ? 'selected' : '' ?>>
-                                            Sim
-                                        </option>
-
-                                        <option value="nao" <?= (($_POST['tem_consumiveis'] ?? '') == 'nao') ? 'selected' : '' ?>>
-                                            Não
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                            <!-- SECÇÃO ACESSÓRIOS -->
-
-                            <div id="secaoAcessorios" style="display:none;">
-
-                                <script>
-                                    let opcoesEstados = '<option value="">Selecione um estado</option>';
-                                    <?php foreach ($estados as $estado): ?>
-                                        opcoesEstados += '<option value="<?= $estado->id ?>"><?= htmlspecialchars($estado->nome_estado) ?></option>';
-                                    <?php endforeach; ?>
-                                </script>
-
 
                                 <hr class="my-4">
 
-                                <h5 class="fw-bold mb-3">
-                                    Acessórios Associados
-                                </h5>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
 
-                                <div id="listaAcessorios">
+                                    <h5 class="fw-bold mb-0">
+                                        Documentação de Aquisição
+                                    </h5>
 
-                                    <div class="row g-4 acessorio-item">
+                                </div>
 
-                                        <div class="col-md-6">
+                                <div class="row g-3">
 
-                                            <label class="form-label fw-bold">
-                                                Nome do Acessório
-                                            </label>
+                                    <!-- FATURA DE AQUISIÇÃO -->
 
-                                            <input type="text" class="form-control" name="acessorio_nome[]"
-                                                value="<?= htmlspecialchars($_POST['acessorio_nome'][0] ?? '') ?>"
-                                                placeholder="Ex: Sensor de Fluxo">
+                                    <div class="col-md-6">
+
+                                        <div class="border rounded-3 p-3">
+
+                                            <h6 class="fw-bold">
+                                                Fatura de Aquisição
+                                            </h6>
+
+                                            <p class="text-muted small mb-3">
+                                                Documento comprovativo da aquisição.
+                                            </p>
+
+                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                                data-bs-target="#modalFaturaAquisicao">
+
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
+
+                                            </button>
 
                                         </div>
 
-                                        <div class="col-md-3">
+                                    </div>
 
-                                            <label class="form-label fw-bold">
-                                                Quantidade
-                                            </label>
+                                    <!-- CONTRATO DE AQUISIÇÃO -->
 
-                                            <input type="number" class="form-control" name="acessorio_quantidade[]"
-                                                value="<?= htmlspecialchars($_POST['acessorio_quantidade'][0] ?? '') ?>">
+                                    <div class="col-md-6">
+
+                                        <div class="border rounded-3 p-3">
+
+                                            <h6 class="fw-bold">
+                                                Contrato de Aquisição
+                                            </h6>
+
+                                            <p class="text-muted small mb-3">
+                                                Contrato associado à compra ou aquisição do equipamento.
+                                            </p>
+
+                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                                data-bs-target="#modalContratoAquisicao">
+
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
+
+                                            </button>
 
                                         </div>
 
-                                        <div class="col-md-3">
+                                    </div>
 
-                                            <label class="form-label fw-bold">
-                                                Estado
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-sm border-0 p-0 ms-1"
-                                                    data-bs-toggle="popover"
-                                                    data-bs-trigger="hover focus"
-                                                    data-bs-html="true"
-                                                    title="Estados dos Equipamentos"
-                                                    data-bs-content="
+                                </div>
+
+
+                                <!-- MODAL FATURA DE AQUISIÇÃO -->
+
+                                <div class="modal fade" id="modalFaturaAquisicao" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Fatura de Aquisição
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_fatura_aquisicao"
+                                                        placeholder="Ex: Fatura MedEquip 2024"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_fatura_aquisicao']['nome']) ?>">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="fatura_aquisicao" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="fatura_aquisicao_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_fatura_aquisicao']['data']) ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="fatura_aquisicao_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_fatura_aquisicao']['validade']) ?>">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MODAL CONTRATO DE AQUISIÇÃO -->
+
+                                <div class="modal fade" id="modalContratoAquisicao" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Contrato de Aquisição
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_contrato_aquisicao"
+                                                        placeholder="Ex: Contrato Aquisição 2024"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_aquisicao']['nome']) ?>">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="contrato_aquisicao" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="contrato_aquisicao_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_aquisicao']['data']) ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="contrato_aquisicao_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_aquisicao']['validade']) ?>">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="submit" name="submeter_step2" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
+
+                            </div>
+
+                            <!-- ACESSÓRIOS E CONSUMÍVEIS -->
+                            <div class="tab-pane fade <?= ($step_atual == 3) ? 'show active' : '' ?>" id="acessoriosNovo">
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-acessorios" style="display:none;">
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0"></ul>
+                                </div>
+
+                                <?php if (!empty($erro_sistema)): ?>
+                                    <div class="alert alert-danger mb-4">
+                                        <strong>Erro do sistema:</strong>
+                                        <p><?= htmlspecialchars($erro_sistema) ?></p>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="row g-4">
+
+                                    <!-- EXISTEM ACESSÓRIOS -->
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Existem acessórios associados ao equipamento?
+                                        </label>
+
+                                        <select class="form-select" id="temAcessorios" name="tem_acessorios">
+
+                                            <option disabled <?= empty($_SESSION['equipamento']['tem_acessorios'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar opção
+                                            </option>
+
+                                            <option value="sim" <?= (($_SESSION['equipamento']['tem_acessorios'] ?? '') == 'sim') ? 'selected' : '' ?>>
+                                                Sim
+                                            </option>
+
+                                            <option value="nao" <?= (($_SESSION['equipamento']['tem_acessorios'] ?? '') == 'nao') ? 'selected' : '' ?>>
+                                                Não
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <!-- EXISTEM CONSUMÍVEIS -->
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Existem consumíveis associados ao equipamento?
+                                        </label>
+
+                                        <select class="form-select" id="temConsumiveis" name="tem_consumiveis">
+
+                                            <option disabled <?= empty($_SESSION['equipamento']['tem_consumiveis'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar opção
+                                            </option>
+
+                                            <option value="sim" <?= (($_SESSION['equipamento']['tem_consumiveis'] ?? '') == 'sim') ? 'selected' : '' ?>>
+                                                Sim
+                                            </option>
+
+                                            <option value="nao" <?=(($_SESSION['equipamento']['tem_consumiveis'] ?? '') == 'nao') ? 'selected' : '' ?>>
+                                                Não
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- SECÇÃO ACESSÓRIOS -->
+
+                                <div id="secaoAcessorios" style="display:none;">
+
+                                    <script>
+                                        let opcoesEstados = '<option value="">Selecione um estado</option>';
+                                        <?php foreach ($estados as $estado): ?>
+                                            opcoesEstados += '<option value="<?= $estado->id ?>"><?= htmlspecialchars($estado->nome_estado) ?></option>';
+                                        <?php endforeach; ?>
+                                    </script>
+
+
+                                    <hr class="my-4">
+
+                                    <h5 class="fw-bold mb-3">
+                                        Acessórios Associados
+                                    </h5>
+
+                                    <div id="listaAcessorios">
+
+                                        <div class="row g-4 acessorio-item">
+
+                                            <div class="col-md-6">
+
+                                                <label class="form-label fw-bold">
+                                                    Nome do Acessório
+                                                </label>
+
+                                                <input type="text" class="form-control" name="acessorio_nome[]"
+                                                   value="<?= htmlspecialchars($_SESSION['equipamento']['acessorios'][0]['nome'] ?? '') ?>"
+                                                    placeholder="Ex: Sensor de Fluxo">
+
+                                            </div>
+
+                                            <div class="col-md-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Quantidade
+                                                </label>
+
+                                                <input type="number" class="form-control" name="acessorio_quantidade[]"
+                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['acessorios'][0]['quantidade'] ?? '') ?>">
+
+                                            </div>
+
+                                            <div class="col-md-3">
+
+                                                <label class="form-label fw-bold">
+                                                    Estado
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-sm border-0 p-0 ms-1"
+                                                        data-bs-toggle="popover"
+                                                        data-bs-trigger="hover focus"
+                                                        data-bs-html="true"
+                                                        title="Estados dos Equipamentos"
+                                                        data-bs-content="
             <b>Ativo</b> - Disponível e operacional.<br>
             <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
             <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
             <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
 
-                                                    <i class="fa-solid fa-circle-question text-primary"></i>
+                                                        <i class="fa-solid fa-circle-question text-primary"></i>
 
-                                                </button>
-                                            </label>
-                                            <select class="form-select" name="acessorio_estado[]">
-                                                <option value="">Selecione um estado</option>
-                                                <?php foreach ($estados as $estado): ?>
-                                                    <option value="<?= $estado->id ?>"
-                                                        <?= (($_POST['acessorio_estado'][0] ?? '') == $estado->id) ? 'selected' : '' ?>>
-                                                        <?= htmlspecialchars($estado->nome_estado) ?>
+                                                    </button>
+                                                </label>
+                                                <select class="form-select" name="acessorio_estado[]">
+                                                    <option value="">Selecione um estado</option>
+                                                    <?php foreach ($estados as $estado): ?>
+                                                        <option value="<?= $estado->id ?>"
+                                                            <?= (($_SESSION['equipamento']['acessorios'][0]['id_estado'] ?? '') == $estado->id) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($estado->nome_estado) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-3">
+
+                                        <button type="button" id="btnAdicionarAcessorio" class="btn btn-outline-primary">
+
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                            Adicionar Acessório
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- SECÇÃO CONSUMÍVEIS -->
+
+                                <div id="secaoConsumiveis" style="display:none;">
+
+                                    <hr class="my-4">
+
+                                    <h5 class="fw-bold mb-3">
+                                        Consumíveis Associados
+                                    </h5>
+
+                                    <div id="listaConsumiveis">
+
+                                        <div class="row g-4 consumivel-item">
+
+                                            <div class="col-md-8">
+
+                                                <label class="form-label fw-bold">
+                                                    Nome do Consumível
+                                                </label>
+
+                                                <input type="text" class="form-control" name="consumivel_nome[]"
+                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['consumiveis'][0]['nome'] ?? '') ?>"
+                                                    placeholder="Ex: Filtro Bacteriano">
+
+                                            </div>
+
+                                            <div class="col-md-4">
+
+                                                <label class="form-label fw-bold">
+                                                    Quantidade
+                                                </label>
+
+                                                <input type="number" class="form-control" name="consumivel_quantidade[]"
+                                                   value="<?= htmlspecialchars($_SESSION['equipamento']['consumiveis'][0]['quantidade'] ?? '') ?>">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-3">
+
+                                        <button type="button" id="btnAdicionarConsumivel" class="btn btn-outline-primary">
+
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                            Adicionar Consumível
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step3" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
+                            </div>
+
+                            <!-- Localização -->
+                            <div class="tab-pane fade <?= ($step_atual == 4) ? 'show active' : '' ?>" id="localizacaoNovo">
+
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-localizacao" <?= empty($erros_localizacao) ? 'style="display:none;"' : '' ?>>
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros_localizacao as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                                <label class="form-label fw-bold">
+                                    Localização Associada
+                                </label>
+
+                                <select class="form-select" name="id_localizacao">
+                                    <option value="">Selecionar localização</option>
+                                    <?php foreach ($localizacoes as $loc): ?>
+                                        <option value="<?= $loc->id ?>"
+                                            <?= (($_SESSION['equipamento']['id_localizacao'] ?? '') == $loc->id) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($loc->edificio . ' - Piso ' . $loc->piso . ' - ' . $loc->sala_gabinete) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step4" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
+                            </div>
+
+                            <!-- Fornecedor -->
+                            <div class="tab-pane fade <?= ($step_atual == 5) ? 'show active' : '' ?>" id="fornecedorNovo">
+
+                                <!-- Alertas -->
+                                <div class="alert alert-danger mb-4" id="alertas-fornecedor" <?= empty($erros_fornecedor) ? 'style="display:none;"' : '' ?>>
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros_fornecedor as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-bold mb-0">Fornecedores Associados</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="btnAdicionarFornecedor">
+                                        <i class="fa-solid fa-plus me-1"></i>
+                                        Adicionar Fornecedor
+                                    </button>
+                                </div>
+
+                                <div id="lista-fornecedores">
+
+                                    <div class="row g-2 mb-2 linha-fornecedor">
+                                        <div class="col-md-7">
+                                            <select class="form-select" name="id_fornecedor[]">
+                                                <option value="">Selecionar fornecedor</option>
+                                                <?php foreach ($fornecedores as $f): ?>
+                                                    <option value="<?= $f->id ?>"
+                                                        <?= (($_SESSION['equipamento']['fornecedores'][0]['id_fornecedor'] ?? '') == $f->id) ? 'selected' : '' ?>>
+                                                        <?= htmlspecialchars($f->codigo_fornecedor . ' - ' . $f->nome_empresa) ?>
                                                     </option>
                                                 <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select class="form-select" name="tipo_relacao[]">
+                                                <option value="">Tipo de relação</option>
+                                                <option value="Fabricante" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Fabricante') ? 'selected' : '' ?>>Fabricante</option>
+                                                <option value="Distribuidor" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Distribuidor') ? 'selected' : '' ?>>Distribuidor</option>
+                                                <option value="Assistência Técnica" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Assistência Técnica') ? 'selected' : '' ?>>Assistência Técnica</option>
+                                                <option value="Consumíveis / Acessórios" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Consumíveis/ Acessórios') ? 'selected' : '' ?>>Consumíveis / Acessórios</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- JSON com fornecedores para o JS usar -->
+                                <script>
+                                    const fornecedoresDisponiveis = <?= json_encode(
+                                                                        array_map(fn($f) => ['id' => $f->id, 'nome' => $f->nome_empresa], $fornecedores)
+                                                                    ) ?>;
+                                </script>
+                                <script>
+                                    const fornecedoresGuardados = <?= json_encode($_SESSION['equipamento']['fornecedores'] ?? []) ?>;
+                                </script>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step5" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
+
+                            </div>
+
+                            <!-- Garantias e Contratos -->
+                            <div class="tab-pane fade <?= ($step_atual == 6) ? 'show active' : '' ?>" id="garantiasNovo">
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-garantias" <?= empty($erros_garantias) ? 'style="display:none;"' : '' ?>>
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros_garantias as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+
+                                <!-- GARANTIA -->
+
+                                <div class="row g-4">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Garantia Associada
+                                        </label>
+
+                                        <select class="form-select" id="temGarantia" name="tem_garantia">
+
+                                            <option disabled <?= empty($_SESSION['equipamento']['tem_garantia'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar opção
+                                            </option>
+
+                                            <option value="sim" <?= (($_SESSION['equipamento']['tem_garantia'] ?? '') == 'sim') ?>>
+                                                Sim
+                                            </option>
+
+                                            <option value="nao" <?= (($_SESSION['equipamento']['tem_garantia'] ?? '') == 'nao') ?>>
+                                                Não
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <hr class="my-4">
+
+                                <!-- CONTRATO -->
+
+                                <div class="row g-4">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label fw-bold">
+                                            Contrato de Manutenção Associado
+                                        </label>
+
+                                        <select class="form-select" id="temContrato" name="tem_contrato">
+
+                                           <option disabled <?= empty($_SESSION['equipamento']['tem_contrato'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar opção
+                                            </option>
+
+                                            <option value="sim" <?= (($_SESSION['equipamento']['tem_garantia'] ?? '') == 'sim') ?>>
+                                                Sim
+                                            </option>
+
+                                            <option value="nao" <?= (($_SESSION['equipamento']['tem_garantia'] ?? '') == 'nao') ?>>
+                                                Não
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- SECÇÃO CONTRATO -->
+
+                                <div id="secaoContrato" style="display:none;">
+
+                                    <div class="row g-4 mt-2">
+
+                                        <div class="col-md-4">
+
+                                            <label class="form-label fw-bold">
+                                                Tipo de Contrato
+                                            </label>
+
+                                            <select class="form-select" name="tipo_contrato">
+                                                <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Preventiva') ? 'selected' : '' ?>>Manutenção Preventiva</option>
+                                                <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Corretiva') ? 'selected' : '' ?>>Manutenção Corretiva</option>
+                                                <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Preventiva e Corretiva') ? 'selected' : '' ?>>Manutenção Preventiva e Corretiva</option>
+                                            </select>
+
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <label class="form-label fw-bold">
+                                                Entidade Responsável
+                                            </label>
+
+                                            <input type="text" class="form-control" name="entidade_responsavel"
+                                                value="<?= htmlspecialchars($_SESSION['equipamento']['entidade_responsavel'] ?? '') ?>">
+
+                                        </div>
+
+                                        <div class=" col-md-4">
+
+                                            <label class="form-label fw-bold">
+                                                Periodicidade
+                                            </label>
+
+                                            <select class="form-select" name="periodicidade">
+                                                <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Mensal') ? 'selected' : '' ?>>Mensal</option>
+                                                <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Trimestral') ? 'selected' : '' ?>>Trimestral</option>
+                                                <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Semestral') ? 'selected' : '' ?>>Semestral</option>
+                                                <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Anual') ? 'selected' : '' ?>>Anual</option>
                                             </select>
 
                                         </div>
@@ -1633,639 +1922,160 @@ $paginaAtiva = 'equipamentos';
 
                                 </div>
 
-                                <div class="mt-3">
-
-                                    <button type="button" id="btnAdicionarAcessorio" class="btn btn-outline-primary">
-
-                                        <i class="fa-solid fa-plus me-2"></i>
-                                        Adicionar Acessório
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                            <!-- SECÇÃO CONSUMÍVEIS -->
-
-                            <div id="secaoConsumiveis" style="display:none;">
-
                                 <hr class="my-4">
 
                                 <h5 class="fw-bold mb-3">
-                                    Consumíveis Associados
+                                    Documentos Associados
                                 </h5>
 
-                                <div id="listaConsumiveis">
+                                <div class="row g-3">
 
-                                    <div class="row g-4 consumivel-item">
+                                    <!-- CERTIFICADO DE GARANTIA -->
 
-                                        <div class="col-md-8">
+                                    <div class="col-md-6" id="cardGarantia" style="display:none;">
 
-                                            <label class="form-label fw-bold">
-                                                Nome do Consumível
-                                            </label>
+                                        <div class="border rounded-3 p-3">
 
-                                            <input type="text" class="form-control" name="consumivel_nome[]"
-                                                value="<?= htmlspecialchars($_POST['consumivel_nome'][0] ?? '') ?>"
-                                                placeholder="Ex: Filtro Bacteriano">
-
-                                        </div>
-
-                                        <div class="col-md-4">
-
-                                            <label class="form-label fw-bold">
-                                                Quantidade
-                                            </label>
-
-                                            <input type="number" class="form-control" name="consumivel_quantidade[]"
-                                                value="<?= htmlspecialchars($_POST['consumivel_quantidade'][0] ?? '') ?>">
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="mt-3">
-
-                                    <button type="button" id="btnAdicionarConsumivel" class="btn btn-outline-primary">
-
-                                        <i class="fa-solid fa-plus me-2"></i>
-                                        Adicionar Consumível
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step3" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-                        </div>
-
-                        <!-- Localização -->
-                        <div class="tab-pane fade <?= ($step_atual == 4) ? 'show active' : '' ?>" id="localizacaoNovo">
-
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-localizacao" <?= empty($erros_localizacao) ? 'style="display:none;"' : '' ?>>
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0">
-                                    <?php foreach ($erros_localizacao as $erro): ?>
-                                        <li><?= htmlspecialchars($erro) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                            <label class="form-label fw-bold">
-                                Localização Associada
-                            </label>
-
-                            <select class="form-select" name="id_localizacao">
-                                <option value="">Selecionar localização</option>
-                                <?php foreach ($localizacoes as $loc): ?>
-                                    <option value="<?= $loc->id ?>"
-                                        <?= (($_SESSION['equipamento']['id_localizacao'] ?? '') == $loc->id) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($loc->edificio . ' - Piso ' . $loc->piso . ' - ' . $loc->sala_gabinete) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step4" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-                        </div>
-
-                        <!-- Fornecedor -->
-                        <div class="tab-pane fade <?= ($step_atual == 5) ? 'show active' : '' ?>" id="fornecedorNovo">
-
-                            <!-- Alertas -->
-                            <div class="alert alert-danger mb-4" id="alertas-fornecedor" <?= empty($erros_fornecedor) ? 'style="display:none;"' : '' ?>>
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0">
-                                    <?php foreach ($erros_fornecedor as $erro): ?>
-                                        <li><?= htmlspecialchars($erro) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h6 class="fw-bold mb-0">Fornecedores Associados</h6>
-                                <button type="button" class="btn btn-sm btn-outline-primary" id="btnAdicionarFornecedor">
-                                    <i class="fa-solid fa-plus me-1"></i>
-                                    Adicionar Fornecedor
-                                </button>
-                            </div>
-
-                            <div id="lista-fornecedores">
-
-                                <div class="row g-2 mb-2 linha-fornecedor">
-                                    <div class="col-md-7">
-                                        <select class="form-select" name="id_fornecedor[]">
-                                            <option value="">Selecionar fornecedor</option>
-                                            <?php foreach ($fornecedores as $f): ?>
-                                                <option value="<?= $f->id ?>"
-                                                    <?= (($_SESSION['equipamento']['fornecedores'][0]['id_fornecedor'] ?? '') == $f->id) ? 'selected' : '' ?>>
-                                                    <?= htmlspecialchars($f->codigo_fornecedor . ' - ' . $f->nome_empresa) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <select class="form-select" name="tipo_relacao[]">
-                                            <option value="">Tipo de relação</option>
-                                            <option value="Fabricante" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Fabricante') ? 'selected' : '' ?>>Fabricante</option>
-                                            <option value="Distribuidor" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Distribuidor') ? 'selected' : '' ?>>Distribuidor</option>
-                                            <option value="Assistência Técnica" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Assistência Técnica') ? 'selected' : '' ?>>Assistência Técnica</option>
-                                            <option value="Consumíveis / Acessórios" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Consumível/ Acessório') ? 'selected' : '' ?>>Consumíveis / Acessórios</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- JSON com fornecedores para o JS usar -->
-                            <script>
-                                const fornecedoresDisponiveis = <?= json_encode(
-                                                                    array_map(fn($f) => ['id' => $f->id, 'nome' => $f->nome_empresa], $fornecedores)
-                                                                ) ?>;
-                            </script>
-                            <script>
-                                const fornecedoresGuardados = <?= json_encode($_SESSION['equipamento']['fornecedores'] ?? []) ?>;
-                            </script>
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step5" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-
-                        </div>
-
-                        <!-- Garantias e Contratos -->
-                        <div class="tab-pane fade <?= ($step_atual == 6) ? 'show active' : '' ?>" id="garantiasNovo">
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-garantias" <?= empty($erros_garantias) ? 'style="display:none;"' : '' ?>>
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0">
-                                    <?php foreach ($erros_garantias as $erro): ?>
-                                        <li><?= htmlspecialchars($erro) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-
-                            <!-- GARANTIA -->
-
-                            <div class="row g-4">
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-bold">
-                                        Garantia Associada
-                                    </label>
-
-                                    <select class="form-select" id="temGarantia" name="tem_garantia">
-
-                                        <option disabled <?= (($_SESSION['equipamento']['tem_garantia'] ?? '') == '...') ? 'selected' : '' ?>>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim" <?= (($_POST['tem_garantia'] ?? '') == 'sim') ? 'selected' : '' ?>>
-                                            Sim
-                                        </option>
-
-                                        <option value="nao" <?= (($_POST['tem_garantia'] ?? '') == 'nao') ? 'selected' : '' ?>>
-                                            Não
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                            <hr class="my-4">
-
-                            <!-- CONTRATO -->
-
-                            <div class="row g-4">
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-bold">
-                                        Contrato de Manutenção Associado
-                                    </label>
-
-                                    <select class="form-select" id="temContrato" name="tem_contrato">
-
-                                        <option disabled <?= (($_SESSION['equipamento']['tem_contrato'] ?? '') == '...') ? 'selected' : '' ?>>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim" <?= (($_POST['tem_contrato'] ?? '') == 'sim') ? 'selected' : '' ?>>
-                                            Sim
-                                        </option>
-
-                                        <option value="nao" <?= (($_POST['tem_contrato'] ?? '') == 'nao') ? 'selected' : '' ?>>
-                                            Não
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                            <!-- SECÇÃO CONTRATO -->
-
-                            <div id="secaoContrato" style="display:none;">
-
-                                <div class="row g-4 mt-2">
-
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-bold">
-                                            Tipo de Contrato
-                                        </label>
-
-                                        <select class="form-select" name="tipo_contrato">
-                                            <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Preventiva') ? 'selected' : '' ?>>Manutenção Preventiva</option>
-                                            <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Corretiva') ? 'selected' : '' ?>>Manutenção Corretiva</option>
-                                            <option <?= (($_SESSION['equipamento']['tipo_contrato'] ?? '') == 'Manutenção Preventiva e Corretiva') ? 'selected' : '' ?>>Manutenção Preventiva e Corretiva</option>
-                                        </select>
-
-                                    </div>
-
-                                    <div class="col-md-4">
-
-                                        <label class="form-label fw-bold">
-                                            Entidade Responsável
-                                        </label>
-
-                                        <input type="text" class="form-control" name="entidade_responsavel"
-                                            value="<?= htmlspecialchars($_SESSION['equipamento']['entidade_responsavel'] ?? '') ?>">
-
-                                    </div>
-
-                                    <div class=" col-md-4">
-
-                                        <label class="form-label fw-bold">
-                                            Periodicidade
-                                        </label>
-
-                                        <select class="form-select" name="periodicidade">
-                                            <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Mensal') ? 'selected' : '' ?>>Mensal</option>
-                                            <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Trimestral') ? 'selected' : '' ?>>Trimestral</option>
-                                            <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Semestral') ? 'selected' : '' ?>>Semestral</option>
-                                            <option <?= (($_SESSION['equipamento']['periodicidade'] ?? '') == 'Anual') ? 'selected' : '' ?>>Anual</option>
-                                        </select>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <hr class="my-4">
-
-                            <h5 class="fw-bold mb-3">
-                                Documentos Associados
-                            </h5>
-
-                            <div class="row g-3">
-
-                                <!-- CERTIFICADO DE GARANTIA -->
-
-                                <div class="col-md-6" id="cardGarantia" style="display:none;">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Certificado de Garantia
-                                        </h6>
-
-                                        <button type="button" class="btn btn-outline-primary mt-2"
-                                            data-bs-toggle="modal" data-bs-target="#modalGarantia">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- CONTRATO DE MANUTENÇÃO -->
-
-                                <div class="col-md-6" id="cardContrato" style="display:none;">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Contrato de Manutenção
-                                        </h6>
-
-                                        <button type="button" class="btn btn-outline-primary mt-2"
-                                            data-bs-toggle="modal" data-bs-target="#modalContratoManutencao">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- CERTIFICADO DE CALIBRAÇÃO -->
-
-                                <div class="col-md-6">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Certificado de Calibração
-                                        </h6>
-
-                                        <button type="button" class="btn btn-outline-primary mt-2"
-                                            data-bs-toggle="modal" data-bs-target="#modalCertificadoCalibracao">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- RELATÓRIO DE CALIBRAÇÃO -->
-
-                                <div class="col-md-6">
-
-                                    <div class="border rounded-3 p-3">
-
-                                        <h6 class="fw-bold">
-                                            Relatório de Calibração
-                                        </h6>
-
-                                        <button type="button" class="btn btn-outline-primary mt-2"
-                                            data-bs-toggle="modal" data-bs-target="#modalRelatorioCalibracao">
-
-                                            <i class="fa-solid fa-file-pdf me-2"></i>
-                                            Adicionar Documento
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <!-- MODAL CERTIFICADO DE GARANTIA -->
-
-                            <div class="modal fade" id="modalGarantia" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
+                                            <h6 class="fw-bold">
                                                 Certificado de Garantia
-                                            </h5>
+                                            </h6>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn btn-outline-primary mt-2"
+                                                data-bs-toggle="modal" data-bs-target="#modalGarantia">
 
-                                        </div>
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
 
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_certificado_garantia"
-                                                    placeholder="Ex: Certificado de Garantia 2024"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['nome'] ?? '') ?>">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="certificado_garantia" accept="application/pdf">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="certificado_garantia_data"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['data'] ?? '') ?>">
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="certificado_garantia_validade"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['validade'] ?? '') ?>">
-                                            </div>
+                                            </button>
 
                                         </div>
 
                                     </div>
 
-                                </div>
+                                    <!-- CONTRATO DE MANUTENÇÃO -->
 
-                            </div>
+                                    <div class="col-md-6" id="cardContrato" style="display:none;">
 
-                            <!-- MODAL CONTRATO DE MANUTENÇÃO -->
+                                        <div class="border rounded-3 p-3">
 
-                            <div class="modal fade" id="modalContratoManutencao" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
+                                            <h6 class="fw-bold">
                                                 Contrato de Manutenção
-                                            </h5>
+                                            </h6>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn btn-outline-primary mt-2"
+                                                data-bs-toggle="modal" data-bs-target="#modalContratoManutencao">
 
-                                        </div>
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
 
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_contrato_manutencao"
-                                                    placeholder="Ex: Contrato Manutenção Preventiva 2025"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['nome'] ?? '') ?>">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="contrato_manutencao" accept="application/pdf">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="contrato_manutencao_data"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['data'] ?? '') ?>">
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="contrato_manutencao_validade"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['validade'] ?? '') ?>">
-                                            </div>
+                                            </button>
 
                                         </div>
 
                                     </div>
 
-                                </div>
+                                    <!-- CERTIFICADO DE CALIBRAÇÃO -->
 
-                            </div>
+                                    <div class="col-md-6">
 
-                            <!-- MODAL CERTIFICADO DE CALIBRAÇÃO -->
+                                        <div class="border rounded-3 p-3">
 
-                            <div class="modal fade" id="modalCertificadoCalibracao" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
+                                            <h6 class="fw-bold">
                                                 Certificado de Calibração
-                                            </h5>
+                                            </h6>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn btn-outline-primary mt-2"
+                                                data-bs-toggle="modal" data-bs-target="#modalCertificadoCalibracao">
 
-                                        </div>
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
 
-                                        <div class="modal-body">
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_certificado_calibracao"
-                                                    placeholder="Ex: Certificado Calibração IPQ 2025"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['nome'] ?? '') ?>">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="certificado_calibracao" accept="application/pdf">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="certificado_calibracao_data"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['data'] ?? '') ?>">
-                                            </div>
-
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="certificado_calibracao_validade"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['validade'] ?? '') ?>">
-                                            </div>
+                                            </button>
 
                                         </div>
 
                                     </div>
 
-                                </div>
+                                    <!-- RELATÓRIO DE CALIBRAÇÃO -->
 
-                            </div>
+                                    <div class="col-md-6">
 
-                            <!-- MODAL RELATÓRIO DE CALIBRAÇÃO -->
+                                        <div class="border rounded-3 p-3">
 
-                            <div class="modal fade" id="modalRelatorioCalibracao" tabindex="-1">
-
-                                <div class="modal-dialog">
-
-                                    <div class="modal-content">
-
-                                        <div class="modal-header">
-
-                                            <h5 class="modal-title">
+                                            <h6 class="fw-bold">
                                                 Relatório de Calibração
-                                            </h5>
+                                            </h6>
 
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <button type="button" class="btn btn-outline-primary mt-2"
+                                                data-bs-toggle="modal" data-bs-target="#modalRelatorioCalibracao">
+
+                                                <i class="fa-solid fa-file-pdf me-2"></i>
+                                                Adicionar Documento
+
+                                            </button>
 
                                         </div>
 
-                                        <div class="modal-body">
+                                    </div>
 
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Nome do Documento
-                                                </label>
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_relatorio_calibracao"
-                                                    placeholder="Ex: Relatório Calibração Anual 2025"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['nome'] ?? '') ?>">
+                                </div>
+
+                                <!-- MODAL CERTIFICADO DE GARANTIA -->
+
+                                <div class="modal fade" id="modalGarantia" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Certificado de Garantia
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Ficheiro PDF
-                                                </label>
-                                                <input type="file" class="form-control"
-                                                    name="relatorio_calibracao" accept="application/pdf">
-                                            </div>
+                                            <div class="modal-body">
 
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">
-                                                    Data do Documento
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_data"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['data'] ?? '') ?>">
-                                            </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_certificado_garantia"
+                                                        placeholder="Ex: Certificado de Garantia 2024"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['nome'] ?? '') ?>">
+                                                </div>
 
-                                            <div>
-                                                <label class="form-label fw-bold">
-                                                    Data de Validade
-                                                </label>
-                                                <input type="date" class="form-control"
-                                                    name="relatorio_calibracao_validade"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['validade'] ?? '') ?>">
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="certificado_garantia" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="certificado_garantia_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['data'] ?? '') ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="certificado_garantia_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['validade'] ?? '') ?>">
+                                                </div>
+
                                             </div>
 
                                         </div>
@@ -2274,195 +2084,387 @@ $paginaAtiva = 'equipamentos';
 
                                 </div>
 
+                                <!-- MODAL CONTRATO DE MANUTENÇÃO -->
+
+                                <div class="modal fade" id="modalContratoManutencao" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Contrato de Manutenção
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_contrato_manutencao"
+                                                        placeholder="Ex: Contrato Manutenção Preventiva 2025"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['nome'] ?? '') ?>">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="contrato_manutencao" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="contrato_manutencao_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['data'] ?? '') ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="contrato_manutencao_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['validade'] ?? '') ?>">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- MODAL CERTIFICADO DE CALIBRAÇÃO -->
+
+                                <div class="modal fade" id="modalCertificadoCalibracao" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Certificado de Calibração
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_certificado_calibracao"
+                                                        placeholder="Ex: Certificado Calibração IPQ 2025"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['nome'] ?? '') ?>">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="certificado_calibracao" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="certificado_calibracao_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['data'] ?? '') ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="certificado_calibracao_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['validade'] ?? '') ?>">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- MODAL RELATÓRIO DE CALIBRAÇÃO -->
+
+                                <div class="modal fade" id="modalRelatorioCalibracao" tabindex="-1">
+
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+
+                                                <h5 class="modal-title">
+                                                    Relatório de Calibração
+                                                </h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Nome do Documento
+                                                    </label>
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_relatorio_calibracao"
+                                                        placeholder="Ex: Relatório Calibração Anual 2025"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['nome'] ?? '') ?>">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Ficheiro PDF
+                                                    </label>
+                                                    <input type="file" class="form-control"
+                                                        name="relatorio_calibracao" accept="application/pdf">
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label fw-bold">
+                                                        Data do Documento
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="relatorio_calibracao_data"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['data'] ?? '') ?>">
+                                                </div>
+
+                                                <div>
+                                                    <label class="form-label fw-bold">
+                                                        Data de Validade
+                                                    </label>
+                                                    <input type="date" class="form-control"
+                                                        name="relatorio_calibracao_validade"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['validade'] ?? '') ?>">
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step6" class="btn btn-primary-custom">Seguinte</button>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step6" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-                        </div>
 
-                        <!-- DOCUMENTAÇÃO -->
-                        <div class="tab-pane fade <?= ($step_atual == 7) ? 'show active' : '' ?>" id="documentacaoNovo">
+                            <!-- DOCUMENTAÇÃO -->
+                            <div class="tab-pane fade <?= ($step_atual == 7) ? 'show active' : '' ?>" id="documentacaoNovo">
 
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-documentacao" <?= empty($erros_documentacao) ? 'style="display:none;"' : '' ?>>
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0">
-                                    <?php foreach ($erros_documentacao as $erro): ?>
-                                        <li><?= htmlspecialchars($erro) ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-documentacao" <?= empty($erros_documentacao) ? 'style="display:none;"' : '' ?>>
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0">
+                                        <?php foreach ($erros_documentacao as $erro): ?>
+                                            <li><?= htmlspecialchars($erro) ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
 
-                            <h5 class="fw-bold mb-3">
-                                Resumo da Documentação Associada
-                            </h5>
+                                <h5 class="fw-bold mb-3">
+                                    Resumo da Documentação Associada
+                                </h5>
 
-                            <div class="accordion" id="accordionResumoDocumentacao">
+                                <div class="accordion" id="accordionResumoDocumentacao">
 
-                                <!-- DOCUMENTAÇÃO TÉCNICA -->
-                                <div class="accordion-item border rounded-3 mb-3">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnica">
-                                            Documentação Técnica
-                                        </button>
-                                    </h2>
-                                    <div id="collapseResumoTecnica" class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <ul class="mb-0">
-                                                <?php if (!empty($_SESSION['equipamento']['doc_manual_utilizacao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_manual_utilizacao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                                <?php if (!empty($_SESSION['equipamento']['doc_manual_tecnico']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_manual_tecnico']['nome']) ?></li>
-                                                <?php endif; ?>
-                                            </ul>
+                                    <!-- DOCUMENTAÇÃO TÉCNICA -->
+                                    <div class="accordion-item border rounded-3 mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseResumoTecnica">
+                                                Documentação Técnica
+                                            </button>
+                                        </h2>
+                                        <div id="collapseResumoTecnica" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul class="mb-0">
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_manual_utilizacao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_manual_utilizacao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_manual_tecnico']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_manual_tecnico']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- AQUISIÇÃO -->
-                                <div class="accordion-item border rounded-3 mb-3">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoAquisicao">
-                                            Documentação de Aquisição
-                                        </button>
-                                    </h2>
-                                    <div id="collapseResumoAquisicao" class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <ul class="mb-0">
-                                                <?php if (!empty($_SESSION['equipamento']['doc_fatura_aquisicao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_fatura_aquisicao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                                <?php if (!empty($_SESSION['equipamento']['doc_contrato_aquisicao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_aquisicao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                            </ul>
+                                    <!-- AQUISIÇÃO -->
+                                    <div class="accordion-item border rounded-3 mb-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseResumoAquisicao">
+                                                Documentação de Aquisição
+                                            </button>
+                                        </h2>
+                                        <div id="collapseResumoAquisicao" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul class="mb-0">
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_fatura_aquisicao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_fatura_aquisicao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_contrato_aquisicao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_aquisicao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!-- GARANTIAS -->
-                                <div class="accordion-item border rounded-3">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseResumoGarantias">
-                                            Garantias e Contratos
-                                        </button>
-                                    </h2>
-                                    <div id="collapseResumoGarantias" class="accordion-collapse collapse">
-                                        <div class="accordion-body">
-                                            <ul class="mb-0">
-                                                <?php if (($_SESSION['equipamento']['tem_garantia'] ?? '') === 'sim' && !empty($_SESSION['equipamento']['doc_certificado_garantia']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['nome']) ?></li>
-                                                <?php endif; ?>
-                                                <?php if (($_SESSION['equipamento']['tem_contrato'] ?? '') === 'sim' && !empty($_SESSION['equipamento']['doc_contrato_manutencao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                                <?php if (!empty($_SESSION['equipamento']['doc_certificado_calibracao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                                <?php if (!empty($_SESSION['equipamento']['doc_relatorio_calibracao']['nome'])): ?>
-                                                    <li><?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['nome']) ?></li>
-                                                <?php endif; ?>
-                                            </ul>
+                                    <!-- GARANTIAS -->
+                                    <div class="accordion-item border rounded-3">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseResumoGarantias">
+                                                Garantias e Contratos
+                                            </button>
+                                        </h2>
+                                        <div id="collapseResumoGarantias" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <ul class="mb-0">
+                                                    <?php if (($_SESSION['equipamento']['tem_garantia'] ?? '') === 'sim' && !empty($_SESSION['equipamento']['doc_certificado_garantia']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_garantia']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                    <?php if (($_SESSION['equipamento']['tem_contrato'] ?? '') === 'sim' && !empty($_SESSION['equipamento']['doc_contrato_manutencao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_contrato_manutencao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_certificado_calibracao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_certificado_calibracao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                    <?php if (!empty($_SESSION['equipamento']['doc_relatorio_calibracao']['nome'])): ?>
+                                                        <li><?= htmlspecialchars($_SESSION['equipamento']['doc_relatorio_calibracao']['nome']) ?></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                            </div>
-
-                            <hr class="my-4">
-
-                            <div class="row g-4">
-
-                                <div class="col-md-6">
-
-                                    <label class="form-label fw-bold">
-                                        Documentação Adicional Associada
-                                    </label>
-
-                                    <select class="form-select" id="temDocumentacaoAdicional" name="tem_documentacao_adicional">
-
-                                        <option disabled <?= (($_SESSION['equipamento']['tem_documento_adicional'] ?? '') == '...') ? 'selected' : '' ?>>
-                                            Selecionar opção
-                                        </option>
-
-                                        <option value="sim" <?= (($_SESSION['equipamento']['tem_documentacao_adicional'] ?? '') == 'sim') ? 'selected' : '' ?>>
-                                            Sim
-                                        </option>
-
-                                        <option value="nao" <?= (($_SESSION['equipamento']['tem_documentacao_adicional'] ?? '') == 'nao') ? 'selected' : '' ?>>
-                                            Não
-                                        </option>
-
-                                    </select>
 
                                 </div>
-
-                            </div>
-
-                            <div id="secaoDocumentacaoAdicional" style="display:none;">
 
                                 <hr class="my-4">
 
-                                <div id="listaDocumentacaoAdicional">
+                                <div class="row g-4">
 
-                                    <!-- DOCUMENTO 1 -->
+                                    <div class="col-md-6">
 
-                                    <div class="border rounded-3 p-3 documento-adicional-item">
+                                        <label class="form-label fw-bold">
+                                            Documentação Adicional Associada
+                                        </label>
 
-                                        <h6 class="fw-bold">
-                                            Documento Adicional
-                                        </h6>
+                                        <select class="form-select" id="temDocumentacaoAdicional" name="tem_documentacao_adicional">
 
-                                        <div class="row g-3">
+                                            <option disabled <?= empty($_SESSION['equipamento']['tem_documentacao_adicional'] ?? '') ? 'selected' : '' ?>>
+                                                Selecionar opção
+                                            </option>
 
-                                            <div class="col-md-6">
+                                            <option value="sim" <?= (($_SESSION['equipamento']['tem_documentacao_adicional'] ?? '') == 'sim') ? 'selected' : '' ?>>
+                                                Sim
+                                            </option>
 
-                                                <label class="form-label">
-                                                    Nome do Documento
-                                                </label>
+                                            <option value="nao" <?= (($_SESSION['equipamento']['tem_documentacao_adicional'] ?? '') == 'nao') ? 'selected' : '' ?>>
+                                                Não
+                                            </option>
 
-                                                <input type="text" class="form-control"
-                                                    name="nome_documento_adicional[]"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['nome'] ?? '') ?>">
+                                        </select>
 
-                                            </div>
+                                    </div>
 
-                                            <div class="col-md-6">
+                                </div>
 
-                                                <label class="form-label">
-                                                    Ficheiro PDF
-                                                </label>
+                                <div id="secaoDocumentacaoAdicional" style="display:none;">
 
-                                                <input type="file" class="form-control"
-                                                    name="ficheiro_documento_adicional[]" accept="application/pdf">
+                                    <hr class="my-4">
 
-                                            </div>
+                                    <div id="listaDocumentacaoAdicional">
 
-                                            <div class="col-md-6">
+                                        <!-- DOCUMENTO 1 -->
 
-                                                <label class="form-label">
-                                                    Data do Documento
-                                                </label>
+                                        <div class="border rounded-3 p-3 documento-adicional-item">
 
-                                                <input type="date" class="form-control"
-                                                    name="data_documento_adicional[]"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['data'] ?? '') ?>">
+                                            <h6 class="fw-bold">
+                                                Documento Adicional
+                                            </h6>
 
-                                            </div>
+                                            <div class="row g-3">
 
-                                            <div class="col-md-6">
+                                                <div class="col-md-6">
 
-                                                <label class="form-label">
-                                                    Data de Validade
-                                                </label>
+                                                    <label class="form-label">
+                                                        Nome do Documento
+                                                    </label>
 
-                                                <input type="date" class="form-control"
-                                                    name="validade_documento_adicional[]"
-                                                    value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['validade'] ?? '') ?>">
+                                                    <input type="text" class="form-control"
+                                                        name="nome_documento_adicional[]"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['nome'] ?? '') ?>">
+
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                    <label class="form-label">
+                                                        Ficheiro PDF
+                                                    </label>
+
+                                                    <input type="file" class="form-control"
+                                                        name="ficheiro_documento_adicional[]" accept="application/pdf">
+
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                    <label class="form-label">
+                                                        Data do Documento
+                                                    </label>
+
+                                                    <input type="date" class="form-control"
+                                                        name="data_documento_adicional[]"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['data'] ?? '') ?>">
+
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                    <label class="form-label">
+                                                        Data de Validade
+                                                    </label>
+
+                                                    <input type="date" class="form-control"
+                                                        name="validade_documento_adicional[]"
+                                                        value="<?= htmlspecialchars($_SESSION['equipamento']['documentos_adicionais'][0]['validade'] ?? '') ?>">
+
+                                                </div>
 
                                             </div>
 
@@ -2470,54 +2472,52 @@ $paginaAtiva = 'equipamentos';
 
                                     </div>
 
-                                </div>
+                                    <button type="button" class="btn btn-outline-primary mt-3"
+                                        id="btnAdicionarDocumentoAdicional">
 
-                                <button type="button" class="btn btn-outline-primary mt-3"
-                                    id="btnAdicionarDocumentoAdicional">
+                                        <i class="fa-solid fa-plus me-2"></i>
+                                        Adicionar Documento
 
-                                    <i class="fa-solid fa-plus me-2"></i>
-                                    Adicionar Documento
-
-                                </button>
-
-                            </div>
-                            <div class="d-flex justify-content-end mt-4">
-                                <button type="submit" name="submeter_step7" class="btn btn-primary-custom">Seguinte</button>
-                            </div>
-                        </div>
-
-                        <!-- Observações -->
-                        <div class="tab-pane fade <?= ($step_atual == 8) ? 'show active' : '' ?>" id="observacoesNovo">
-                            <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-observacoes" style="display:none;">
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0"></ul>
-                            </div>
-
-                            <label class="form-label fw-bold">
-                                Observações
-                            </label>
-
-                            <textarea class="form-control"
-                                name="observacoes"
-                                rows="6"><?= htmlspecialchars($_SESSION['equipamento']['observacoes'] ?? '') ?></textarea>
-                            <div class="d-flex justify-content-between mt-4">
-                                <div class="d-flex gap-3">
-                                    <a href="equipamentos.php" class="btn btn-outline-secondary">Cancelar</a>
-                                    <button type="submit"
-                                        name="submeter_step8"
-                                        class="btn btn-primary-custom">
-                                        <i class="fa-solid fa-floppy-disk me-2"></i>
-                                        Guardar Equipamento
                                     </button>
+
+                                </div>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="submeter_step7" class="btn btn-primary-custom">Seguinte</button>
                                 </div>
                             </div>
+
+                            <!-- Observações -->
+                            <div class="tab-pane fade <?= ($step_atual == 8) ? 'show active' : '' ?>" id="observacoesNovo">
+                                <!-- ALERTAS -->
+                                <div class="alert alert-danger mb-4" id="alertas-observacoes" style="display:none;">
+                                    <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
+                                    <ul class="mb-0"></ul>
+                                </div>
+
+                                <label class="form-label fw-bold">
+                                    Observações
+                                </label>
+
+                                <textarea class="form-control"
+                                    name="observacoes"
+                                    rows="6"><?= htmlspecialchars($_SESSION['equipamento']['observacoes'] ?? '') ?></textarea>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <div class="d-flex gap-3">
+                                        <a href="equipamentos.php" class="btn btn-outline-secondary">Cancelar</a>
+                                        <button type="submit"
+                                            name="submeter_step8"
+                                            class="btn btn-primary-custom">
+                                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                                            Guardar Equipamento
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
 
-            </div>
+                </div>
         </form>
     </main>
 </div>

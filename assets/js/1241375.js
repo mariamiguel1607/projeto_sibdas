@@ -2376,6 +2376,14 @@ function mostrarErrosAba(idDivAlertas, mensagens) {
 
 // Desativa todas as abas exceto a atual e as já validadas
 function atualizarEstadoAbas() {
+
+    if (typeof modoEdicao !== 'undefined' && modoEdicao === true) {
+        // No modo edição, todas as abas ficam sempre disponíveis
+        document.querySelectorAll('.conteudos-tabs .nav-link').forEach(function (botaoTab) {
+            botaoTab.classList.remove('disabled');
+        });
+        return;
+    }
     const atual = abaAtual();
     const indexAtual = ordemAbas.indexOf(atual);
 
