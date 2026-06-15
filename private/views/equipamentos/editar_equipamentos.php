@@ -27,17 +27,13 @@ if (!isset($_SESSION['edit_step']) || ($_SESSION['edit_equip_id'] ?? null) != $i
     $_SESSION['equipamento_edit'] = [];
 }
 
-// Sempre que abre via GET (botão "Editar"), recarrega dados frescos da BD
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $_SESSION['equipamento_edit'] = [];
-}
-
 $step_atual = $_SESSION['edit_step'];
 
 $erros = [];
 $erro_sistema = "";
 $erros_dados_gerais = [];
 $erros_aquisicao    = [];
+$erros_acessorios = [];
 $erros_localizacao  = [];
 $erros_fornecedor   = [];
 $erros_garantias    = [];
@@ -177,10 +173,26 @@ if (isset($_POST['submeter_edit_step3'])) {
             'quantidade' => $consumivel_quantidade[$i] ?? '',
         ];
     }
+    $erros_acessorios = validar_step_acessorios_consumiveis(
 
-    $_SESSION['edit_step'] = 4;
-    header('Location: editar_equipamentos.php?id_equipamento=' . $idEquipamentoEncrypted);
-    exit;
+        $_POST,
+
+        $_SESSION['equipamento_edit']['acessorios'],
+
+        $_SESSION['equipamento_edit']['consumiveis']
+
+    );
+
+    if (empty($erros_acessorios)) {
+
+        $_SESSION['edit_step'] = 4;
+
+        header('Location: editar_equipamentos.php?id_equipamento=' . $idEquipamentoEncrypted);
+
+        exit;
+    }
+
+    $step_atual = 3;
 }
 
 if (isset($_POST['submeter_edit_step4'])) {
@@ -291,6 +303,7 @@ if (isset($_POST['submeter_edit_step6'])) {
         'data' => $_POST['relatorio_calibracao_data'] ?? '',
         'validade' => $_POST['relatorio_calibracao_validade'] ?? '',
     ];
+
 
     // Agora valida (usa os dados já atualizados na sessão)
     $erros_garantias    = validar_step_garantias($_POST, $_FILES, $_SESSION['equipamento_edit']);
@@ -523,6 +536,7 @@ if (isset($_POST['submeter_edit_step8'])) {
                 }
             }
 
+
             $ligacao->commit();
             $ligacao = null;
 
@@ -541,7 +555,6 @@ if (isset($_POST['submeter_edit_step8'])) {
 
     $step_atual = 8;
 }
-
 
 // Se a sessão de edição ainda está vazia, carregar dados da BD e pré-preencher
 if (empty($_SESSION['equipamento_edit'])) {
@@ -704,6 +717,20 @@ $paginaAtiva = 'equipamentos';
                 <p class="text-muted mb-0">
                     Atualização dos dados técnicos e administrativos do equipamento.
                 </p>
+
+
+                <div class="mt-3 mb-4">
+
+                    <small class="text-secondary">
+
+                        <i class="fa-solid fa-circle-info me-1 text-primary"></i>
+
+                        As alterações efetuadas em cada secção só são guardadas após clicar em
+                        <strong>Seguinte</strong>.
+
+                    </small>
+
+                </div>
             </div>
 
             <div class="d-flex gap-2">
@@ -1421,17 +1448,26 @@ $paginaAtiva = 'equipamentos';
                         <!-- ACESSÓRIOS E CONSUMÍVEIS -->
                         <div class="tab-pane fade <?= ($step_atual == 3) ? 'show active' : '' ?>" id="acessoriosNovo">
                             <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-acessorios" style="display:none;">
-                                <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0"></ul>
-                            </div>
+                            <div class="alert alert-danger mb-4"
+                                id="alertas-acessorios"
+                                <?= empty($erros_acessorios) ? 'style="display:none;"' : '' ?>>
 
-                            <?php if (!empty($erro_sistema)): ?>
-                                <div class="alert alert-danger mb-4">
-                                    <strong>Erro do sistema:</strong>
-                                    <p><?= htmlspecialchars($erro_sistema) ?></p>
-                                </div>
-                            <?php endif; ?>
+                                <h6 class="alert-heading mb-2">
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                    Foram encontrados erros
+                                </h6>
+
+                                <ul class="mb-0">
+
+                                    <?php foreach ($erros_acessorios as $erro): ?>
+
+                                        <li><?= htmlspecialchars($erro) ?></li>
+
+                                    <?php endforeach; ?>
+
+                                </ul>
+
+                            </div>
 
                             <div class="row g-4">
 
@@ -1763,11 +1799,11 @@ $paginaAtiva = 'equipamentos';
                                             Selecionar opção
                                         </option>
 
-                                        <option value="sim" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'sim') ?>>
+                                        <option value="sim" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'sim') ? 'selected' : '' ?>>
                                             Sim
                                         </option>
 
-                                        <option value="nao" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'nao') ?>>
+                                        <option value="nao" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'nao') ? 'selected' : '' ?>>
                                             Não
                                         </option>
 
@@ -1795,16 +1831,17 @@ $paginaAtiva = 'equipamentos';
                                             Selecionar opção
                                         </option>
 
-                                        <option value="sim" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'sim') ?>>
+                                        <option value="sim"
+                                            <?= (($_SESSION['equipamento_edit']['tem_contrato'] ?? '') == 'sim') ? 'selected' : '' ?>>
                                             Sim
                                         </option>
 
-                                        <option value="nao" <?= (($_SESSION['equipamento_edit']['tem_garantia'] ?? '') == 'nao') ?>>
+                                        <option value="nao"
+                                            <?= (($_SESSION['equipamento_edit']['tem_contrato'] ?? '') == 'nao') ? 'selected' : '' ?>>
                                             Não
                                         </option>
 
                                     </select>
-
                                 </div>
 
                             </div>

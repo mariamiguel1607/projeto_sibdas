@@ -4,7 +4,8 @@
 // Validações genéricas reutilizáveis
 // ============================================================
 
-function validar_nome(string $nome): array {
+function validar_nome(string $nome): array
+{
     $erros = [];
     if (empty(trim($nome))) {
         $erros[] = "O campo Nome é obrigatório.";
@@ -14,7 +15,8 @@ function validar_nome(string $nome): array {
     return $erros;
 }
 
-function validar_email(string $email): array {
+function validar_email(string $email): array
+{
     $erros = [];
     if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erros[] = "O email tem um formato inválido.";
@@ -22,7 +24,8 @@ function validar_email(string $email): array {
     return $erros;
 }
 
-function validar_nif(string $nif): array {
+function validar_nif(string $nif): array
+{
     $erros = [];
     if (!empty($nif) && !preg_match('/^\d{9}$/', $nif)) {
         $erros[] = "O NIF deve conter exatamente 9 números.";
@@ -30,7 +33,8 @@ function validar_nif(string $nif): array {
     return $erros;
 }
 
-function validar_preco(string $valor, string $nome_campo = "O valor"): array {
+function validar_preco(string $valor, string $nome_campo = "O valor"): array
+{
     $erros = [];
     if ($valor !== '') {
         if (!is_numeric($valor)) {
@@ -42,7 +46,8 @@ function validar_preco(string $valor, string $nome_campo = "O valor"): array {
     return $erros;
 }
 
-function validar_data(string $data, string $nome_campo = "A data"): array {
+function validar_data(string $data, string $nome_campo = "A data"): array
+{
     $erros = [];
     if (!empty($data)) {
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data)) {
@@ -57,7 +62,8 @@ function validar_data(string $data, string $nome_campo = "A data"): array {
     return $erros;
 }
 
-function validar_ano(string $ano): array {
+function validar_ano(string $ano): array
+{
     $erros = [];
     if (!empty($ano)) {
         if (!preg_match('/^\d{4}$/', $ano) || (int)$ano < 1900 || (int)$ano > (int)date('Y')) {
@@ -72,7 +78,8 @@ function validar_ano(string $ano): array {
 // Validações de datas de documentos (independente do contexto)
 // ============================================================
 
-function validar_datas_documento_simples(string $data_documento, string $data_validade, string $nome_documento): array {
+function validar_datas_documento_simples(string $data_documento, string $data_validade, string $nome_documento): array
+{
     $erros = [];
     $hoje = date('Y-m-d');
 
@@ -134,7 +141,8 @@ function validar_documento_completo(
 //                          (passar [] no inserir caso ainda não existam documentos)
 // ============================================================
 
-function validar_step_dados_gerais(array $dados, array $files, array $caminhos_existentes = []): array {
+function validar_step_dados_gerais(array $dados, array $files, array $caminhos_existentes = []): array
+{
     $erros = [];
 
     if (empty(trim($dados['designacao'] ?? '')))   $erros[] = "A designação é obrigatória.";
@@ -163,7 +171,8 @@ function validar_step_dados_gerais(array $dados, array $files, array $caminhos_e
     return $erros;
 }
 
-function validar_step_aquisicao(array $dados, array $files, array $caminhos_existentes = []): array {
+function validar_step_aquisicao(array $dados, array $files, array $caminhos_existentes = []): array
+{
     $erros = [];
 
     if (empty($dados['id_estado'] ?? '')) $erros[] = "O estado é obrigatório.";
@@ -189,16 +198,97 @@ function validar_step_aquisicao(array $dados, array $files, array $caminhos_exis
         'Contrato de Aquisição'
     ));
 
+    if (!empty($dados['data_aquisicao'])) {
+        if ($dados['data_aquisicao'] > date('Y-m-d')) {
+            $erros[] = "A data de aquisição não pode ser futura.";
+        }
+    }
+
     return $erros;
 }
 
-function validar_step_localizacao(array $dados): array {
+function validar_step_acessorios_consumiveis(
+    array $dados,
+    array $acessorios,
+    array $consumiveis
+): array {
+
+    $erros = [];
+
+
+    // ==========================
+    // ACESSÓRIOS
+    // ==========================
+
+    if (($dados['tem_acessorios'] ?? '') === 'sim') {
+
+        foreach ($acessorios as $acessorio) {
+
+            if (empty(trim($acessorio['nome'] ?? ''))) {
+                continue;
+            }
+
+            if (
+                empty($acessorio['quantidade'])
+                || !is_numeric($acessorio['quantidade'])
+            ) {
+
+                $erros[] =
+                    "A quantidade do acessório é obrigatória.";
+            } elseif ($acessorio['quantidade'] < 0) {
+
+                $erros[] =
+                    "A quantidade do acessório não pode ser negativa.";
+            }
+
+            if (empty($acessorio['id_estado'])) {
+
+                $erros[] =
+                    "O estado do acessório é obrigatório.";
+            }
+        }
+    }
+
+
+    // ==========================
+    // CONSUMÍVEIS
+    // ==========================
+
+    if (($dados['tem_consumiveis'] ?? '') === 'sim') {
+
+        foreach ($consumiveis as $consumivel) {
+
+            if (empty(trim($consumivel['nome'] ?? ''))) {
+                continue;
+            }
+
+            if (
+                empty($consumivel['quantidade'])
+                || !is_numeric($consumivel['quantidade'])
+            ) {
+
+                $erros[] =
+                    "A quantidade do consumível é obrigatória.";
+            } elseif ($consumivel['quantidade'] < 0) {
+
+                $erros[] =
+                    "A quantidade do consumível não pode ser negativa.";
+            }
+        }
+    }
+
+    return $erros;
+}
+
+function validar_step_localizacao(array $dados): array
+{
     $erros = [];
     if (empty($dados['id_localizacao'] ?? '')) $erros[] = "A localização é obrigatória.";
     return $erros;
 }
 
-function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao): array {
+function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao): array
+{
     $erros = [];
     $valido = false;
 
@@ -213,7 +303,8 @@ function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao): a
     return $erros;
 }
 
-function validar_step_garantias(array $dados, array $files, array $caminhos_existentes = []): array {
+function validar_step_garantias(array $dados, array $files, array $caminhos_existentes = []): array
+{
     $erros = [];
 
     $erros = array_merge($erros, validar_documento_completo(
@@ -258,8 +349,51 @@ function validar_step_garantias(array $dados, array $files, array $caminhos_exis
 
     return $erros;
 }
+function validar_step_documentacao(
+    array $dados,
+    array $files
+): array {
 
-function validar_step_observacoes(string $observacoes): array {
+    $erros = [];
+
+    if (($dados['tem_documentacao_adicional'] ?? '') !== 'sim') {
+        return $erros;
+    }
+
+    $nomes      = $dados['nome_documento_adicional'] ?? [];
+    $datas      = $dados['data_documento_adicional'] ?? [];
+    $validades  = $dados['validade_documento_adicional'] ?? [];
+    $ficheiros  = $files['ficheiro_documento_adicional'] ?? [];
+
+    foreach ($nomes as $i => $nome) {
+
+        $nome = trim($nome);
+
+        if (empty($nome)) {
+            continue;
+        }
+
+        $erros = array_merge(
+            $erros,
+            validar_datas_documento_simples(
+                $datas[$i] ?? '',
+                $validades[$i] ?? '',
+                $nome
+            )
+        );
+
+        if (empty($ficheiros['name'][$i])) {
+
+            $erros[] =
+                "O ficheiro PDF do documento '{$nome}' é obrigatório.";
+        }
+    }
+
+    return $erros;
+}
+
+function validar_step_observacoes(string $observacoes): array
+{
     $erros = [];
     if (strlen($observacoes) > 5000) {
         $erros[] = "As observações não podem exceder 5000 caracteres.";
