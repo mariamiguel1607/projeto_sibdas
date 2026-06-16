@@ -535,10 +535,12 @@ if (isset($_POST['submeter_step8'])) {
                     observacoes,
                     id_localizacao,
                     id_categoria,
-                    id_estado
+                    id_estado,
+                    tem_garantia,
+                    tem_contrato
                 )
                 VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
@@ -557,7 +559,9 @@ if (isset($_POST['submeter_step8'])) {
                 $_SESSION['equipamento']['observacoes'],
                 $_SESSION['equipamento']['id_localizacao'],
                 $_SESSION['equipamento']['id_categoria'],
-                $_SESSION['equipamento']['id_estado']
+                $_SESSION['equipamento']['id_estado'],
+                ($_SESSION['equipamento']['tem_garantia'] ?? '') === 'sim' ? 1 : 0,
+                ($_SESSION['equipamento']['tem_contrato'] ?? '') === 'sim' ? 1 : 0,
             ]);
             $idEquipamento = $ligacao->lastInsertId();
 

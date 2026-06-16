@@ -275,11 +275,10 @@ $paginaAtiva = 'equipamentos';
                                             ?>
                                         </td>
                                         <td class="text-end acoes-nowrap">
-                                            <a href="ficha_equipamento.php?id=<?= $equipamento->id ?>"
+                                            <a href="ficha_equipamento.php?id=<?= aes_encrypt($equipamento->id) ?>"
                                                 class="btn btn-sm btn-outline-primary">
                                                 Ver
                                             </a>
-
                                             <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
                                                 class="btn btn-sm btn-outline-warning">
                                                 Editar
@@ -289,7 +288,7 @@ $paginaAtiva = 'equipamentos';
                                                 class="btn btn-sm btn-outline-danger"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#eliminarEquipamentoModal"
-                                                data-id="<?= $equipamento->id ?>">
+                                                data-id="<?= aes_encrypt($equipamento->id) ?>">
                                                 Eliminar
                                             </button>
                                         </td>
@@ -321,9 +320,7 @@ $paginaAtiva = 'equipamentos';
             <div class="modal-header">
 
                 <h5 class="modal-title" id="eliminarEquipamentoModalLabel">
-
                     Confirmar eliminação
-
                 </h5>
 
                 <button type="button"
@@ -342,9 +339,7 @@ $paginaAtiva = 'equipamentos';
                 <br><br>
 
                 <small class="text-muted">
-
                     Esta ação não pode ser revertida.
-
                 </small>
 
             </div>
@@ -355,16 +350,13 @@ $paginaAtiva = 'equipamentos';
                 <button type="button"
                     class="btn btn-outline-secondary"
                     data-bs-dismiss="modal">
-
                     Cancelar
-
                 </button>
 
                 <button type="button"
+                    id="btnConfirmarEliminar"
                     class="btn btn-danger">
-
                     Eliminar
-
                 </button>
 
             </div>
@@ -374,6 +366,20 @@ $paginaAtiva = 'equipamentos';
     </div>
 
 </div>
+<script>
+    // Quando o modal abre, guarda o ID encriptado no botão confirmar
+    document.getElementById('eliminarEquipamentoModal').addEventListener('show.bs.modal', function(event) {
+        const botao = event.relatedTarget;
+        const idEncriptado = botao.getAttribute('data-id');
+        document.getElementById('btnConfirmarEliminar').setAttribute('data-id', idEncriptado);
+    });
+
+    // Quando clica Eliminar, redireciona para eliminar_equipamento.php
+    document.getElementById('btnConfirmarEliminar').addEventListener('click', function() {
+        const idEncriptado = this.getAttribute('data-id');
+        window.location.href = 'eliminar_equipamento.php?id=' + idEncriptado;
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('#tabela-equipamentos').DataTable({

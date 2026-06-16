@@ -382,23 +382,25 @@ if (isset($_POST['submeter_edit_step8'])) {
 
             // 1. UPDATE equipamentos
             $stmt = $ligacao->prepare("
-                UPDATE equipamentos SET
-                    designacao      = :designacao,
-                    id_categoria    = :id_categoria,
-                    fabricante      = :fabricante,
-                    marca           = :marca,
-                    modelo          = :modelo,
-                    num_serie       = :num_serie,
-                    ano_fabrico     = :ano_fabrico,
-                    criticidade     = :criticidade,
-                    data_aquisicao  = :data_aquisicao,
-                    custo_aquisicao = :custo_aquisicao,
-                    tipo_entrada    = :tipo_entrada,
-                    id_estado       = :id_estado,
-                    id_localizacao  = :id_localizacao,
-                    observacoes     = :observacoes
-                WHERE id = :id
-            ");
+                    UPDATE equipamentos SET
+                        designacao      = :designacao,
+                        id_categoria    = :id_categoria,
+                        fabricante      = :fabricante,
+                        marca           = :marca,
+                        modelo          = :modelo,
+                        num_serie       = :num_serie,
+                        ano_fabrico     = :ano_fabrico,
+                        criticidade     = :criticidade,
+                        data_aquisicao  = :data_aquisicao,
+                        custo_aquisicao = :custo_aquisicao,
+                        tipo_entrada    = :tipo_entrada,
+                        id_estado       = :id_estado,
+                        id_localizacao  = :id_localizacao,
+                        observacoes     = :observacoes,
+                        tem_garantia    = :tem_garantia,
+                        tem_contrato    = :tem_contrato
+                    WHERE id = :id 
+                ");
             $stmt->execute([
                 ':designacao'      => $eq['designacao'],
                 ':id_categoria'    => $eq['id_categoria'],
@@ -414,6 +416,8 @@ if (isset($_POST['submeter_edit_step8'])) {
                 ':id_estado'       => $eq['id_estado'],
                 ':id_localizacao'  => $eq['id_localizacao'],
                 ':observacoes'     => $eq['observacoes'],
+                ':tem_garantia'    => ($eq['tem_garantia'] ?? '') === 'sim' ? 1 : 0,
+                ':tem_contrato'    => ($eq['tem_contrato'] ?? '') === 'sim' ? 1 : 0,
                 ':id'              => $idEquipamento,
             ]);
 
