@@ -733,6 +733,9 @@ if (isset($_POST['submeter_step8'])) {
                 ]);
             }
 
+            // Registar criação no histórico
+            registar_historico($ligacao, $idEquipamento, 'Equipamento criado', 'Equipamento registado no sistema com o código ' . $proximo_codigo . '.');
+
             $ligacao->commit();
 
             unset($_SESSION['equipamento']);

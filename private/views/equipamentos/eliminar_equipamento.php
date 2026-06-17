@@ -14,6 +14,9 @@ try {
     $ligacao = ligar_bd();
     $stmt = $ligacao->prepare("UPDATE equipamentos SET ativo = 0 WHERE id = :id");
     $stmt->execute([':id' => $id]);
+
+    registar_historico($ligacao, $id, 'Equipamento desativado', 'O equipamento foi desativado pelo utilizador.');
+
     $ligacao = null;
 
     header('Location: equipamentos.php?sucesso=desativado');

@@ -73,13 +73,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (empty($erros)) {
                 $stmt = $ligacao->prepare("
-                    UPDATE localizacoes SET
-                        edificio             = :edificio,
-                        piso                 = :piso,
-                        servico_departamento = :servico,
-                        sala_gabinete        = :sala
-                    WHERE id = :id
-                ");
+        UPDATE localizacoes SET
+            edificio             = :edificio,
+            piso                 = :piso,
+            servico_departamento = :servico,
+            sala_gabinete        = :sala
+        WHERE id = :id
+    ");
                 $stmt->execute([
                     ':edificio' => $dados['edificio'],
                     ':piso'     => $dados['piso'],
@@ -87,6 +87,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':sala'     => $dados['sala_gabinete'] ?: null,
                     ':id'       => $id,
                 ]);
+
+                // Registar no histórico para todos os equipamentos desta localização
+                $stmtEqs = $ligacao->prepare("SELECT id FROM equipamentos WHERE id_localizacao = :id");
+                $stmtEqs->execute([':id' => $id]);
+                $eqsNaLocalizacao = $stmtEqs->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($eqsNaLocalizacao as $eq) {
+                    registar_historico(
+                        $ligacao,
+                        $eq['id'],
+                        'Localização editada',
+                        'Os dados da localização ' . $localizacao['codigo_localizacao'] . ' foram atualizados.'
+                    );
+                }
 
                 $ligacao = null;
                 header('Location: localizacao.php?sucesso=editado');

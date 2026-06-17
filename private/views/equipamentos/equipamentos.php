@@ -279,10 +279,16 @@ $paginaAtiva = 'equipamentos';
                                                 class="btn btn-sm btn-outline-primary">
                                                 Ver
                                             </a>
-                                            <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
-                                                class="btn btn-sm btn-outline-warning">
-                                                Editar
-                                            </a>
+                                            <?php if ($equipamento->ativo): ?>
+                                                <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
+                                                    class="btn btn-sm btn-outline-warning">
+                                                    Editar
+                                                </a>
+                                            <?php else: ?>
+                                                <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                    Editar
+                                                </button>
+                                            <?php endif; ?>
 
                                             <?php if ($equipamento->ativo): ?>
                                                 <button

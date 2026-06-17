@@ -62,11 +62,33 @@ try {
     $resultados = $ligacao->query($sql)
         ->fetchAll(PDO::FETCH_OBJ);
 
+    // Buscar equipamentos por localização
+    $stmtEqs = $ligacao->prepare("
+        SELECT 
+            equipamentos.id,
+            equipamentos.codigo_interno,
+            equipamentos.designacao,
+            equipamentos.id_localizacao,
+            estados.nome_estado
+        FROM equipamentos
+        INNER JOIN estados ON equipamentos.id_estado = estados.id
+        ORDER BY equipamentos.codigo_interno
+    ");
+    $stmtEqs->execute();
+    $todosEquipamentos = $stmtEqs->fetchAll(PDO::FETCH_ASSOC);
+
+    // Organizar por localização
+    $equipamentosPorLocalizacao = [];
+    foreach ($todosEquipamentos as $eq) {
+        $equipamentosPorLocalizacao[$eq['id_localizacao']][] = $eq;
+    }
+
     $erro = '';
 } catch (PDOException $err) {
 
     $erro = "Aconteceu um erro na ligação à base de dados.";
     $resultados = [];
+    $equipamentosPorLocalizacao = [];
 }
 
 $ligacao = null;
@@ -239,43 +261,40 @@ $paginaAtiva = 'localizacao';
                                                 class="badge rounded-pill bg-light text-dark border px-3 py-2"
                                                 style="cursor:pointer;"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#modalEquipamentosLOC0001">
-
+                                                data-bs-target="#modalEquipamentos<?= $localizacao->id ?>"
+                                                data-id="<?= aes_encrypt($localizacao->id) ?>"
+                                                data-codigo="<?= htmlspecialchars($localizacao->codigo_localizacao) ?>">
                                                 <?= $localizacao->total_equipamentos ?> equipamentos
-
                                             </button>
-
                                         </td>
 
                                         <td class="text-end">
 
                                             <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                                <a href="editar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
-                                                    class="btn btn-sm btn-outline-warning">
-                                                    Editar
-                                                </a>
+                                                <?php if ($localizacao->ativo): ?>
+                                                    <a href="editar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                        class="btn btn-sm btn-outline-warning">
+                                                        Editar
+                                                    </a>
+                                                <?php else: ?>
+                                                    <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                        Editar
+                                                    </button>
+                                                <?php endif; ?>
 
                                                 <?php if ($localizacao->ativo): ?>
-                                                    <button
-                                                        class="btn btn-sm btn-outline-danger"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#eliminarLocalizacaoModal"
-                                                        data-id="<?= aes_encrypt($localizacao->id) ?>"
-                                                        data-acao="desativar">
+                                                    <a href="eliminar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                        class="btn btn-sm btn-outline-danger">
                                                         <i class="fa-solid fa-ban me-1"></i>
                                                         Eliminar
-                                                    </button>
+                                                    </a>
                                                 <?php else: ?>
-                                                    <button
-                                                        class="btn btn-sm btn-outline-success"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#eliminarLocalizacaoModal"
-                                                        data-id="<?= aes_encrypt($localizacao->id) ?>"
-                                                        data-acao="reativar">
+                                                    <a href="reativar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                        class="btn btn-sm btn-outline-success">
                                                         <i class="fa-solid fa-circle-check me-1"></i>
                                                         Reativar
-                                                    </button>
+                                                    </a>
                                                 <?php endif; ?>
 
                                             </div>
@@ -332,118 +351,67 @@ $paginaAtiva = 'localizacao';
         </div>
 
     </div>
-    <!-- MODAL EQUIPAMENTOS DA LOCALIZAÇÃO -->
-
-    <div class="modal fade" id="modalEquipamentosLOC0001" tabindex="-1">
-
-        <div class="modal-dialog modal-lg">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-
-                    <h5 class="modal-title">
-
-                        Equipamentos da Localização LOC-0001
-
-                    </h5>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal">
-                    </button>
-
-                </div>
-
-                <div class="modal-body">
-
-                    <table class="table align-middle">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Código</th>
-                                <th>Designação</th>
-                                <th>Estado</th>
-                                <th>Ações</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-
-                                <td>EQ-0001</td>
-
-                                <td>Ventilador Pulmonar</td>
-
-                                <td>
-
-                                    <span class="badge bg-success">
-                                        Ativo
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a href="../equipamentos/ficha_equipamento.php"
-                                        class="btn btn-sm btn-outline-primary">
-
-                                        <i class="fa-solid fa-eye me-1"></i>
-                                        Ver Ficha
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                            <tr>
-
-                                <td>EQ-0024</td>
-
-                                <td>Monitor Multiparamétrico</td>
-
-                                <td>
-
-                                    <span class="badge bg-success">
-                                        Ativo
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a href="../equipamentos/ficha_equipamento.php"
-                                        class="btn btn-sm btn-outline-primary">
-
-                                        <i class="fa-solid fa-eye me-1"></i>
-                                        Ver Ficha
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
 </div>
+<!-- MODAL EQUIPAMENTOS DA LOCALIZAÇÃO -->
+<?php foreach ($resultados as $loc): ?>
+    <div class="modal fade" id="modalEquipamentos<?= $loc->id ?>" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Equipamentos da Localização <?= htmlspecialchars($loc->codigo_localizacao) ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if (empty($equipamentosPorLocalizacao[$loc->id])): ?>
+                        <p class="text-muted">Nenhum equipamento associado a esta localização.</p>
+                    <?php else: ?>
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Designação</th>
+                                    <th>Estado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($equipamentosPorLocalizacao[$loc->id] as $eq): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($eq['codigo_interno']) ?></td>
+                                        <td><?= htmlspecialchars($eq['designacao']) ?></td>
+                                        <td>
+                                            <?php
+                                            $estado = $eq['nome_estado'];
+                                            if ($estado == 'Ativo') echo '<span class="badge bg-success">Ativo</span>';
+                                            elseif ($estado == 'Em manutenção') echo '<span class="badge bg-warning text-dark">Em manutenção</span>';
+                                            elseif ($estado == 'Inativo') echo '<span class="badge bg-secondary">Inativo</span>';
+                                            elseif ($estado == 'Em calibração') echo '<span class="badge bg-info text-dark">Em calibração</span>';
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <a href="../equipamentos/ficha_equipamento.php?id=<?= aes_encrypt($eq['id']) ?>"
+                                                class="btn btn-sm btn-outline-primary">
+                                                <i class="fa-solid fa-eye me-1"></i>
+                                                Ver Ficha
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
 <script>
     $(document).ready(function() {
         $('#tabela-localizacoes').DataTable({
             paging: true,
+            pageLength: 5,
             searching: false,
             lengthChange: false,
             info: false,

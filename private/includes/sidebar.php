@@ -66,10 +66,19 @@ $nome = $_SESSION['utilizador'];
 
             <li>
                 <a class="dropdown-item" href="#">
-
                     <i class="fa-solid fa-key me-2"></i>
                     Alterar Palavra-passe
+                </a>
+            </li>
 
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+
+            <li>
+                <a class="dropdown-item text-danger" href="/projeto_sibdas/private/login/logout.php">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
+                    Sair
                 </a>
             </li>
 
@@ -106,10 +115,93 @@ $nome = $_SESSION['utilizador'];
     </nav>
 
     <div class="sidebar-footer mt-auto">
-        <a href="/projeto_sibdas/private/login/logout.php" class="nav-link">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            Sair
-        </a>
+
+        <button class="nav-link w-100 text-start border-0 bg-transparent"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasHistorico">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Histórico
+        </button>
+
     </div>
 
 </aside>
+<!-- OFFCANVAS HISTÓRICO -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasHistorico"
+    aria-labelledby="offcanvasHistoricoLabel">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title fw-bold" id="offcanvasHistoricoLabel">
+            <i class="fa-solid fa-clock-rotate-left me-2"></i>
+            Histórico de Atividade
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+        <?php
+        try {
+            $ligacao_hist = ligar_bd();
+            $stmtHist = $ligacao_hist->prepare("
+                SELECT 
+                    historico_equipamentos.*,
+                    equipamentos.codigo_interno,
+                    equipamentos.designacao
+                FROM historico_equipamentos
+                INNER JOIN equipamentos ON historico_equipamentos.id_equipamento = equipamentos.id
+                ORDER BY historico_equipamentos.data_acao DESC
+                LIMIT 50
+            ");
+            $stmtHist->execute();
+            $historico = $stmtHist->fetchAll(PDO::FETCH_ASSOC);
+            $ligacao_hist = null;
+        } catch (PDOException $e) {
+            $historico = [];
+        }
+        ?>
+
+        <?php if (empty($historico)): ?>
+            <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-clock-rotate-left fa-2x mb-3"></i>
+                <p>Nenhuma atividade registada.</p>
+            </div>
+        <?php else: ?>
+            <div class="list-group list-group-flush">
+                <?php foreach ($historico as $evento): ?>
+                    <div class="list-group-item px-4 py-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="fw-semibold">
+                                    <?= htmlspecialchars($evento['codigo_interno']) ?>
+                                    — <?= htmlspecialchars($evento['designacao']) ?>
+                                </span>
+                                <br>
+                                <span class="text-muted small">
+                                    <?= htmlspecialchars($evento['acao']) ?>
+                                </span>
+                                <?php if (!empty($evento['descricao'])): ?>
+                                    <br>
+                                    <span class="text-muted small">
+                                        <?= htmlspecialchars($evento['descricao']) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?php if (!empty($evento['utilizador'])): ?>
+                                    <br>
+                                    <span class="text-muted small">
+                                        <i class="fa-solid fa-user me-1"></i>
+                                        <?= htmlspecialchars($evento['utilizador']) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <span class="text-muted small text-nowrap ms-3">
+                                <?= (new DateTime($evento['data_acao'], new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Europe/Lisbon'))->format('d/m/Y H:i') ?>
+                            </span>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+</div>

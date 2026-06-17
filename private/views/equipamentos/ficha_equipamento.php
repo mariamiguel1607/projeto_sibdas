@@ -139,10 +139,17 @@ $paginaAtiva = 'equipamentos';
                     Voltar
                 </a>
 
-                <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento['id']) ?>" class="btn btn-primary-custom">
-                    <i class="fa-solid fa-pen-to-square me-2"></i>
-                    Editar
-                </a>
+                <?php if ($equipamento['ativo']): ?>
+                    <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento['id']) ?>" class="btn btn-primary-custom">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Editar
+                    </a>
+                <?php else: ?>
+                    <button class="btn btn-primary-custom" disabled title="Equipamento desativado">
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Editar
+                    </button>
+                <?php endif; ?>
             </div>
 
         </div>
@@ -188,6 +195,13 @@ $paginaAtiva = 'equipamentos';
                             <span class="badge bg-primary">
                                 <?= htmlspecialchars($equipamento['servico_departamento']) ?>
                             </span>
+
+                            <?php if (!$equipamento['ativo']): ?>
+                                <span class="badge bg-dark">
+                                    <i class="fa-solid fa-ban me-1"></i>
+                                    Desativado
+                                </span>
+                            <?php endif; ?>
 
                         </div>
 
@@ -1269,7 +1283,7 @@ $paginaAtiva = 'equipamentos';
 
                         </div>
                     </div>
-                   
+
                     <!-- OBSERVAÇÕES -->
                     <div class="tab-pane fade" id="observacoes">
 

@@ -540,6 +540,8 @@ if (isset($_POST['submeter_edit_step8'])) {
                 }
             }
 
+            // Registar edição no histórico
+            registar_historico($ligacao, $idEquipamento, 'Equipamento editado', 'Dados do equipamento atualizados pelo utilizador.');
 
             $ligacao->commit();
             $ligacao = null;
@@ -683,8 +685,6 @@ if (empty($_SESSION['equipamento_edit'])) {
     }
 }
 
-
-
 try {
     $ligacao = ligar_bd();
 
@@ -697,9 +697,6 @@ try {
 } catch (PDOException $err) {
     $erro_sistema = "Erro ao carregar dados auxiliares.";
 }
-
-
-
 
 ?>
 <?php include '../../includes/header.php';

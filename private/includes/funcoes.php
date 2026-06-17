@@ -145,7 +145,8 @@ function validar_datas_documento(
 // ============================================================
 // Encriptação e desencriptação de valores com OpenSSL
 // ============================================================
-function aes_encrypt($value) {
+function aes_encrypt($value)
+{
     return bin2hex(openssl_encrypt(
         $value,
         OPENSSL_METHOD,
@@ -155,7 +156,8 @@ function aes_encrypt($value) {
     ));
 }
 
-function aes_decrypt($value) {
+function aes_decrypt($value)
+{
     if (!is_string($value) || strlen($value) % 2 !== 0) return false;
 
     return openssl_decrypt(
@@ -165,4 +167,19 @@ function aes_decrypt($value) {
         OPENSSL_RAW_DATA,
         OPENSSL_IV
     );
+}
+function registar_historico($ligacao, $id_equipamento, $acao, $descricao = null, $id_localizacao_anterior = null)
+{
+    $utilizador = $_SESSION['utilizador'] ?? 'Sistema';
+    $stmt = $ligacao->prepare("
+        INSERT INTO historico_equipamentos (id_equipamento, acao, descricao, utilizador, id_localizacao_anterior)
+        VALUES (:id_equipamento, :acao, :descricao, :utilizador, :id_localizacao_anterior)
+    ");
+    $stmt->execute([
+        ':id_equipamento'        => $id_equipamento,
+        ':acao'                  => $acao,
+        ':descricao'             => $descricao,
+        ':utilizador'            => $utilizador,
+        ':id_localizacao_anterior' => $id_localizacao_anterior,
+    ]);
 }

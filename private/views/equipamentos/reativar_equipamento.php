@@ -14,6 +14,9 @@ try {
     $ligacao = ligar_bd();
     $stmt = $ligacao->prepare("UPDATE equipamentos SET ativo = 1 WHERE id = :id");
     $stmt->execute([':id' => $id]);
+
+    registar_historico($ligacao, $id, 'Equipamento reativado', 'O equipamento foi reativado pelo utilizador.');
+
     $ligacao = null;
 
     header('Location: equipamentos.php?sucesso=reativado');
