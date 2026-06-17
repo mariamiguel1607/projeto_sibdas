@@ -2499,6 +2499,3 @@ if (typeof fornecedoresGuardados !== 'undefined' && fornecedoresGuardados.length
         });
     }
 }
-
-
-

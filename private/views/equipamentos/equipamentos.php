@@ -284,13 +284,27 @@ $paginaAtiva = 'equipamentos';
                                                 Editar
                                             </a>
 
-                                            <button
-                                                class="btn btn-sm btn-outline-danger"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#eliminarEquipamentoModal"
-                                                data-id="<?= aes_encrypt($equipamento->id) ?>">
-                                                Eliminar
-                                            </button>
+                                            <?php if ($equipamento->ativo): ?>
+                                                <button
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#eliminarEquipamentoModal"
+                                                    data-id="<?= aes_encrypt($equipamento->id) ?>"
+                                                    data-acao="desativar">
+                                                    <i class="fa-solid fa-ban me-1"></i>
+                                                    Eliminar
+                                                </button>
+                                            <?php else: ?>
+                                                <button
+                                                    class="btn btn-sm btn-outline-success"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#eliminarEquipamentoModal"
+                                                    data-id="<?= aes_encrypt($equipamento->id) ?>"
+                                                    data-acao="reativar">
+                                                    <i class="fa-solid fa-circle-check me-1"></i>
+                                                    Reativar
+                                                </button>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -307,77 +321,73 @@ $paginaAtiva = 'equipamentos';
     </main>
 
 </div>
-<!-- MODAL ELIMINAR EQUIPAMENTO -->
+<!-- MODAL ELIMINAR/REATIVAR EQUIPAMENTO -->
 <div class="modal fade" id="eliminarEquipamentoModal" tabindex="-1"
     aria-labelledby="eliminarEquipamentoModalLabel"
     aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
 
-            <!-- HEADER -->
             <div class="modal-header">
-
                 <h5 class="modal-title" id="eliminarEquipamentoModalLabel">
-                    Confirmar eliminação
+                    Confirmar ação
                 </h5>
-
-                <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
-
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <!-- BODY -->
-            <div class="modal-body">
-
-                Tem a certeza que pretende eliminar este equipamento?
-
-                <br><br>
-
-                <small class="text-muted">
-                    Esta ação não pode ser revertida.
-                </small>
-
+            <div class="modal-body" id="modalEquipamentoBody">
+                <!-- preenchido pelo JavaScript -->
             </div>
 
-            <!-- FOOTER -->
             <div class="modal-footer">
-
-                <button type="button"
-                    class="btn btn-outline-secondary"
-                    data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                     Cancelar
                 </button>
-
-                <button type="button"
-                    id="btnConfirmarEliminar"
-                    class="btn btn-danger">
-                    Eliminar
+                <button type="button" id="btnConfirmarEliminar" class="btn btn-danger">
+                    <!-- preenchido pelo JavaScript -->
                 </button>
-
             </div>
 
         </div>
-
     </div>
 
 </div>
 <script>
-    // Quando o modal abre, guarda o ID encriptado no botão confirmar
     document.getElementById('eliminarEquipamentoModal').addEventListener('show.bs.modal', function(event) {
         const botao = event.relatedTarget;
         const idEncriptado = botao.getAttribute('data-id');
-        document.getElementById('btnConfirmarEliminar').setAttribute('data-id', idEncriptado);
+        const acao = botao.getAttribute('data-acao');
+
+        const btnConfirmar = document.getElementById('btnConfirmarEliminar');
+        const body = document.getElementById('modalEquipamentoBody');
+        const titulo = document.getElementById('eliminarEquipamentoModalLabel');
+
+        btnConfirmar.setAttribute('data-id', idEncriptado);
+        btnConfirmar.setAttribute('data-acao', acao);
+
+        if (acao === 'reativar') {
+            titulo.textContent = 'Reativar Equipamento';
+            body.innerHTML = 'Tem a certeza que pretende <strong>reativar</strong> este equipamento?<br><br><small class="text-muted">O equipamento voltará a estar disponível.</small>';
+            btnConfirmar.textContent = 'Reativar';
+            btnConfirmar.className = 'btn btn-success';
+        } else {
+            titulo.textContent = 'Confirmar eliminação';
+            body.innerHTML = 'Tem a certeza que pretende <strong>eliminar</strong> este equipamento?<br><br><small class="text-muted">O equipamento ficará inativo.</small>';
+            btnConfirmar.textContent = 'Eliminar';
+            btnConfirmar.className = 'btn btn-danger';
+        }
     });
 
-    // Quando clica Eliminar, redireciona para eliminar_equipamento.php
     document.getElementById('btnConfirmarEliminar').addEventListener('click', function() {
         const idEncriptado = this.getAttribute('data-id');
-        window.location.href = 'eliminar_equipamento.php?id=' + idEncriptado;
+        const acao = this.getAttribute('data-acao');
+
+        if (acao === 'reativar') {
+            window.location.href = 'reativar_equipamento.php?id=' + idEncriptado;
+        } else {
+            window.location.href = 'eliminar_equipamento.php?id=' + idEncriptado;
+        }
     });
 </script>
 <script>
@@ -400,6 +410,4 @@ $paginaAtiva = 'equipamentos';
         });
     });
 </script>
-
-
 <?php include '../../includes/footer.php'; ?>

@@ -1,226 +1,233 @@
 <?php
-// --------------------------------------------------------------------
-// SEGURANÇA: Proteção de acesso à página de edição
-// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
-// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
-// --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+require_once __DIR__ . '/../../includes/validacoes.php';
+redirect_if_not_logged();
+
+$erros = [];
+
+// Receber e desencriptar o ID
+$idEncriptado = $_GET['id'] ?? $_POST['id'] ?? null;
+$id = aes_decrypt($idEncriptado);
+
+if (!$id || !is_numeric($id)) {
+    header('Location: localizacao.php');
+    exit;
+}
+
+// Carregar dados atuais da localização
+try {
+    $ligacao = ligar_bd();
+    $stmt = $ligacao->prepare("SELECT * FROM localizacoes WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $localizacao = $stmt->fetch(PDO::FETCH_ASSOC);
+    $ligacao = null;
+
+    if (!$localizacao) {
+        header('Location: localizacao.php');
+        exit;
+    }
+} catch (PDOException $e) {
+    header('Location: localizacao.php');
+    exit;
+}
+
+// Pré-preencher $dados com os valores atuais
+$dados = $localizacao;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $dados = [
+        'codigo_localizacao'   => trim($_POST['codigo_localizacao'] ?? ''),
+        'edificio'             => trim($_POST['edificio'] ?? ''),
+        'piso'                 => trim($_POST['piso'] ?? ''),
+        'servico_departamento' => trim($_POST['servico_departamento'] ?? ''),
+        'sala_gabinete'        => trim($_POST['sala_gabinete'] ?? ''),
+    ];
+
+    $erros = validar_inserir_localizacao($dados);
+
+    if (empty($erros)) {
+        try {
+            $ligacao = ligar_bd();
+
+            // Verificar combinação duplicada (excluindo a própria localização)
+            $stmtVerif = $ligacao->prepare("
+                SELECT id FROM localizacoes 
+                WHERE edificio = :edificio 
+                AND piso = :piso 
+                AND servico_departamento = :servico 
+                AND (sala_gabinete = :sala OR (sala_gabinete IS NULL AND :sala2 IS NULL))
+                AND id != :id
+            ");
+            $stmtVerif->execute([
+                ':edificio' => $dados['edificio'],
+                ':piso'     => $dados['piso'],
+                ':servico'  => $dados['servico_departamento'],
+                ':sala'     => $dados['sala_gabinete'] ?: null,
+                ':sala2'    => $dados['sala_gabinete'] ?: null,
+                ':id'       => $id,
+            ]);
+            if ($stmtVerif->fetch()) {
+                $erros[] = 'Já existe uma localização com essa combinação de edifício, piso, departamento e sala.';
+            }
+
+            if (empty($erros)) {
+                $stmt = $ligacao->prepare("
+                    UPDATE localizacoes SET
+                        edificio             = :edificio,
+                        piso                 = :piso,
+                        servico_departamento = :servico,
+                        sala_gabinete        = :sala
+                    WHERE id = :id
+                ");
+                $stmt->execute([
+                    ':edificio' => $dados['edificio'],
+                    ':piso'     => $dados['piso'],
+                    ':servico'  => $dados['servico_departamento'],
+                    ':sala'     => $dados['sala_gabinete'] ?: null,
+                    ':id'       => $id,
+                ]);
+
+                $ligacao = null;
+                header('Location: localizacao.php?sucesso=editado');
+                exit;
+            }
+
+            $ligacao = null;
+        } catch (PDOException $e) {
+            $erros[] = 'Erro ao guardar: ' . $e->getMessage();
+        }
+    }
+}
 ?>
-<?php include '../../includes/header.php'; 
+<?php include '../../includes/header.php';
 $paginaAtiva = 'localizacao';
 ?>
 
-    <div class="private-layout">
+<div class="private-layout">
 
-        <?php include '../../includes/sidebar.php'; ?>
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="private-main">
+    <?php include '../../includes/sidebar.php'; ?>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="private-main">
 
-            <!-- CABEÇALHO -->
-            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <!-- CABEÇALHO -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
 
-                <div>
+            <div>
 
-                    <h1 class="fw-bold mb-1">
-                        Editar Localização
-                    </h1>
+                <h1 class="fw-bold mb-1">
+                    Editar Localização
+                </h1>
 
-                    <p class="text-muted mb-0">
-                        Atualização da informação associada à localização física.
-                    </p>
-
-                </div>
-
-                <div class="d-flex gap-2">
-
-                    <a href="localizacao.php" class="btn btn-outline-secondary">
-
-                        <i class="fa-solid fa-arrow-left me-2"></i>
-                        Voltar
-
-                    </a>
-                </div>
+                <p class="text-muted mb-0">
+                    Atualização da informação associada à localização física.
+                </p>
 
             </div>
 
+            <div class="d-flex gap-2">
 
-            <!-- FORMULÁRIO -->
-            <div class="card border-0 shadow-sm rounded-4">
+                <a href="localizacao.php" class="btn btn-outline-secondary">
 
-                <div class="card-body p-4 p-lg-5">
+                    <i class="fa-solid fa-arrow-left me-2"></i>
+                    Voltar
 
-                    <form>
+                </a>
+            </div>
 
-                        <!-- DADOS DA LOCALIZAÇÃO -->
-                        <h4 class="fw-bold mb-4">
+        </div>
 
-                            <i class="fa-solid fa-location-dot me-2 text-primary"></i>
-                            Dados da localização
 
-                        </h4>
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
+        <!-- FORMULÁRIO -->
+        <div class="card border-0 shadow-sm rounded-4">
 
+            <div class="card-body p-4 p-lg-5">
+
+                <form method="POST" action="">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($idEncriptado) ?>">
+
+                    <h4 class="fw-bold mb-4">
+                        <i class="fa-solid fa-location-dot me-2 text-primary"></i>
+                        Dados da localização
+                    </h4>
+
+                    <?php if (!empty($erros)): ?>
+                        <div class="alert alert-danger mb-4">
                             <h6 class="alert-heading mb-2">
-
                                 <i class="fa-solid fa-circle-exclamation me-2"></i>
                                 Foram encontrados erros
-
                             </h6>
-
                             <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
+                                <?php foreach ($erros as $erro): ?>
+                                    <li><?= htmlspecialchars($erro) ?></li>
+                                <?php endforeach; ?>
                             </ul>
+                        </div>
+                    <?php endif; ?>
 
+                    <div class="row g-4">
+
+                        <!-- Código (readonly) -->
+                        <div class="col-md-6">
+                            <label for="codigoLocalizacao" class="form-label fw-bold">Código da Localização</label>
+                            <input type="text" id="codigoLocalizacao" class="form-control"
+                                name="codigo_localizacao"
+                                value="<?= htmlspecialchars($dados['codigo_localizacao']) ?>"
+                                readonly>
                         </div>
 
-                        <div class="row g-4">
-
-                            <!-- Código -->
-                            <div class="col-md-6">
-
-                                <label for="codigoLocalizacao" class="form-label fw-bold">
-
-                                    Código da Localização
-
-                                </label>
-
-                                <input type="text" id="codigoLocalizacao" class="form-control" name="codigo_localizacao" value="LOC-001">
-
-                            </div>
-
-                            <!-- Edifício -->
-                            <div class="col-md-6">
-
-                                <label for="edificio" class="form-label fw-bold">
-
-                                    Edifício
-
-                                </label>
-
-                                <select id="edificio" class="form-select" name="edificio">
-
-                                    <option selected>
-                                        Hospital Central
-                                    </option>
-
-                                    <option>
-                                        Clínica Norte
-                                    </option>
-
-                                    <option>
-                                        Bloco Operatório
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <!-- Piso -->
-                            <div class="col-md-6">
-
-                                <label for="piso" class="form-label fw-bold">
-
-                                    Piso
-
-                                </label>
-
-                                <select id="piso" class="form-select" name="piso">
-
-                                    <option>
-                                        Piso 0
-                                    </option>
-
-                                    <option>
-                                        Piso 1
-                                    </option>
-
-                                    <option selected>
-                                        Piso 2
-                                    </option>
-
-                                    <option>
-                                        Piso 3
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <!-- Departamento -->
-                            <div class="col-md-6">
-
-                                <label for="departamento" class="form-label fw-bold">
-
-                                    Departamento
-
-                                </label>
-
-                                <select id="departamento" class="form-select" name="servico_departamento">
-
-                                    <option selected>
-                                        Unidade de Cuidados Intensivos
-                                    </option>
-
-                                    <option>
-                                        Cardiologia
-                                    </option>
-
-                                    <option>
-                                        Radiologia
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <!-- Sala -->
-                            <div class="col-md-6">
-
-                                <label for="sala" class="form-label fw-bold">
-
-                                    Sala / Gabinete
-
-                                </label>
-
-                                <input type="text" id="sala" class="form-control"  name="sala_gabinete" value="UCI-02">
-
-                            </div>
-
+                        <!-- Edifício -->
+                        <div class="col-md-6">
+                            <label for="edificio" class="form-label fw-bold">Edifício</label>
+                            <input type="text" id="edificio" class="form-control"
+                                name="edificio"
+                                placeholder="Ex: Hospital Central"
+                                value="<?= htmlspecialchars($dados['edificio'] ?? '') ?>">
                         </div>
 
-
-
-
-                        <!-- BOTÕES -->
-                        <div class="d-flex justify-content-end gap-3 mt-5">
-
-                            <a href="localizacao.php" class="btn btn-outline-secondary">
-
-                                Cancelar
-
-                            </a>
-
-                            <button type="submit" class="btn btn-primary-custom">
-
-                                <i class="fa-solid fa-floppy-disk me-2"></i>
-                                Guardar Alterações
-
-                            </button>
-
+                        <!-- Piso -->
+                        <div class="col-md-6">
+                            <label for="piso" class="form-label fw-bold">Piso</label>
+                            <input type="text" id="piso" class="form-control"
+                                name="piso"
+                                placeholder="Ex: Piso 2"
+                                value="<?= htmlspecialchars($dados['piso'] ?? '') ?>">
                         </div>
 
-                    </form>
+                        <!-- Departamento -->
+                        <div class="col-md-6">
+                            <label for="departamento" class="form-label fw-bold">Departamento / Serviço</label>
+                            <input type="text" id="departamento" class="form-control"
+                                name="servico_departamento"
+                                placeholder="Ex: Cardiologia"
+                                value="<?= htmlspecialchars($dados['servico_departamento'] ?? '') ?>">
+                        </div>
 
-                </div>
+                        <!-- Sala -->
+                        <div class="col-md-6">
+                            <label for="sala" class="form-label fw-bold">Sala / Gabinete</label>
+                            <input type="text" id="sala" class="form-control"
+                                name="sala_gabinete"
+                                placeholder="Ex: Sala 2.14"
+                                value="<?= htmlspecialchars($dados['sala_gabinete'] ?? '') ?>">
+                        </div>
 
+                    </div>
+
+                    <!-- BOTÕES -->
+                    <div class="d-flex justify-content-end gap-3 mt-5">
+                        <a href="localizacao.php" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                            Guardar Alterações
+                        </button>
+                    </div>
+
+                </form>
             </div>
 
-        </main>
-    </div>
-    <?php include '../../includes/footer.php'; ?> 
+        </div>
+
+    </main>
+</div>
+<?php include '../../includes/footer.php'; ?>

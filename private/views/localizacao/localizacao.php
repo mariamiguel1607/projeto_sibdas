@@ -251,20 +251,32 @@ $paginaAtiva = 'localizacao';
 
                                             <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                                <a href="editar_localizacao.php?id=<?= $localizacao->id ?>"
+                                                <a href="editar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
                                                     class="btn btn-sm btn-outline-warning">
                                                     Editar
                                                 </a>
 
-                                                <button
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#eliminarLocalizacaoModal"
-                                                    data-id="<?= $localizacao->id ?>">
-
-                                                    Eliminar
-
-                                                </button>
+                                                <?php if ($localizacao->ativo): ?>
+                                                    <button
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#eliminarLocalizacaoModal"
+                                                        data-id="<?= aes_encrypt($localizacao->id) ?>"
+                                                        data-acao="desativar">
+                                                        <i class="fa-solid fa-ban me-1"></i>
+                                                        Eliminar
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button
+                                                        class="btn btn-sm btn-outline-success"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#eliminarLocalizacaoModal"
+                                                        data-id="<?= aes_encrypt($localizacao->id) ?>"
+                                                        data-acao="reativar">
+                                                        <i class="fa-solid fa-circle-check me-1"></i>
+                                                        Reativar
+                                                    </button>
+                                                <?php endif; ?>
 
                                             </div>
 
@@ -284,7 +296,7 @@ $paginaAtiva = 'localizacao';
 
         </section>
     </main>
-    <!-- MODAL ELIMINAR LOCALIZAÇÃO -->
+    <!-- MODAL ELIMINAR/REATIVAR LOCALIZAÇÃO -->
     <div class="modal fade"
         id="eliminarLocalizacaoModal"
         tabindex="-1"
@@ -296,54 +308,23 @@ $paginaAtiva = 'localizacao';
             <div class="modal-content">
 
                 <div class="modal-header">
-
                     <h5 class="modal-title" id="eliminarLocalizacaoModalLabel">
-
-                        Confirmar eliminação
-
+                        Confirmar ação
                     </h5>
-
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                    </button>
-
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body">
-
-                    Tem a certeza que pretende eliminar esta localização?
-
-                    <br><br>
-
-                    <small class="text-muted">
-
-                        Esta ação não pode ser revertida.
-
-                    </small>
-
+                <div class="modal-body" id="modalLocalizacaoBody">
+                    <!-- preenchido pelo JavaScript -->
                 </div>
 
                 <div class="modal-footer">
-
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        data-bs-dismiss="modal">
-
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Cancelar
-
                     </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-danger">
-
-                        Eliminar
-
+                    <button type="button" id="btnConfirmarAcaoLocalizacao" class="btn btn-danger">
+                        <!-- texto preenchido pelo JavaScript -->
                     </button>
-
                 </div>
 
             </div>
@@ -476,6 +457,43 @@ $paginaAtiva = 'localizacao';
                 }
             }
         });
+    });
+</script>
+<script>
+    document.getElementById('eliminarLocalizacaoModal').addEventListener('show.bs.modal', function(event) {
+        const botao = event.relatedTarget;
+        const idEncriptado = botao.getAttribute('data-id');
+        const acao = botao.getAttribute('data-acao');
+
+        const btnConfirmar = document.getElementById('btnConfirmarAcaoLocalizacao');
+        const body = document.getElementById('modalLocalizacaoBody');
+        const titulo = document.getElementById('eliminarLocalizacaoModalLabel');
+
+        btnConfirmar.setAttribute('data-id', idEncriptado);
+        btnConfirmar.setAttribute('data-acao', acao);
+
+        if (acao === 'reativar') {
+            titulo.textContent = 'Reativar Localização';
+            body.innerHTML = 'Tem a certeza que pretende <strong>reativar</strong> esta localização?<br><br><small class="text-muted">A localização voltará a estar disponível para associar a equipamentos.</small>';
+            btnConfirmar.textContent = 'Reativar';
+            btnConfirmar.className = 'btn btn-success';
+        } else {
+            titulo.textContent = 'Confirmar eliminação';
+            body.innerHTML = 'Tem a certeza que pretende <strong>eliminar</strong> esta localização?<br><br><small class="text-muted">A localização ficará inativa e não poderá ser associada a novos equipamentos.</small>';
+            btnConfirmar.textContent = 'Eliminar';
+            btnConfirmar.className = 'btn btn-danger';
+        }
+    });
+
+    document.getElementById('btnConfirmarAcaoLocalizacao').addEventListener('click', function() {
+        const idEncriptado = this.getAttribute('data-id');
+        const acao = this.getAttribute('data-acao');
+
+        if (acao === 'reativar') {
+            window.location.href = 'reativar_localizacao.php?id=' + idEncriptado;
+        } else {
+            window.location.href = 'eliminar_localizacao.php?id=' + idEncriptado;
+        }
     });
 </script>
 <?php include '../../includes/footer.php'; ?>

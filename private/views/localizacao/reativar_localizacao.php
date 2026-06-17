@@ -6,17 +6,17 @@ $idEncriptado = $_GET['id'] ?? null;
 $id = aes_decrypt($idEncriptado);
 
 if (!$id || !is_numeric($id)) {
-    header('Location: equipamentos.php');
+    header('Location: localizacao.php');
     exit;
 }
 
 try {
     $ligacao = ligar_bd();
-    $stmt = $ligacao->prepare("UPDATE equipamentos SET ativo = 0 WHERE id = :id");
+    $stmt = $ligacao->prepare("UPDATE localizacoes SET ativo = 1 WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $ligacao = null;
 
-    header('Location: equipamentos.php?sucesso=desativado');
+    header('Location: localizacao.php?sucesso=reativado');
     exit;
 } catch (PDOException $e) {
     echo "<p class='text-danger'>Erro: " . $e->getMessage() . "</p>";

@@ -12,11 +12,11 @@ if (!$id || !is_numeric($id)) {
 
 try {
     $ligacao = ligar_bd();
-    $stmt = $ligacao->prepare("UPDATE equipamentos SET ativo = 0 WHERE id = :id");
+    $stmt = $ligacao->prepare("UPDATE equipamentos SET ativo = 1 WHERE id = :id");
     $stmt->execute([':id' => $id]);
     $ligacao = null;
 
-    header('Location: equipamentos.php?sucesso=desativado');
+    header('Location: equipamentos.php?sucesso=reativado');
     exit;
 } catch (PDOException $e) {
     echo "<p class='text-danger'>Erro: " . $e->getMessage() . "</p>";

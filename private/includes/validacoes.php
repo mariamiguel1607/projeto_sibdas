@@ -400,3 +400,23 @@ function validar_step_observacoes(string $observacoes): array
     }
     return $erros;
 }
+function validar_inserir_localizacao(array $dados): array
+{
+    $erros = [];
+
+    if (empty($dados['codigo_localizacao']))
+        $erros[] = 'Código da localização é obrigatório.';
+
+    if (empty($dados['edificio']))
+        $erros[] = 'Edifício é obrigatório.';
+
+    if (empty($dados['piso']))
+        $erros[] = 'Piso é obrigatório.';
+
+    if (empty($dados['servico_departamento']))
+        $erros[] = 'Departamento / Serviço é obrigatório.';
+
+    // sala_gabinete é opcional, não valida
+
+    return $erros;
+}
