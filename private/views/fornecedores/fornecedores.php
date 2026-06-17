@@ -280,29 +280,29 @@ $paginaAtiva = 'fornecedores';
 
                                             <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                                <a href="ficha_fornecedor.php?id=<?= $fornecedor->id ?>"
+                                                <a href="ficha_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
                                                     class="btn btn-sm btn-outline-primary">
-
                                                     Ver
-
                                                 </a>
 
-                                                <a href="editar_fornecedor.php?id=<?= $fornecedor->id ?>"
+                                                <a href="editar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
                                                     class="btn btn-sm btn-outline-warning">
-
                                                     Editar
-
                                                 </a>
 
-                                                <button
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#eliminarFornecedorModal"
-                                                    data-id="<?= $fornecedor->id ?>">
-
-                                                    Eliminar
-
-                                                </button>
+                                                <?php if ($fornecedor->ativo): ?>
+                                                    <a href="eliminar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
+                                                        class="btn btn-sm btn-outline-danger">
+                                                        <i class="fa-solid fa-ban me-1"></i>
+                                                        Eliminar
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="reativar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
+                                                        class="btn btn-sm btn-outline-success">
+                                                        <i class="fa-solid fa-circle-check me-1"></i>
+                                                        Reativar
+                                                    </a>
+                                                <?php endif; ?>
 
                                             </div>
 

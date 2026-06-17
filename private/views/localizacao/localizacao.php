@@ -391,7 +391,7 @@ $paginaAtiva = 'localizacao';
                                             ?>
                                         </td>
                                         <td>
-                                            <a href="../equipamentos/ficha_equipamento.php?id=<?= aes_encrypt($eq['id']) ?>"
+                                            <a href="../equipamentos/ficha_equipamento.php?id=<?= aes_encrypt($eq['id']) ?>&origem=localizacao&id_localizacao=<?= aes_encrypt($loc->id) ?>"
                                                 class="btn btn-sm btn-outline-primary">
                                                 <i class="fa-solid fa-eye me-1"></i>
                                                 Ver Ficha

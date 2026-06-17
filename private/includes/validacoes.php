@@ -287,19 +287,37 @@ function validar_step_localizacao(array $dados): array
     return $erros;
 }
 
-function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao): array
+function validar_step_fornecedor(array $ids_fornecedor, array $tipos_relacao, array $fornecedores_disponiveis = []): array
 {
     $erros = [];
     $valido = false;
 
+    // Criar mapa id => [tipo_fornecedor, nome] para validação rápida
+    $mapaFornecedores = [];
+    foreach ($fornecedores_disponiveis as $f) {
+        $mapaFornecedores[$f['id']] = [
+            'tipo' => $f['tipo_fornecedor'],
+            'nome' => $f['nome_empresa'],
+        ];
+    }
+
     foreach ($ids_fornecedor as $i => $id_forn) {
         if (!empty($id_forn) && !empty($tipos_relacao[$i])) {
             $valido = true;
-            break;
+
+            // Validar compatibilidade do tipo
+            if (!empty($mapaFornecedores) && isset($mapaFornecedores[$id_forn])) {
+                if ($mapaFornecedores[$id_forn]['tipo'] !== $tipos_relacao[$i]) {
+                    $nomeForn = $mapaFornecedores[$id_forn]['nome'];
+                    $tipoForn = $mapaFornecedores[$id_forn]['tipo'];
+                    $erros[] = 'O fornecedor "' . $nomeForn . '" é do tipo "' . $tipoForn . '" — não pode ser associado com o tipo de relação "' . $tipos_relacao[$i] . '".';
+                }
+            }
         }
     }
 
     if (!$valido) $erros[] = "É obrigatório associar pelo menos um fornecedor com tipo de relação.";
+
     return $erros;
 }
 
@@ -418,5 +436,42 @@ function validar_inserir_localizacao(array $dados): array
 
     // sala_gabinete é opcional, não valida
 
+    return $erros;
+}
+function validar_inserir_fornecedor(array $dados): array
+{
+    $erros = [];
+
+    if (empty($dados['nome_empresa']))
+        $erros[] = 'Nome da empresa é obrigatório.';
+
+    if (empty($dados['tipo_fornecedor']))
+        $erros[] = 'Tipo de fornecedor é obrigatório.';
+
+    if (empty($dados['nif']))
+        $erros[] = 'NIF é obrigatório.';
+    elseif (!preg_match('/^\d{9}$/', $dados['nif']))
+        $erros[] = 'NIF inválido — deve ter 9 dígitos.';
+
+    if (empty($dados['telefone']))
+        $erros[] = 'Contacto telefónico é obrigatório.';
+    elseif (!preg_match('/^(\+351|00351)?[\s\-]?(2[0-9]{1}|9[1236])[0-9]{7}$/', str_replace(' ', '', $dados['telefone'])))
+        $erros[] = 'Telefone inválido — deve ser um número português válido (ex: +351 912 345 678).';
+
+    if (empty($dados['email']))
+        $erros[] = 'Email é obrigatório.';
+    elseif (!filter_var($dados['email'], FILTER_VALIDATE_EMAIL))
+        $erros[] = 'Email inválido.';
+
+    if (empty($dados['pessoa_contacto']))
+        $erros[] = 'Nome da pessoa de contacto é obrigatório.';
+
+    if (empty($dados['telefone_contacto']))
+        $erros[] = 'Telefone da pessoa de contacto é obrigatório.';
+    elseif (!preg_match('/^(\+351|00351)?[\s\-]?(2[0-9]{1}|9[1236])[0-9]{7}$/', str_replace(' ', '', $dados['telefone_contacto'])))
+        $erros[] = 'Telefone da pessoa de contacto inválido — deve ser um número português válido (ex: +351 912 345 678).';
+
+    if (!empty($dados['website']) && !filter_var($dados['website'], FILTER_VALIDATE_URL))
+        $erros[] = 'Website inválido — deve ser um URL válido (ex: https://www.empresa.pt).';
     return $erros;
 }

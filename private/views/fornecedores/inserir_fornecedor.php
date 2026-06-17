@@ -1,335 +1,266 @@
 <?php
-// --------------------------------------------------------------------
-// SEGURANÇA: Proteção de acesso à página de edição
-// Este ficheiro deve ser acedido apenas por utilizadores autenticados.
-// Caso não exista sessão iniciada, o utilizador será redirecionado para o login.
-// --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
-redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+require_once __DIR__ . '/../../includes/validacoes.php';
+redirect_if_not_logged();
+
+$erros = [];
+$dados = [];
+
+// Gerar próximo código automaticamente
+$proximo_codigo = 'FORN-001';
+try {
+    $ligacao = ligar_bd();
+    $stmt = $ligacao->query("SELECT codigo_fornecedor FROM fornecedores ORDER BY id DESC LIMIT 1");
+    $ultimo = $stmt->fetchColumn();
+    if ($ultimo) {
+        $numero = intval(substr($ultimo, 5)) + 1;
+        $proximo_codigo = 'FORN-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
+    }
+    $ligacao = null;
+} catch (PDOException $e) {
+    $proximo_codigo = 'FORN-001';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $dados = [
+        'codigo_fornecedor'  => trim($_POST['codigo_fornecedor'] ?? ''),
+        'nome_empresa'       => trim($_POST['nome_empresa'] ?? ''),
+        'tipo_fornecedor'    => trim($_POST['tipo_fornecedor'] ?? ''),
+        'nif'                => trim($_POST['nif'] ?? ''),
+        'telefone'           => trim($_POST['telefone'] ?? ''),
+        'email'              => trim($_POST['email'] ?? ''),
+        'morada'             => trim($_POST['morada'] ?? ''),
+        'website'            => trim($_POST['website'] ?? ''),
+        'pessoa_contacto'    => trim($_POST['pessoa_contacto'] ?? ''),
+        'telefone_contacto'  => trim($_POST['telefone_contacto'] ?? ''),
+        'observacoes'        => trim($_POST['observacoes'] ?? ''),
+    ];
+
+    // Validações básicas
+    $erros = validar_inserir_fornecedor($dados);
+
+    if (empty($erros)) {
+        try {
+            $ligacao = ligar_bd();
+
+            // Verificar NIF duplicado
+            $stmtNif = $ligacao->prepare("SELECT id FROM fornecedores WHERE nif = :nif");
+            $stmtNif->execute([':nif' => $dados['nif']]);
+            if ($stmtNif->fetch()) {
+                $erros[] = 'Já existe um fornecedor com este NIF.';
+            }
+
+            if (empty($erros)) {
+                $stmt = $ligacao->prepare("
+                    INSERT INTO fornecedores (
+                        codigo_fornecedor, nome_empresa, tipo_fornecedor, nif,
+                        website, email, telefone, morada,
+                        pessoa_contacto, telefone_contacto, observacoes
+                    ) VALUES (
+                        :codigo, :nome, :tipo, :nif,
+                        :website, :email, :telefone, :morada,
+                        :pessoa_contacto, :telefone_contacto, :observacoes
+                    )
+                ");
+                $stmt->execute([
+                    ':codigo'             => $dados['codigo_fornecedor'],
+                    ':nome'               => $dados['nome_empresa'],
+                    ':tipo'               => $dados['tipo_fornecedor'],
+                    ':nif'                => $dados['nif'],
+                    ':website'            => $dados['website'] ?: null,
+                    ':email'              => $dados['email'] ?: null,
+                    ':telefone'           => $dados['telefone'] ?: null,
+                    ':morada'             => $dados['morada'] ?: null,
+                    ':pessoa_contacto'    => $dados['pessoa_contacto'] ?: null,
+                    ':telefone_contacto'  => $dados['telefone_contacto'] ?: null,
+                    ':observacoes'        => $dados['observacoes'] ?: null,
+                ]);
+
+                $ligacao = null;
+                header('Location: fornecedores.php?sucesso=inserido');
+                exit;
+            }
+
+            $ligacao = null;
+        } catch (PDOException $e) {
+            $erros[] = 'Erro ao guardar: ' . $e->getMessage();
+        }
+    }
+}
 ?>
-<?php include '../../includes/header.php'; 
+
+<?php include '../../includes/header.php';
 $paginaAtiva = 'fornecedores';
 ?>
 
-    <div class="private-layout">
+<div class="private-layout">
+    <?php include '../../includes/sidebar.php'; ?>
 
-        <?php include '../../includes/sidebar.php'; ?> 
+    <main class="private-main">
 
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="private-main">
-
-            <!-- CABEÇALHO -->
-            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
-
-                <div>
-
-                    <h1 class="fw-bold mb-1">
-                        Adicionar Fornecedor
-                    </h1>
-
-                    <p class="text-muted mb-0">
-                        Registo de novos fornecedores associados aos equipamentos médicos.
-                    </p>
-
-                </div>
-
-                <a href="fornecedores.php" class="btn btn-outline-secondary">
-
-                    <i class="fa-solid fa-arrow-left me-2"></i>
-                    Voltar
-
-                </a>
-
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <h1 class="fw-bold mb-1">Adicionar Fornecedor</h1>
+                <p class="text-muted mb-0">Registo de novos fornecedores associados aos equipamentos médicos.</p>
             </div>
+            <a href="fornecedores.php" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left me-2"></i>
+                Voltar
+            </a>
+        </div>
 
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 p-lg-5">
 
-            <!-- FORMULÁRIO -->
-            <div class="card border-0 shadow-sm rounded-4">
+                <form method="POST" action="">
 
-                <div class="card-body p-4 p-lg-5">
+                    <!-- DADOS PRINCIPAIS -->
+                    <h4 class="fw-bold mb-4">
+                        <i class="fa-solid fa-building me-2 text-primary"></i>
+                        Dados do fornecedor
+                    </h4>
 
-                    <form>
-
-                        <!-- DADOS PRINCIPAIS -->
-                        <h4 class="fw-bold mb-4">
-
-                            <i class="fa-solid fa-building me-2 text-primary"></i>
-                            Dados do fornecedor
-
-                        </h4>
-                        <!-- ALERTAS -->
-                        <div id="alertasDadosGerais" class="alert alert-danger mb-4">
-
+                    <?php if (!empty($erros)): ?>
+                        <div class="alert alert-danger mb-4">
                             <h6 class="alert-heading mb-2">
-
                                 <i class="fa-solid fa-circle-exclamation me-2"></i>
                                 Foram encontrados erros
-
                             </h6>
-
                             <ul class="mb-0">
-
-                                <li>Código interno é obrigatório.</li>
-
-                                <li>Categoria é obrigatória.</li>
-
+                                <?php foreach ($erros as $erro): ?>
+                                    <li><?= htmlspecialchars($erro) ?></li>
+                                <?php endforeach; ?>
                             </ul>
+                        </div>
+                    <?php endif; ?>
 
+                    <div class="row g-4">
+
+                        <div class="col-md-4">
+                            <label for="codigoFornecedor" class="form-label fw-bold">Código</label>
+                            <input type="text" id="codigoFornecedor" class="form-control"
+                                name="codigo_fornecedor"
+                                value="<?= htmlspecialchars($dados['codigo_fornecedor'] ?? $proximo_codigo) ?>"
+                                readonly>
                         </div>
 
-                        <div class="row g-4">
-
-                            <!-- Código -->
-                            <div class="col-md-4">
-
-                                <label for="codigoFornecedor" class="form-label fw-bold">
-                                    Código
-                                </label>
-
-                                <input type="text" id="codigoFornecedor" class="form-control" name="codigo_fornecedor"
-                                    placeholder="Ex: FOR-0005">
-
-                            </div>
-
-                            <!-- Nome -->
-                            <div class="col-md-8">
-
-                                <label for="nomeFornecedor" class="form-label fw-bold">
-                                    Nome da empresa
-                                </label>
-
-                                <input type="text" id="nomeFornecedor" class="form-control"  name="nome_empresa" placeholder="Ex: Dräger">
-
-                            </div>
-
-                            <!-- Tipo -->
-                            <div class="col-md-6">
-
-                                <label for="tipoFornecedor" class="form-label fw-bold">
-                                    Tipo de fornecedor
-                                </label>
-
-                                <select id="tipoFornecedor" class="form-select" name="tipo_fornecedor">
-
-                                    <option selected disabled>
-                                        Selecionar tipo
-                                    </option>
-
-                                    <option>
-                                        Fabricante
-                                    </option>
-
-                                    <option>
-                                        Distribuidor / Fornecedor Comercial
-                                    </option>
-
-                                    <option>
-                                        Assistência Técnica
-                                    </option>
-
-                                    <option>
-                                        Consumíveis / Acessórios
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-                            <!-- NIF -->
-                            <div class="col-md-4">
-
-                                <label for="nifFornecedor" class="form-label fw-bold">
-                                    NIF
-                                </label>
-
-                                <input type="text" id="nifFornecedor" class="form-control" name="nif" placeholder="Ex: 509123456"
-                                     inputmode="numeric">
-
-                            </div>
-
-                            <!-- Telefone -->
-                            <div class="col-md-4">
-
-                                <label for="telefoneFornecedor" class="form-label fw-bold">
-                                    Contacto telefónico
-                                </label>
-
-                                <input type="text" id="telefoneFornecedor" class="form-control" name="telefone"
-                                    placeholder="Ex: +351 220 000 000"  inputmode="tel">
-
-                            </div>
-
-                            <!-- Email -->
-                            <div class="col-md-4">
-
-                                <label for="emailFornecedor" class="form-label fw-bold">
-                                    Email
-                                </label>
-
-                                <input type="email" id="emailFornecedor" class="form-control" name="email"
-                                    placeholder="Ex: geral@empresa.pt">
-
-                            </div>
-
-                            <!-- Morada -->
-                            <div class="col-md-8">
-
-                                <label for="moradaFornecedor" class="form-label fw-bold">
-                                    Morada
-                                </label>
-
-                                <input type="text" id="moradaFornecedor" class="form-control" name="morada"
-                                    placeholder="Ex: Rua da Tecnologia, Porto">
-
-                            </div>
-
-                            <!-- Website -->
-                            <div class="col-md-4">
-
-                                <label for="websiteFornecedor" class="form-label fw-bold">
-                                    Website
-                                </label>
-
-                                <input type="url" id="websiteFornecedor" class="form-control" name="website"
-                                    placeholder="Ex: www.empresa.pt">
-
-                            </div>
-
+                        <div class="col-md-8">
+                            <label for="nomeFornecedor" class="form-label fw-bold">Nome da empresa</label>
+                            <input type="text" id="nomeFornecedor" class="form-control"
+                                name="nome_empresa"
+                                placeholder="Ex: Dräger"
+                                value="<?= htmlspecialchars($dados['nome_empresa'] ?? '') ?>">
                         </div>
 
-
-                        <!-- CONTACTO RESPONSÁVEL -->
-                        <hr class="my-5">
-
-                        <h4 class="fw-bold mb-4">
-
-                            <i class="fa-solid fa-user me-2 text-primary"></i>
-                            Pessoa de contacto
-
-                        </h4>
-
-                        <div class="row g-4">
-
-                            <!-- Nome -->
-                            <div class="col-md-6">
-
-                                <label for="pessoaContacto" class="form-label fw-bold">
-                                    Nome da pessoa de contacto
-                                </label>
-
-                                <input type="text" id="pessoaContacto" class="form-control" name="pessoa_contacto"
-                                    placeholder="Ex: João Silva">
-
-                            </div>
-
-                            <!-- Telefone -->
-                            <div class="col-md-6">
-
-                                <label for="telefoneContacto" class="form-label fw-bold">
-                                    Telefone da pessoa de contacto
-                                </label>
-
-                                <input type="text" id="telefoneContacto" class="form-control" name="telefone_contacto"
-                                    placeholder="Ex: +351 912 000 000">
-
-                            </div>
-
+                        <div class="col-md-6">
+                            <label for="tipoFornecedor" class="form-label fw-bold">Tipo de fornecedor</label>
+                            <select id="tipoFornecedor" class="form-select" name="tipo_fornecedor">
+                                <option value="" disabled <?= empty($dados['tipo_fornecedor']) ? 'selected' : '' ?>>Selecionar tipo</option>
+                                <option value="Fabricante" <?= ($dados['tipo_fornecedor'] ?? '') == 'Fabricante' ? 'selected' : '' ?>>Fabricante</option>
+                                <option value="Distribuidor / Fornecedor Comercial" <?= ($dados['tipo_fornecedor'] ?? '') == 'Distribuidor / Fornecedor Comercial' ? 'selected' : '' ?>>Distribuidor / Fornecedor Comercial</option>
+                                <option value="Assistência Técnica" <?= ($dados['tipo_fornecedor'] ?? '') == 'Assistência Técnica' ? 'selected' : '' ?>>Assistência Técnica</option>
+                                <option value="Consumíveis / Acessórios" <?= ($dados['tipo_fornecedor'] ?? '') == 'Consumíveis / Acessórios' ? 'selected' : '' ?>>Consumíveis / Acessórios</option>
+                            </select>
                         </div>
 
-                        <!-- EQUIPAMENTOS ASSOCIADOS -->
-                        <hr class="my-5">
-
-                        <div class="row g-4">
-
-                            <div class="col-12">
-
-                                <h4 class="fw-bold mb-4">
-                                    <i class="fa-solid fa-laptop-medical text-primary me-3"></i>
-                                    Selecionar equipamentos associados
-                                </h4>
-
-                                <div class="row g-3 align-items-end">
-
-                                    <!-- Código do equipamento -->
-                                    <div class="col-md-8">
-
-                                        <label for="equipamentoAssociado" class="form-label fw-bold">
-
-                                            Código do equipamento
-
-                                        </label>
-
-                                        <input type="text" id="equipamentoAssociado" class="form-control"
-                                            placeholder="Ex: EQ-0001">
-
-                                    </div>
-
-                                    <!-- Botão adicionar -->
-                                    <div class="col-md-4">
-
-                                        <button type="button" class="btn btn-outline-primary w-100"
-                                            id="btnAssociarEquipamento">
-
-                                            <i class="fa-solid fa-plus me-2"></i>
-                                            Associar
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                                <!-- Equipamentos associados -->
-                                <div id="listaEquipamentosAssociados" class="mt-4 d-flex flex-wrap gap-2">
-
-                                </div>
-                            </div>
-
+                        <div class="col-md-4">
+                            <label for="nifFornecedor" class="form-label fw-bold">NIF</label>
+                            <input type="text" id="nifFornecedor" class="form-control"
+                                name="nif"
+                                placeholder="Ex: 509123456"
+                                inputmode="numeric"
+                                value="<?= htmlspecialchars($dados['nif'] ?? '') ?>">
                         </div>
 
-
-                        <!-- OBSERVAÇÕES -->
-                        <hr class="my-5">
-
-                        <h4 class="fw-bold mb-4">
-
-                            <i class="fa-solid fa-note-sticky me-2 text-primary"></i>
-                            Observações
-
-                        </h4>
-
-                        <div class="mb-4">
-
-                            <textarea class="form-control" rows="5" name="observacoes"
-                                placeholder="Observações adicionais sobre o fornecedor..."></textarea>
-
+                        <div class="col-md-4">
+                            <label for="telefoneFornecedor" class="form-label fw-bold">Contacto telefónico</label>
+                            <input type="text" id="telefoneFornecedor" class="form-control"
+                                name="telefone"
+                                placeholder="Ex: +351 220 000 000"
+                                inputmode="tel"
+                                value="<?= htmlspecialchars($dados['telefone'] ?? '') ?>">
                         </div>
 
-
-                        <!-- BOTÕES -->
-                        <div class="d-flex justify-content-end gap-3 mt-5">
-
-                            <a href="fornecedores.php" class="btn btn-outline-secondary">
-
-                                Cancelar
-
-                            </a>
-
-                            <button type="submit" class="btn btn-primary-custom">
-
-                                <i class="fa-solid fa-floppy-disk me-2"></i>
-                                Guardar Fornecedor
-
-                            </button>
-
+                        <div class="col-md-4">
+                            <label for="emailFornecedor" class="form-label fw-bold">Email</label>
+                            <input type="text" id="emailFornecedor" class="form-control"
+                                name="email"
+                                placeholder="Ex: geral@empresa.pt"
+                                value="<?= htmlspecialchars($dados['email'] ?? '') ?>">
                         </div>
 
-                    </form>
+                        <div class="col-md-8">
+                            <label for="moradaFornecedor" class="form-label fw-bold">Morada</label>
+                            <input type="text" id="moradaFornecedor" class="form-control"
+                                name="morada"
+                                placeholder="Ex: Rua da Tecnologia, Porto"
+                                value="<?= htmlspecialchars($dados['morada'] ?? '') ?>">
+                        </div>
 
-                </div>
+                        <div class="col-md-4">
+                            <label for="websiteFornecedor" class="form-label fw-bold">Website</label>
+                            <input type="text" id="websiteFornecedor" class="form-control"
+                                name="website"
+                                placeholder="Ex: www.empresa.pt"
+                                value="<?= htmlspecialchars($dados['website'] ?? '') ?>">
+                        </div>
+
+                    </div>
+
+                    <hr class="my-5">
+
+                    <h4 class="fw-bold mb-4">
+                        <i class="fa-solid fa-user me-2 text-primary"></i>
+                        Pessoa de contacto
+                    </h4>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <label for="pessoaContacto" class="form-label fw-bold">Nome da pessoa de contacto</label>
+                            <input type="text" id="pessoaContacto" class="form-control"
+                                name="pessoa_contacto"
+                                placeholder="Ex: João Silva"
+                                value="<?= htmlspecialchars($dados['pessoa_contacto'] ?? '') ?>">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="telefoneContacto" class="form-label fw-bold">Telefone da pessoa de contacto</label>
+                            <input type="text" id="telefoneContacto" class="form-control"
+                                name="telefone_contacto"
+                                placeholder="Ex: +351 912 000 000"
+                                value="<?= htmlspecialchars($dados['telefone_contacto'] ?? '') ?>">
+                        </div>
+
+                    </div>
+
+                    <hr class="my-5">
+
+                    <h4 class="fw-bold mb-4">
+                        <i class="fa-solid fa-note-sticky me-2 text-primary"></i>
+                        Observações
+                    </h4>
+
+                    <div class="mb-4">
+                        <textarea class="form-control" rows="5" name="observacoes"
+                            placeholder="Observações adicionais sobre o fornecedor..."><?= htmlspecialchars($dados['observacoes'] ?? '') ?></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-3 mt-5">
+                        <a href="fornecedores.php" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>
+                            Guardar Fornecedor
+                        </button>
+                    </div>
+
+                </form>
 
             </div>
+        </div>
 
-        </main>
-    </div>
-    <?php include '../../includes/footer.php'; ?> 
+    </main>
+</div>
+
+<?php include '../../includes/footer.php'; ?>

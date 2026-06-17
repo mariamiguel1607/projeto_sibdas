@@ -40,6 +40,18 @@ $erros_garantias    = [];
 $erros_documentacao = [];
 $erros_observacoes  = [];
 
+try {
+    $ligacao = ligar_bd();
+
+    $categorias    = $ligacao->query("SELECT * FROM categorias ORDER BY nome_categoria")->fetchAll(PDO::FETCH_OBJ);
+    $estados       = $ligacao->query("SELECT * FROM estados")->fetchAll(PDO::FETCH_OBJ);
+    $localizacoes  = $ligacao->query("SELECT * FROM localizacoes")->fetchAll(PDO::FETCH_OBJ);
+    $fornecedores  = $ligacao->query("SELECT * FROM fornecedores ORDER BY codigo_fornecedor")->fetchAll(PDO::FETCH_OBJ);
+
+    $ligacao = null;
+} catch (PDOException $err) {
+    $erro_sistema = "Erro ao carregar dados auxiliares.";
+}
 
 
 if (isset($_POST['submeter_edit_step1'])) {
@@ -226,7 +238,20 @@ if (isset($_POST['submeter_edit_step5'])) {
 
     $_SESSION['equipamento_edit']['fornecedores'] = $fornecedores_validos;
 
-    $erros_fornecedor = validar_step_fornecedor($ids_fornecedor, $tipos_relacao);
+    // Converter objetos para array para a validação
+    $fornecedoresArray = array_map(function ($f) {
+        return [
+            'id'              => $f->id,
+            'tipo_fornecedor' => $f->tipo_fornecedor,
+            'nome_empresa'    => $f->nome_empresa,
+        ];
+    }, $fornecedores);
+
+    $erros_fornecedor = validar_step_fornecedor(
+        $ids_fornecedor,
+        $tipos_relacao,
+        $fornecedoresArray
+    );
 
     if (empty($erros_fornecedor)) {
         $_SESSION['edit_step'] = 6;
@@ -371,9 +396,11 @@ if (isset($_POST['submeter_edit_step8'])) {
 
     $erros_observacoes = validar_step_observacoes($observacoes);
 
+
     if (empty($erros_observacoes)) {
 
         $_SESSION['equipamento_edit']['observacoes'] = $observacoes;
+
         try {
             $ligacao = ligar_bd();
             $ligacao->beginTransaction();
@@ -425,7 +452,12 @@ if (isset($_POST['submeter_edit_step8'])) {
             $ligacao->prepare("DELETE FROM equipamentos_fornecedores WHERE id_equipamento = :id")
                 ->execute([':id' => $idEquipamento]);
 
+            $fornecedoresInseridos = []; // para evitar duplicados
             foreach ($eq['fornecedores'] as $forn) {
+                $chave = $forn['id_fornecedor'] . '_' . $forn['tipo_relacao'];
+                if (in_array($chave, $fornecedoresInseridos)) continue; // skip duplicado
+                $fornecedoresInseridos[] = $chave;
+
                 $stmt = $ligacao->prepare("
                     INSERT INTO equipamentos_fornecedores (id_equipamento, id_fornecedor, tipo_relacao)
                     VALUES (:id_equipamento, :id_fornecedor, :tipo_relacao)
@@ -562,6 +594,7 @@ if (isset($_POST['submeter_edit_step8'])) {
     $step_atual = 8;
 }
 
+
 // Se a sessão de edição ainda está vazia, carregar dados da BD e pré-preencher
 if (empty($_SESSION['equipamento_edit'])) {
 
@@ -683,19 +716,6 @@ if (empty($_SESSION['equipamento_edit'])) {
     } catch (PDOException $err) {
         $erro_sistema = "Erro ao carregar dados do equipamento.";
     }
-}
-
-try {
-    $ligacao = ligar_bd();
-
-    $categorias    = $ligacao->query("SELECT * FROM categorias ORDER BY nome_categoria")->fetchAll(PDO::FETCH_OBJ);
-    $estados       = $ligacao->query("SELECT * FROM estados")->fetchAll(PDO::FETCH_OBJ);
-    $localizacoes  = $ligacao->query("SELECT * FROM localizacoes")->fetchAll(PDO::FETCH_OBJ);
-    $fornecedores  = $ligacao->query("SELECT * FROM fornecedores ORDER BY codigo_fornecedor")->fetchAll(PDO::FETCH_OBJ);
-
-    $ligacao = null;
-} catch (PDOException $err) {
-    $erro_sistema = "Erro ao carregar dados auxiliares.";
 }
 
 ?>

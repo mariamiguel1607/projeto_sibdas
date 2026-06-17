@@ -5,14 +5,100 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+try {
+    $ligacao = ligar_bd();
+
+    // Total equipamentos
+    $total = $ligacao->query("SELECT COUNT(*) FROM equipamentos WHERE ativo = 1")->fetchColumn();
+
+    // Por estado
+    $stmtEstados = $ligacao->query("
+        SELECT estados.nome_estado, COUNT(equipamentos.id) as total
+        FROM equipamentos
+        INNER JOIN estados ON equipamentos.id_estado = estados.id
+        WHERE equipamentos.ativo = 1
+        GROUP BY estados.nome_estado
+    ")->fetchAll(PDO::FETCH_KEY_PAIR);
+
+    $ativos      = $stmtEstados['Ativo'] ?? 0;
+    $manutencao  = $stmtEstados['Em manutenção'] ?? 0;
+    $inativos    = $stmtEstados['Inativo'] ?? 0;
+
+    // Garantias expiradas
+    $garantiasExpiradas = $ligacao->query("
+        SELECT COUNT(*) FROM documentacao
+        WHERE id_tipo_documento = 5
+        AND data_validade < CURDATE()
+    ")->fetchColumn();
+
+    // Sem documentação (sem nenhum documento associado)
+    $semDocumentacao = $ligacao->query("
+        SELECT COUNT(*) FROM equipamentos e
+        WHERE e.ativo = 1
+        AND NOT EXISTS (
+            SELECT 1 FROM documentacao d WHERE d.id_equipamento = e.id
+        )
+    ")->fetchColumn();
+
+    // Equipamentos por serviço (top 5)
+    $equipamentosPorServico = $ligacao->query("
+    SELECT localizacoes.servico_departamento, COUNT(equipamentos.id) as total
+    FROM equipamentos
+    INNER JOIN localizacoes ON equipamentos.id_localizacao = localizacoes.id
+    WHERE equipamentos.ativo = 1
+    GROUP BY localizacoes.servico_departamento
+    ORDER BY total DESC
+    LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Distribuição por categoria
+    $equipamentosPorCategoria = $ligacao->query("
+    SELECT categorias.nome_categoria, COUNT(equipamentos.id) as total
+    FROM equipamentos
+    INNER JOIN categorias ON equipamentos.id_categoria = categorias.id
+    WHERE equipamentos.ativo = 1
+    GROUP BY categorias.nome_categoria
+    ORDER BY total DESC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Garantias a expirar nos próximos 4 meses
+    $garantiasProximos = $ligacao->query("
+    SELECT 
+        DATE_FORMAT(data_validade, '%Y-%m') as mes,
+        DATE_FORMAT(data_validade, '%M %Y') as mes_nome,
+        COUNT(*) as total
+    FROM documentacao
+    WHERE id_tipo_documento = 5
+    AND data_validade >= CURDATE()
+    AND data_validade <= DATE_ADD(CURDATE(), INTERVAL 4 MONTH)
+    GROUP BY mes, mes_nome
+    ORDER BY mes ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Suporte de vida por serviço
+    $suporteVidaPorServico = $ligacao->query("
+    SELECT localizacoes.servico_departamento, COUNT(equipamentos.id) as total
+    FROM equipamentos
+    INNER JOIN localizacoes ON equipamentos.id_localizacao = localizacoes.id
+    WHERE equipamentos.ativo = 1
+    AND equipamentos.criticidade = 'Suporte de Vida'
+    GROUP BY localizacoes.servico_departamento
+    ORDER BY total DESC
+    LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
+    $ligacao = null;
+} catch (PDOException $e) {
+    $total = $ativos = $manutencao = $inativos = $garantiasExpiradas = $semDocumentacao = 0;
+}
 
 $paginaAtiva = 'dashboard';
 include '../../includes/header.php';
 ?>
 
 <div class="private-layout">
-    
-    <?php include '../../includes/sidebar.php'; ?> 
+
+    <?php include '../../includes/sidebar.php'; ?>
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="private-main">
 
@@ -36,7 +122,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">152</h2>
+                        <h2 class="fw-bold mb-1"><?= $total ?></h2>
                         <small class="text-muted">Total de Equipamentos</small>
                     </div>
                 </div>
@@ -45,7 +131,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">127</h2>
+                        <h2 class="fw-bold mb-1"><?= $ativos ?></h2>
                         <small class="text-muted">Equipamentos Ativos</small>
                     </div>
                 </div>
@@ -54,7 +140,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">12</h2>
+                        <h2 class="fw-bold mb-1"><?= $manutencao ?></h2>
                         <small class="text-muted">Em Manutenção</small>
                     </div>
                 </div>
@@ -63,7 +149,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">13</h2>
+                        <h2 class="fw-bold mb-1"><?= $inativos ?></h2>
                         <small class="text-muted">Inativos</small>
                     </div>
                 </div>
@@ -72,7 +158,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">8</h2>
+                        <h2 class="fw-bold mb-1"><?= $garantiasExpiradas ?></h2>
                         <small class="text-muted">Garantias Expiradas</small>
                     </div>
                 </div>
@@ -81,7 +167,7 @@ include '../../includes/header.php';
             <div class="col-md-6 col-xl-2">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center py-4">
-                        <h2 class="fw-bold mb-1">5</h2>
+                        <h2 class="fw-bold mb-1"><?= $semDocumentacao ?></h2>
                         <small class="text-muted">Sem Documentação</small>
                     </div>
                 </div>
@@ -107,62 +193,21 @@ include '../../includes/header.php';
                         </h5>
 
                         <div class="equipamentos-servico">
-
-                            <div class="mb-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Urgência</span>
-                                    <strong>34</strong>
+                            <?php
+                            $maxServico = !empty($equipamentosPorServico) ? $equipamentosPorServico[0]['total'] : 1;
+                            foreach ($equipamentosPorServico as $i => $servico):
+                                $percentagem = round(($servico['total'] / $maxServico) * 100);
+                            ?>
+                                <div class="<?= $i < count($equipamentosPorServico) - 1 ? 'mb-4' : '' ?>">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span><?= htmlspecialchars($servico['servico_departamento']) ?></span>
+                                        <strong><?= $servico['total'] ?></strong>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: <?= $percentagem ?>%"></div>
+                                    </div>
                                 </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 85%"></div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Bloco Operatório</span>
-                                    <strong>30</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 75%"></div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>UCI</span>
-                                    <strong>25</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 62%"></div>
-                                </div>
-                            </div>
-
-                            <div class="mb-4">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Imagiologia</span>
-                                    <strong>22</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 55%"></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Cardiologia</span>
-                                    <strong>18</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 45%"></div>
-                                </div>
-                            </div>
-
+                            <?php endforeach; ?>
                         </div>
 
                     </div>
@@ -185,47 +230,16 @@ include '../../includes/header.php';
                         </h5>
 
                         <div class="categorias-dashboard">
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <span>Monitorização</span>
-
-                                <span class="badge bg-primary px-3 py-2">
-                                    45
-                                </span>
-
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <span>Diagnóstico</span>
-
-                                <span class="badge bg-success px-3 py-2">
-                                    38
-                                </span>
-
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <span>Terapia</span>
-
-                                <span class="badge bg-warning text-dark px-3 py-2">
-                                    29
-                                </span>
-
-                            </div>
-
-                            <div class="d-flex justify-content-between align-items-center">
-
-                                <span>Suporte de Vida</span>
-
-                                <span class="badge bg-danger px-3 py-2">
-                                    18
-                                </span>
-
-                            </div>
-
+                            <?php
+                            $cores = ['bg-primary', 'bg-success', 'bg-warning text-dark', 'bg-danger', 'bg-info'];
+                            foreach ($equipamentosPorCategoria as $i => $cat):
+                                $cor = $cores[$i % count($cores)];
+                            ?>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span><?= htmlspecialchars($cat['nome_categoria']) ?></span>
+                                    <span class="badge <?= $cor ?> px-3 py-2"><?= $cat['total'] ?></span>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
 
                     </div>
@@ -254,62 +268,33 @@ include '../../includes/header.php';
                         </h5>
 
                         <div class="table-responsive">
-
                             <table class="table align-middle">
-
                                 <thead>
-
                                     <tr>
                                         <th>Mês</th>
                                         <th>Garantias</th>
                                     </tr>
-
                                 </thead>
-
                                 <tbody>
-
-                                    <tr>
-                                        <td>Junho</td>
-                                        <td>
-                                            <span class="badge bg-danger">
-                                                8
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Julho</td>
-                                        <td>
-                                            <span class="badge bg-warning text-dark">
-                                                5
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Agosto</td>
-                                        <td>
-                                            <span class="badge bg-info">
-                                                3
-                                            </span>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Setembro</td>
-                                        <td>
-                                            <span class="badge bg-success">
-                                                2
-                                            </span>
-                                        </td>
-                                    </tr>
-
+                                    <?php if (empty($garantiasProximos)): ?>
+                                        <tr>
+                                            <td colspan="2" class="text-muted">Nenhuma garantia a expirar nos próximos 4 meses.</td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php
+                                        $coresMes = ['bg-danger', 'bg-warning text-dark', 'bg-info', 'bg-success'];
+                                        foreach ($garantiasProximos as $i => $g):
+                                            $cor = $coresMes[$i % count($coresMes)];
+                                        ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($g['mes_nome']) ?></td>
+                                                <td><span class="badge <?= $cor ?>"><?= $g['total'] ?></span></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
 
                 </div>
@@ -330,46 +315,23 @@ include '../../includes/header.php';
                         </h5>
 
                         <div class="suporte-vida-dashboard">
-
-                            <div class="mb-4">
-
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>UCI</span>
-                                    <strong>12</strong>
+                            <?php
+                            $maxSuporte = !empty($suporteVidaPorServico) ? $suporteVidaPorServico[0]['total'] : 1;
+                            $coresSuporte = ['bg-danger', 'bg-warning', 'bg-success', 'bg-info', 'bg-primary'];
+                            foreach ($suporteVidaPorServico as $i => $sv):
+                                $percentagem = round(($sv['total'] / $maxSuporte) * 100);
+                                $cor = $coresSuporte[$i % count($coresSuporte)];
+                            ?>
+                                <div class="<?= $i < count($suporteVidaPorServico) - 1 ? 'mb-4' : '' ?>">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span><?= htmlspecialchars($sv['servico_departamento']) ?></span>
+                                        <strong><?= $sv['total'] ?></strong>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar <?= $cor ?>" style="width: <?= $percentagem ?>%"></div>
+                                    </div>
                                 </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar bg-danger" style="width:100%"></div>
-                                </div>
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Urgência</span>
-                                    <strong>4</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar bg-warning" style="width:33%"></div>
-                                </div>
-
-                            </div>
-
-                            <div>
-
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Bloco Operatório</span>
-                                    <strong>2</strong>
-                                </div>
-
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" style="width:16%"></div>
-                                </div>
-
-                            </div>
-
+                            <?php endforeach; ?>
                         </div>
 
                     </div>
@@ -383,4 +345,4 @@ include '../../includes/header.php';
     </main>
 </div>
 
-<?php include '../../includes/footer.php'; ?> 
+<?php include '../../includes/footer.php'; ?>

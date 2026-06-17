@@ -318,9 +318,19 @@ if (isset($_POST['submeter_step5'])) {
         }
     }
 
+    // Converter objetos para array para a validação
+    $fornecedoresArray = array_map(function ($f) {
+        return [
+            'id'              => $f->id,
+            'tipo_fornecedor' => $f->tipo_fornecedor,
+            'nome_empresa'    => $f->nome_empresa,
+        ];
+    }, $fornecedores);
+
     $erros_fornecedor = validar_step_fornecedor(
         $ids_fornecedor,
-        $tipos_relacao
+        $tipos_relacao,
+        $fornecedoresArray
     );
 
     if (empty($erros_fornecedor)) {
@@ -754,8 +764,10 @@ if (isset($_POST['submeter_step8'])) {
             $erros_observacoes[] = "Erro ao guardar equipamento: " . $e->getMessage();
             $step_atual = 8;
         }
+        
     }
 }
+
 
 ?>
 <?php include '../../includes/header.php';

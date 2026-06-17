@@ -134,7 +134,20 @@ $paginaAtiva = 'equipamentos';
             </div>
 
             <div class="d-flex gap-2">
-                <a href="equipamentos.php" class="btn btn-outline-secondary">
+                <?php
+                $origem = $_GET['origem'] ?? 'equipamentos';
+                $idFornecedorEncriptado = $_GET['id_fornecedor'] ?? null;
+                $idLocalizacaoEncriptado = $_GET['id_localizacao'] ?? null;
+
+                if ($origem === 'fornecedor' && $idFornecedorEncriptado) {
+                    $urlVoltar = '../fornecedores/ficha_fornecedor.php?id=' . $idFornecedorEncriptado;
+                } elseif ($origem === 'localizacao') {
+                    $urlVoltar = '../localizacao/localizacao.php';
+                } else {
+                    $urlVoltar = 'equipamentos.php';
+                }
+                ?>
+                <a href="<?= htmlspecialchars($urlVoltar) ?>" class="btn btn-outline-secondary">
                     <i class="fa-solid fa-arrow-left me-2"></i>
                     Voltar
                 </a>
