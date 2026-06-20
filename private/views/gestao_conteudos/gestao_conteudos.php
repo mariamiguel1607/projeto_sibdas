@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+if (($_SESSION['perfil'] ?? '') !== 'Administrador') {
+    header('Location: /projeto_sibdas/private/views/dashboard/dashboard.php');
+    exit;
+}
 
 $ligacao = ligar_bd();
 

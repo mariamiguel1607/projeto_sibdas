@@ -98,12 +98,12 @@ $paginaAtiva = 'fornecedores';
 
             </div>
 
-            <a href="inserir_fornecedor.php" class="btn btn-primary-custom">
-
-                <i class="fa-solid fa-plus me-2"></i>
-                Adicionar Fornecedor
-
-            </a>
+            <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+                <a href="inserir_fornecedor.php" class="btn btn-primary-custom">
+                    <i class="fa-solid fa-plus me-2"></i>
+                    Adicionar Fornecedor
+                </a>
+            <?php endif; ?>
 
         </header>
 
@@ -284,24 +284,27 @@ $paginaAtiva = 'fornecedores';
                                                     class="btn btn-sm btn-outline-primary">
                                                     Ver
                                                 </a>
+                                                <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
 
-                                                <a href="editar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
-                                                    class="btn btn-sm btn-outline-warning">
-                                                    Editar
-                                                </a>
+                                                    <a href="editar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
+                                                        class="btn btn-sm btn-outline-warning">
+                                                        Editar
+                                                    </a>
 
-                                                <?php if ($fornecedor->ativo): ?>
-                                                    <a href="eliminar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
-                                                        class="btn btn-sm btn-outline-danger">
-                                                        <i class="fa-solid fa-ban me-1"></i>
-                                                        Eliminar
-                                                    </a>
-                                                <?php else: ?>
-                                                    <a href="reativar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
-                                                        class="btn btn-sm btn-outline-success">
-                                                        <i class="fa-solid fa-circle-check me-1"></i>
-                                                        Reativar
-                                                    </a>
+                                                    <?php if ($fornecedor->ativo): ?>
+                                                        <a href="eliminar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
+                                                            class="btn btn-sm btn-outline-danger">
+                                                            <i class="fa-solid fa-ban me-1"></i>
+                                                            Eliminar
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="reativar_fornecedor.php?id=<?= aes_encrypt($fornecedor->id) ?>"
+                                                            class="btn btn-sm btn-outline-success">
+                                                            <i class="fa-solid fa-circle-check me-1"></i>
+                                                            Reativar
+                                                        </a>
+                                                    <?php endif; ?>
+
                                                 <?php endif; ?>
 
                                             </div>

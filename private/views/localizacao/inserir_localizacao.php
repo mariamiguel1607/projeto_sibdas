@@ -2,6 +2,10 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/validacoes.php';
 redirect_if_not_logged();
+if (!in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])) {
+    header('Location: localizacao.php'); 
+    exit;
+}
 
 $erros = [];
 

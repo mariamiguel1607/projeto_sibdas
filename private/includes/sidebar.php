@@ -13,37 +13,39 @@ if (!isset($_SESSION['utilizador'])) {
 // Podemos usar livremente os dados da sessão
 $nome = $_SESSION['utilizador'];
 ?>
-<!-- SIDEBAR -->
+
 <!-- SIDEBAR -->
 <aside class="sidebar d-flex flex-column p-3">
 
-    <!-- ÍCONE MENSAGENS -->
-    <div class="d-flex justify-content-start mb-2 px-2">
-        <button class="btn position-relative rounded-circle d-flex align-items-center justify-content-center"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasMensagens"
-            title="Mensagens recebidas"
-            style="width: 42px; height: 42px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);">
-            <i class="fa-solid fa-envelope text-white"></i>
-            <?php
-            try {
-                $ligacao_msg_count = ligar_bd();
-                $stmt_count = $ligacao_msg_count->query("SELECT COUNT(*) FROM mensagens_contacto WHERE lida = 0");
-                $nao_lidas = $stmt_count->fetchColumn();
-                $ligacao_msg_count = null;
-            } catch (PDOException $e) {
-                $nao_lidas = 0;
-            }
-            ?>
-            <?php if ($nao_lidas > 0): ?>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    style="font-size: 0.6rem;">
-                    <?= $nao_lidas ?>
-                </span>
-            <?php endif; ?>
-        </button>
-    </div>
+    <?php if (($_SESSION['perfil'] ?? '') === 'Administrador'): ?>
+        <!-- ÍCONE MENSAGENS -->
+        <div class="d-flex justify-content-start mb-2 px-2">
+            <button class="btn position-relative rounded-circle d-flex align-items-center justify-content-center"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasMensagens"
+                title="Mensagens recebidas"
+                style="width: 42px; height: 42px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);">
+                <i class="fa-solid fa-envelope text-white"></i>
+                <?php
+                try {
+                    $ligacao_msg_count = ligar_bd();
+                    $stmt_count = $ligacao_msg_count->query("SELECT COUNT(*) FROM mensagens_contacto WHERE lida = 0");
+                    $nao_lidas = $stmt_count->fetchColumn();
+                    $ligacao_msg_count = null;
+                } catch (PDOException $e) {
+                    $nao_lidas = 0;
+                }
+                ?>
+                <?php if ($nao_lidas > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style="font-size: 0.6rem;">
+                        <?= $nao_lidas ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+        </div>
+    <?php endif; ?>
 
     <div class="sidebar-logo text-center mb-4">
         <img src="/projeto_sibdas/assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
@@ -72,7 +74,7 @@ $nome = $_SESSION['utilizador'];
                     </div>
 
                     <div class="cargo-utilizador">
-                        Administrador
+                        <?= htmlspecialchars($_SESSION['perfil'] ?? '') ?>
                     </div>
 
                 </div>
@@ -117,41 +119,58 @@ $nome = $_SESSION['utilizador'];
 
 
     <nav class="sidebar-menu nav nav-pills flex-column gap-2">
-        <a href="/projeto_sibdas/private/views/dashboard/dashboard.php" class="nav-link <?= ($paginaAtiva == 'dashboard') ? 'active' : '' ?>">
+
+        <!-- DASHBOARD — todos os perfis -->
+        <a href="/projeto_sibdas/private/views/dashboard/dashboard.php"
+            class="nav-link <?= ($paginaAtiva == 'dashboard') ? 'active' : '' ?>">
             <i class="fa-solid fa-chart-line"></i>
             Dashboard
         </a>
 
-        <a href="/projeto_sibdas/private/views/equipamentos/equipamentos.php" class="nav-link  <?= ($paginaAtiva == 'equipamentos') ? 'active' : '' ?>">
+        <!-- EQUIPAMENTOS — todos os perfis -->
+        <a href="/projeto_sibdas/private/views/equipamentos/equipamentos.php"
+            class="nav-link <?= ($paginaAtiva == 'equipamentos') ? 'active' : '' ?>">
             <i class="fa-solid fa-screwdriver-wrench"></i>
             Equipamentos
         </a>
 
-        <a href="/projeto_sibdas/private/views/localizacao/localizacao.php" class="nav-link  <?= ($paginaAtiva == 'localizacao') ? 'active' : '' ?>">
+        <!-- LOCALIZAÇÕES — todos os perfis -->
+        <a href="/projeto_sibdas/private/views/localizacao/localizacao.php"
+            class="nav-link <?= ($paginaAtiva == 'localizacao') ? 'active' : '' ?>">
             <i class="fa-solid fa-location-dot"></i>
             Localizações
         </a>
 
-        <a href="/projeto_sibdas/private/views/fornecedores/fornecedores.php" class="nav-link  <?= ($paginaAtiva == 'fornecedores') ? 'active' : '' ?>">
+        <!-- FORNECEDORES — todos os perfis -->
+        <a href="/projeto_sibdas/private/views/fornecedores/fornecedores.php"
+            class="nav-link <?= ($paginaAtiva == 'fornecedores') ? 'active' : '' ?>">
             <i class="fa-solid fa-truck-medical"></i>
             Fornecedores
         </a>
 
-        <a href="/projeto_sibdas/private/views/gestao_conteudos/gestao_conteudos.php" class="nav-link  <?= ($paginaAtiva == 'gestao_conteudos') ? 'active' : '' ?>">
-            <i class="fa-solid fa-pen-to-square"></i>
-            Gestão de Conteúdos
-        </a>
+        <!-- GESTÃO DE CONTEÚDOS — só Administrador -->
+        <?php if (($_SESSION['perfil'] ?? '') === 'Administrador'): ?>
+            <a href="/projeto_sibdas/private/views/gestao_conteudos/gestao_conteudos.php"
+                class="nav-link <?= ($paginaAtiva == 'gestao_conteudos') ? 'active' : '' ?>">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Gestão de Conteúdos
+            </a>
+        <?php endif; ?>
+
     </nav>
 
     <div class="sidebar-footer mt-auto">
 
-        <button class="nav-link w-100 text-start border-0 bg-transparent"
-            type="button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasHistorico">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            Histórico
-        </button>
+        <!-- HISTÓRICO — Administrador e Técnico -->
+        <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+            <button class="nav-link w-100 text-start border-0 bg-transparent"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasHistorico">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Histórico
+            </button>
+        <?php endif; ?>
 
     </div>
 

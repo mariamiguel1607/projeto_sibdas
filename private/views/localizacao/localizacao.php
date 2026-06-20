@@ -115,10 +115,12 @@ $paginaAtiva = 'localizacao';
                 <p>Gestão e consulta das localizações físicas associadas aos equipamentos médicos.</p>
             </div>
 
-            <a href="inserir_localizacao.php" class="btn btn-primary-custom">
-                <i class="fa-solid fa-plus me-2"></i>
-                Adicionar Localização
-            </a>
+            <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+                <a href="inserir_localizacao.php" class="btn btn-primary-custom">
+                    <i class="fa-solid fa-plus me-2"></i>
+                    Adicionar Localização
+                </a>
+            <?php endif; ?>
         </header>
         <!-- FILTROS -->
         <section class="card filter-card mb-4">
@@ -231,9 +233,9 @@ $paginaAtiva = 'localizacao';
 
                                     <th>Equipamentos</th>
 
-                                    <th class="text-end">
-                                        Ações
-                                    </th>
+                                    <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+                                        <th class="text-end">Ações</th>
+                                    <?php endif; ?>
 
                                 </tr>
 
@@ -258,7 +260,7 @@ $paginaAtiva = 'localizacao';
                                         <td>
 
                                             <button
-                                                class="badge rounded-pill bg-light text-dark border px-3 py-2"
+                                                class="badge rounded-pill bg-primary-subtle text-primary border px-3 py-2"
                                                 style="cursor:pointer;"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalEquipamentos<?= $localizacao->id ?>"
@@ -268,38 +270,38 @@ $paginaAtiva = 'localizacao';
                                             </button>
                                         </td>
 
-                                        <td class="text-end">
+                                        <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+                                            <td class="text-end">
+                                                <div class="d-flex gap-2 justify-content-end flex-nowrap">
 
-                                            <div class="d-flex gap-2 justify-content-end flex-nowrap">
+                                                    <?php if ($localizacao->ativo): ?>
+                                                        <a href="editar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                            class="btn btn-sm btn-outline-warning">
+                                                            Editar
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                            Editar
+                                                        </button>
+                                                    <?php endif; ?>
 
-                                                <?php if ($localizacao->ativo): ?>
-                                                    <a href="editar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
-                                                        class="btn btn-sm btn-outline-warning">
-                                                        Editar
-                                                    </a>
-                                                <?php else: ?>
-                                                    <button class="btn btn-sm btn-outline-secondary" disabled>
-                                                        Editar
-                                                    </button>
-                                                <?php endif; ?>
+                                                    <?php if ($localizacao->ativo): ?>
+                                                        <a href="eliminar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                            class="btn btn-sm btn-outline-danger">
+                                                            <i class="fa-solid fa-ban me-1"></i>
+                                                            Eliminar
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="reativar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
+                                                            class="btn btn-sm btn-outline-success">
+                                                            <i class="fa-solid fa-circle-check me-1"></i>
+                                                            Reativar
+                                                        </a>
+                                                    <?php endif; ?>
 
-                                                <?php if ($localizacao->ativo): ?>
-                                                    <a href="eliminar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
-                                                        class="btn btn-sm btn-outline-danger">
-                                                        <i class="fa-solid fa-ban me-1"></i>
-                                                        Eliminar
-                                                    </a>
-                                                <?php else: ?>
-                                                    <a href="reativar_localizacao.php?id=<?= aes_encrypt($localizacao->id) ?>"
-                                                        class="btn btn-sm btn-outline-success">
-                                                        <i class="fa-solid fa-circle-check me-1"></i>
-                                                        Reativar
-                                                    </a>
-                                                <?php endif; ?>
-
-                                            </div>
-
-                                        </td>
+                                                </div>
+                                            </td>
+                                        <?php endif; ?>
 
                                     </tr>
 

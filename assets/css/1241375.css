@@ -915,7 +915,6 @@ section {
 ========================================== */
 
 .utilizador-btn {
-
     background: rgba(255, 255, 255, 0.08);
     padding: 12px;
     display: flex;
@@ -924,53 +923,53 @@ section {
 }
 
 .utilizador-btn:hover {
-
     background: rgba(255, 255, 255, 0.12);
-
 }
 
 .avatar-utilizador {
-
     width: 34px;
     height: 34px;
-
     border-radius: 50%;
-
     background: white;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     color: #6f42c1;
     font-size: 0.85rem;
-
     flex-shrink: 0;
-
 }
 
 .nome-utilizador {
-
     color: white;
     font-weight: 600;
     font-size: 0.95rem;
     line-height: 1.1;
-
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
 }
 
 .cargo-utilizador {
-
     color: rgba(255, 255, 255, 0.75);
     font-size: 0.80rem;
-
 }
 
 .utilizador-sidebar .dropdown-toggle::after {
-
     margin-left: auto;
     color: white;
-
 }
+
+.utilizador-sidebar .dropdown-menu {
+    min-width: 260px;
+}
+
+.utilizador-sidebar .dropdown-header {
+    font-size: 0.78rem;
+    color: #6c757d;
+    padding: 6px 16px;
+}
+
 .table {
     font-size: 0.80rem;
 }
@@ -985,6 +984,7 @@ section {
     padding: 0.15rem 0.35rem;
     font-size: 0.75rem;
 }
+
 .acoes-nowrap {
     white-space: nowrap;
     width: 1%;

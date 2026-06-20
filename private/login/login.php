@@ -6,20 +6,13 @@ $validation_errors = [];
 // --------------------------------------------------------------------
 // RECOLHA DE MENSAGENS TEMPORÁRIAS DA SESSÃO
 // --------------------------------------------------------------------
-// Verifica se existem erros de validação guardados na sessão
 if (!empty($_SESSION['validation_errors'])) {
-    // Se existirem, copia-os para a variável local
     $validation_errors = $_SESSION['validation_errors'];
-    // Remove os erros da sessão para que não apareçam novamente numa recarga de página
     unset($_SESSION['validation_errors']);
 }
-// Inicializa a variável que irá conter erros de servidor
 $server_error = [];
-// Verifica se existe algum erro de servidor guardado na sessão
 if (!empty($_SESSION['server_error'])) {
-    // Se existir, copia-o para a variável local
     $server_error = $_SESSION['server_error'];
-    // Remove o erro da sessão após ser lido
     unset($_SESSION['server_error']);
 }
 ?>
@@ -31,7 +24,7 @@ if (!empty($_SESSION['server_error'])) {
 
         <!-- Logo e título -->
         <div class="text-center mb-4">
-            <a href="/projeto_sibdas/public/index.html">
+            <a href="/projeto_sibdas/public/index.php">
                 <img src="/projeto_sibdas/assets/images/imagem_logo1.png" alt="Logo TechMed Solutions" class="login-logo">
             </a>
 
@@ -45,22 +38,7 @@ if (!empty($_SESSION['server_error'])) {
         <!-- Formulário de login -->
         <form action="../processa_login.php" method="post" novalidate>
 
-            <!-- Nome de utilizador -->
-            <div class="mb-3">
-                <label class="form-label fw-bold">
-                    Nome
-                </label>
-
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="fa-solid fa-user"></i>
-                    </span>
-
-                    <input type="text" class="form-control" name="text_nome" id="" placeholder="Insira o seu nome">
-                </div>
-            </div>
-
-            <!-- Email de utilizador -->
+            <!-- Email -->
             <div class="mb-3">
                 <label class="form-label fw-bold">
                     Email
@@ -71,13 +49,14 @@ if (!empty($_SESSION['server_error'])) {
                         <i class="fa-solid fa-envelope"></i>
                     </span>
 
-                    <input type="email" class="form-control" name="text_username" id="" placeholder="Insira o email">
+                    <input type="text" class="form-control" name="text_username"
+                        placeholder="Insira o seu email">
                 </div>
             </div>
 
             <!-- Palavra-passe -->
             <div class="mb-3">
-                <label for="password" class="form-label fw-bold">
+                <label class="form-label fw-bold">
                     Palavra-passe
                 </label>
 
@@ -86,7 +65,7 @@ if (!empty($_SESSION['server_error'])) {
                         <i class="fa-solid fa-lock"></i>
                     </span>
 
-                    <input type="password" class="form-control" name="text_password" id=""
+                    <input type="password" class="form-control" name="text_password"
                         placeholder="Insira a palavra-passe">
                 </div>
             </div>
@@ -99,25 +78,16 @@ if (!empty($_SESSION['server_error'])) {
             </div>
 
             <!-- ALERTAS -->
-            <!-- -------------------------------------------------------------------- -->
-            <!-- APRESENTAÇÃO DE MENSAGENS DE ERRO (VALIDAÇÃO E SERVIDOR) -->
-            <!-- -------------------------------------------------------------------- -->
-            <!-- Verifica se existem erros de validação -->
             <?php if (!empty($validation_errors)) : ?>
-                <!-- Se existirem, apresenta um alerta de erro (vermelho) usando as classes do Bootstrap -->
                 <div class="alert alert-danger p-2 text-center">
-                    <!-- Percorre todos os erros de validação -->
                     <?php foreach ($validation_errors as $error) : ?>
-                        <!-- Mostra cada erro dentro de uma <div>, escapando caracteres especiais para segurança -->
                         <div><?= htmlspecialchars($error) ?></div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <!-- Verifica se existe um erro de servidor -->
+
             <?php if (!empty($server_error)) : ?>
-                <!-- Apresenta também num alerta de erro (vermelho) -->
                 <div class="alert alert-danger p-2 text-center">
-                    <!-- Mostra o erro do servidor, também escapado com htmlspecialchars -->
                     <div><?= htmlspecialchars($server_error) ?></div>
                 </div>
             <?php endif; ?>
@@ -140,6 +110,5 @@ if (!empty($_SESSION['server_error'])) {
     </div>
 
 </main>
-
 
 <?php include '../includes/footer.php'; ?>

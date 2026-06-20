@@ -102,10 +102,12 @@ $paginaAtiva = 'equipamentos';
                 <p>Gestão e consulta dos equipamentos médicos registados na plataforma.</p>
             </div>
 
-            <a href="inserir_equipamentos.php" class="btn btn-primary-custom">
-                <i class="fa-solid fa-plus me-2"></i>
-                Adicionar Equipamento
-            </a>
+            <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+                <a href="inserir_equipamentos.php" class="btn btn-primary-custom">
+                    <i class="fa-solid fa-plus me-2"></i>
+                    Adicionar Equipamento
+                </a>
+            <?php endif; ?>
         </header>
 
 
@@ -279,37 +281,42 @@ $paginaAtiva = 'equipamentos';
                                                 class="btn btn-sm btn-outline-primary">
                                                 Ver
                                             </a>
-                                            <?php if ($equipamento->ativo): ?>
-                                                <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
-                                                    class="btn btn-sm btn-outline-warning">
-                                                    Editar
-                                                </a>
-                                            <?php else: ?>
-                                                <button class="btn btn-sm btn-outline-secondary" disabled>
-                                                    Editar
-                                                </button>
-                                            <?php endif; ?>
 
-                                            <?php if ($equipamento->ativo): ?>
-                                                <button
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#eliminarEquipamentoModal"
-                                                    data-id="<?= aes_encrypt($equipamento->id) ?>"
-                                                    data-acao="desativar">
-                                                    <i class="fa-solid fa-ban me-1"></i>
-                                                    Eliminar
-                                                </button>
-                                            <?php else: ?>
-                                                <button
-                                                    class="btn btn-sm btn-outline-success"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#eliminarEquipamentoModal"
-                                                    data-id="<?= aes_encrypt($equipamento->id) ?>"
-                                                    data-acao="reativar">
-                                                    <i class="fa-solid fa-circle-check me-1"></i>
-                                                    Reativar
-                                                </button>
+                                            <?php if (in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])): ?>
+
+                                                <?php if ($equipamento->ativo): ?>
+                                                    <a href="editar_equipamentos.php?id_equipamento=<?= aes_encrypt($equipamento->id) ?>"
+                                                        class="btn btn-sm btn-outline-warning">
+                                                        Editar
+                                                    </a>
+                                                <?php else: ?>
+                                                    <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                        Editar
+                                                    </button>
+                                                <?php endif; ?>
+
+                                                <?php if ($equipamento->ativo): ?>
+                                                    <button
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#eliminarEquipamentoModal"
+                                                        data-id="<?= aes_encrypt($equipamento->id) ?>"
+                                                        data-acao="desativar">
+                                                        <i class="fa-solid fa-ban me-1"></i>
+                                                        Eliminar
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button
+                                                        class="btn btn-sm btn-outline-success"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#eliminarEquipamentoModal"
+                                                        data-id="<?= aes_encrypt($equipamento->id) ?>"
+                                                        data-acao="reativar">
+                                                        <i class="fa-solid fa-circle-check me-1"></i>
+                                                        Reativar
+                                                    </button>
+                                                <?php endif; ?>
+
                                             <?php endif; ?>
                                         </td>
                                     </tr>

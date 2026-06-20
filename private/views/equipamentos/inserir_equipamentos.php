@@ -2,6 +2,11 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/validacoes.php';
 redirect_if_not_logged();
+// Só Administrador e Técnico podem inserir equipamentos
+if (!in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])) {
+    header('Location: equipamentos.php');
+    exit;
+}
 
 if (!isset($_SESSION['equip_step'])) $_SESSION['equip_step'] = 1;
 $step_atual = $_SESSION['equip_step'];
@@ -764,7 +769,6 @@ if (isset($_POST['submeter_step8'])) {
             $erros_observacoes[] = "Erro ao guardar equipamento: " . $e->getMessage();
             $step_atual = 8;
         }
-        
     }
 }
 

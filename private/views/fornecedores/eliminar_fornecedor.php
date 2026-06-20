@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
+if (!in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])) {
+    header('Location: fornecedores.php'); 
+    exit;
+}
 
 $idEncriptado = $_GET['id'] ?? $_POST['id'] ?? null;
 $id = aes_decrypt($idEncriptado);
