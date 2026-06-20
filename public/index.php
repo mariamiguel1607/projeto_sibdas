@@ -1,3 +1,31 @@
+<?php
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../private/includes/funcoes.php';
+
+$ligacao = ligar_bd();
+
+// Secção Início
+$inicio = $ligacao->query("SELECT * FROM gestao_conteudos WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
+
+// Serviços (apenas Ativos, ordenados)
+$servicos = $ligacao->query("
+    SELECT * FROM gestao_conteudos_servicos
+    WHERE estado = 'Ativo'
+    ORDER BY ordem_apresentacao ASC, id ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+$sobre = $ligacao->query("SELECT * FROM gestao_conteudos_sobre WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
+
+$contactos = $ligacao->query("SELECT * FROM gestao_conteudos_contactos WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
+
+$faqs = $ligacao->query("
+    SELECT * FROM gestao_conteudos_faq
+    ORDER BY ordem_apresentacao ASC, id ASC
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$rodape = $ligacao->query("SELECT * FROM gestao_conteudos_rodape WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -62,7 +90,7 @@
                     </li>
                 </ul>
 
-                <a href="../private/login/login.html" class="btn-login">
+                <a href="../private/login/login.php" class="btn-login">
                     Início de Sessão
                 </a>
 
@@ -79,25 +107,18 @@
 
                 <div class="col-lg-5 text-center text-lg-start">
 
-                    <h1 id="inicioPublicoTitulo" class="display-4 fw-bold mb-4">
-
-                        Gestão eficiente de equipamentos médicos
-
+                    <h1 class="display-4 fw-bold mb-4">
+                        <?= htmlspecialchars($inicio['titulo_principal']) ?>
                     </h1>
 
-                    <p id="inicioPublicoDescricao" class="lead mb-4">
-
-                        A TechMed Solutions ajuda hospitais a gerir o inventário de equipamentos médicos de forma
-                        centralizada, segura e eficiente.
-
+                    <p class="lead mb-4">
+                        <?= htmlspecialchars($inicio['descricao']) ?>
                     </p>
 
-                    <a href="#servicos" id="inicioPublicoBotao" class="btn btn-primary-custom">
-
-                        Conhecer Serviços
-
+                    <a href="<?= htmlspecialchars($inicio['link_botao'] ?: '#servicos') ?>"
+                        class="btn btn-primary-custom">
+                        <?= htmlspecialchars($inicio['texto_botao']) ?>
                         <i class="fa-solid fa-arrow-right ms-2"></i>
-
                     </a>
 
                 </div>
@@ -110,7 +131,8 @@
 
                         <div class="dots-bg"></div>
 
-                        <img id="inicioPublicoImagem" src="../assets/images/imagem_inicio.png" class="img-fluid"
+                        <img src="<?= htmlspecialchars($inicio['imagem_principal']) ?>"
+                            class="img-fluid"
                             alt="Dashboard de gestão hospitalar">
 
                     </div>
@@ -131,8 +153,26 @@
                 Os Nossos Serviços
             </h2>
 
-            <div class="row g-4" id="servicosPublicos">
-                <!-- Os serviços vão aparecer aqui através do JavaScript -->
+            <div class="row g-4">
+
+                <?php if (empty($servicos)): ?>
+                    <div class="col-12 text-center text-muted">
+                        <p>Nenhum serviço disponível de momento.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($servicos as $servico): ?>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="service-card h-100 text-center">
+                                <div class="service-icon mb-3">
+                                    <i class="<?= htmlspecialchars($servico['icone']) ?>"></i>
+                                </div>
+                                <h3><?= htmlspecialchars($servico['titulo']) ?></h3>
+                                <p><?= htmlspecialchars($servico['descricao']) ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
             </div>
 
         </div>
@@ -148,21 +188,11 @@
                 <div class="col-lg-6">
                     <div class="about-card">
 
-                        <h2 id="sobrePublicoTitulo">Sobre Nós</h2>
+                        <h2><?= htmlspecialchars($sobre['titulo_secao']) ?></h2>
 
                         <div class="section-line mb-4"></div>
 
-                        <p id="sobrePublicoTexto">
-                            A TechMed Solutions nasceu com o objetivo de apoiar instituições de saúde
-                            na organização e digitalização dos seus processos internos, promovendo uma
-                            gestão mais eficiente, segura e acessível da informação associada aos
-                            equipamentos médicos.
-                            <br><br>
-                            Através de uma plataforma simples e intuitiva, procuramos reduzir a
-                            dependência de registos manuais, facilitar o trabalho dos profissionais
-                            responsáveis pela gestão hospitalar e contribuir para uma maior qualidade
-                            e segurança nos serviços de saúde.
-                        </p>
+                        <p><?= nl2br(htmlspecialchars($sobre['texto_principal'])) ?></p>
 
                     </div>
                 </div>
@@ -174,60 +204,39 @@
                         <!-- BLOCO 1 -->
                         <div class="col-12">
                             <div class="about-info-card d-flex align-items-center gap-4">
-
                                 <div class="about-icon">
                                     <i class="fa-solid fa-bullseye"></i>
                                 </div>
-
                                 <div>
-                                    <h3 id="sobrePublicoBloco1Titulo">Missão</h3>
-
-                                    <p id="sobrePublicoBloco1Texto">
-                                        Apoiar hospitais na transição para processos digitais mais
-                                        organizados, seguros e eficientes.
-                                    </p>
+                                    <h3><?= htmlspecialchars($sobre['bloco1_titulo']) ?></h3>
+                                    <p><?= htmlspecialchars($sobre['bloco1_texto']) ?></p>
                                 </div>
-
                             </div>
                         </div>
 
                         <!-- BLOCO 2 -->
                         <div class="col-12">
                             <div class="about-info-card d-flex align-items-center gap-4">
-
                                 <div class="about-icon">
                                     <i class="fa-solid fa-lightbulb"></i>
                                 </div>
-
                                 <div>
-                                    <h3 id="sobrePublicoBloco2Titulo">Inovação</h3>
-
-                                    <p id="sobrePublicoBloco2Texto">
-                                        Desenvolver soluções tecnológicas simples, intuitivas e
-                                        adaptadas às necessidades do contexto hospitalar.
-                                    </p>
+                                    <h3><?= htmlspecialchars($sobre['bloco2_titulo']) ?></h3>
+                                    <p><?= htmlspecialchars($sobre['bloco2_texto']) ?></p>
                                 </div>
-
                             </div>
                         </div>
 
                         <!-- BLOCO 3 -->
                         <div class="col-12">
                             <div class="about-info-card d-flex align-items-center gap-4">
-
                                 <div class="about-icon">
                                     <i class="fa-solid fa-hand-holding-heart"></i>
                                 </div>
-
                                 <div>
-                                    <h3 id="sobrePublicoBloco3Titulo">Impacto</h3>
-
-                                    <p id="sobrePublicoBloco3Texto">
-                                        Contribuir para uma gestão hospitalar mais eficaz e para
-                                        melhores condições de apoio aos profissionais de saúde.
-                                    </p>
+                                    <h3><?= htmlspecialchars($sobre['bloco3_titulo']) ?></h3>
+                                    <p><?= htmlspecialchars($sobre['bloco3_texto']) ?></p>
                                 </div>
-
                             </div>
                         </div>
 
@@ -239,7 +248,7 @@
         </div>
     </section>
 
-    <!-- Perguntas Frequentes -->
+    <!-- FAQ -->
     <section id="perguntas-frequentes" class="faq-section py-5">
 
         <div class="container">
@@ -249,9 +258,23 @@
             </h2>
 
             <div class="accordion mx-auto" id="faqAccordionPublico">
-
-                <!-- FAQs aparecem aqui automaticamente -->
-
+                <?php foreach ($faqs as $i => $faq): ?>
+                    <div class="accordion-item mb-3 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button <?= $i > 0 ? 'collapsed' : '' ?> fw-bold"
+                                type="button" data-bs-toggle="collapse"
+                                data-bs-target="#faq<?= $i ?>">
+                                <?= htmlspecialchars($faq['pergunta']) ?>
+                            </button>
+                        </h2>
+                        <div id="faq<?= $i ?>" class="accordion-collapse collapse <?= $i === 0 ? 'show' : '' ?>"
+                            data-bs-parent="#faqAccordionPublico">
+                            <div class="accordion-body">
+                                <?= nl2br(htmlspecialchars($faq['resposta'])) ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
         </div>
@@ -262,66 +285,52 @@
     <section id="contactos" class="contact-section">
         <div class="container">
 
-            <!-- Título -->
             <div class="text-center mb-5">
-                <h2 class="section-title" id="contactosPublicoTitulo">Contactos</h2>
-
-                <p class="section-subtitle mx-auto" id="contactosPublicoTexto">
-                    Entre em contacto connosco para obter mais informações sobre os nossos serviços.
-                </p>
+                <h2 class="section-title"><?= htmlspecialchars($contactos['titulo_secao']) ?></h2>
+                <p class="section-subtitle mx-auto"><?= htmlspecialchars($contactos['texto_introdutorio']) ?></p>
             </div>
 
-            <!-- Formulário de contacto -->
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-
                     <div class="contact-form-card">
 
-                        <h3 class="fw-bold mb-4 text-center" id="contactosFormularioTituloPublico">
-                            Envie-nos uma mensagem
+                        <h3 class="fw-bold mb-4 text-center">
+                            <?= htmlspecialchars($contactos['titulo_formulario']) ?>
                         </h3>
 
                         <form>
-
                             <div class="row g-3">
 
                                 <div class="col-md-6">
-                                    <label for="nomeContacto" class="form-label fw-semibold">Nome</label>
-                                    <input type="text" class="form-control" id="nomeContacto"
-                                        placeholder="Insira o seu nome">
+                                    <label class="form-label fw-semibold">Nome</label>
+                                    <input type="text" class="form-control" placeholder="Insira o seu nome">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label for="emailContacto" class="form-label fw-semibold">Email</label>
-                                    <input type="email" class="form-control" id="emailContacto"
-                                        placeholder="Insira o seu email">
+                                    <label class="form-label fw-semibold">Email</label>
+                                    <input type="email" class="form-control" placeholder="Insira o seu email">
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="assuntoContacto" class="form-label fw-semibold">Assunto</label>
-                                    <input type="text" class="form-control" id="assuntoContacto"
-                                        placeholder="Indique o assunto da mensagem">
+                                    <label class="form-label fw-semibold">Assunto</label>
+                                    <input type="text" class="form-control" placeholder="Indique o assunto da mensagem">
                                 </div>
 
                                 <div class="col-12">
-                                    <label for="mensagemContacto" class="form-label fw-semibold">Mensagem</label>
-                                    <textarea class="form-control" id="mensagemContacto" rows="5"
-                                        placeholder="Escreva aqui a sua mensagem"></textarea>
+                                    <label class="form-label fw-semibold">Mensagem</label>
+                                    <textarea class="form-control" rows="5" placeholder="Escreva aqui a sua mensagem"></textarea>
                                 </div>
 
                                 <div class="col-12 text-center mt-4">
-                                    <button type="button" class="btn btn-primary-custom px-5"
-                                        id="contactosBotaoTextoPublico">
-                                        Enviar Mensagem
+                                    <button type="button" class="btn btn-primary-custom px-5">
+                                        <?= htmlspecialchars($contactos['texto_botao']) ?>
                                     </button>
                                 </div>
 
                             </div>
-
                         </form>
 
                     </div>
-
                 </div>
             </div>
 
@@ -330,79 +339,43 @@
 
     <!-- RODAPÉ -->
     <footer id="footer" class="footer-section">
-
         <div class="container">
-
             <div class="row gy-5">
 
                 <!-- Logo -->
                 <div class="col-lg-4">
-
-                    <img src="../assets/images/imagem_logo2.png" alt="Logo TechMed Solutions" class="footer-logo mb-4"
-                        id="footerLogo">
-                    <p id="footerTexto">
-                        Soluções digitais para gestão eficiente de equipamentos médicos.
-                    </p>
-
+                    <img src="<?= htmlspecialchars($rodape['logo']) ?>"
+                        alt="Logo TechMed Solutions" class="footer-logo mb-4">
+                    <p><?= htmlspecialchars($rodape['texto_descritivo']) ?></p>
                 </div>
 
                 <!-- Localização -->
                 <div class="col-md-4 col-lg-2">
-
-                    <h5 class="footer-title">
-                        LOCALIZAÇÃO
-                    </h5>
-
-                    <p id="footerLocalizacao">
-                        Rua Dr. António Bernardino de Almeida
-                        <br>
-                        4249-015 Porto
-                        <br>
-                        Portugal
-                    </p>
-
+                    <h5 class="footer-title">LOCALIZAÇÃO</h5>
+                    <p><?= nl2br(htmlspecialchars($rodape['localizacao'])) ?></p>
                 </div>
 
                 <!-- Horário -->
                 <div class="col-md-4 col-lg-3">
-
-                    <h5 class="footer-title">
-                        HORÁRIO
-                    </h5>
-
-                    <p id="footerHorario">
-                        2ª a 6ª Feira: 9h — 18h
-                        <br><br>
-                        Sábado: Encerrado
-                        <br><br>
-                        Domingo: Encerrado
-                    </p>
-
+                    <h5 class="footer-title">HORÁRIO</h5>
+                    <p><?= nl2br(htmlspecialchars($rodape['horario'])) ?></p>
                 </div>
 
                 <!-- Contactos -->
                 <div class="col-md-4 col-lg-3">
-
-                    <h5 class="footer-title">
-                        CONTACTOS
-                    </h5>
-
+                    <h5 class="footer-title">CONTACTOS</h5>
                     <p>
                         <i class="fa-solid fa-phone me-2"></i>
-                        <span id="footerTelefone">+351 917 654 321</span>
+                        <?= htmlspecialchars($rodape['telefone']) ?>
                     </p>
-
                     <p>
                         <i class="fa-solid fa-envelope me-2"></i>
-                        <span id="footerEmail">geral@techmedsolutions.pt</span>
+                        <?= htmlspecialchars($rodape['email']) ?>
                     </p>
-
                 </div>
 
             </div>
-
         </div>
-
     </footer>
     <!-- Bootstrap JS -->
     <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
