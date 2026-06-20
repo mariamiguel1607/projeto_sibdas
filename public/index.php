@@ -7,12 +7,12 @@ $ligacao = ligar_bd();
 // Secção Início
 $inicio = $ligacao->query("SELECT * FROM gestao_conteudos WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
 
-// Serviços (apenas Ativos, ordenados)
+// Serviços
 $servicos = $ligacao->query("
     SELECT * FROM gestao_conteudos_servicos
-    WHERE estado = 'Ativo'
-    ORDER BY ordem_apresentacao ASC, id ASC
+    ORDER BY id ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
+
 $sobre = $ligacao->query("SELECT * FROM gestao_conteudos_sobre WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
 
 $contactos = $ligacao->query("SELECT * FROM gestao_conteudos_contactos WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
@@ -24,6 +24,40 @@ $faqs = $ligacao->query("
 
 $rodape = $ligacao->query("SELECT * FROM gestao_conteudos_rodape WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
 
+// ============================================================
+// PROCESSAR — MENSAGEM DE CONTACTO
+// ============================================================
+$sucesso_mensagem = false;
+$erros_mensagem   = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'enviar_mensagem') {
+    $nome     = trim($_POST['contacto_nome']     ?? '');
+    $email    = trim($_POST['contacto_email']    ?? '');
+    $assunto  = trim($_POST['contacto_assunto']  ?? '');
+    $mensagem = trim($_POST['contacto_mensagem'] ?? '');
+
+    if (empty($nome))     $erros_mensagem[] = 'O nome é obrigatório.';
+    if (empty($email)) {
+        $erros_mensagem[] = 'O email é obrigatório.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $erros_mensagem[] = 'O email introduzido não é válido.';
+    }
+    if (empty($mensagem)) $erros_mensagem[] = 'A mensagem é obrigatória.';
+
+    if (empty($erros_mensagem)) {
+        $stmt = $ligacao->prepare("
+            INSERT INTO mensagens_contacto (nome, email, assunto, mensagem)
+            VALUES (:nome, :email, :assunto, :mensagem)
+        ");
+        $stmt->execute([
+            ':nome'     => $nome,
+            ':email'    => $email,
+            ':assunto'  => $assunto,
+            ':mensagem' => $mensagem,
+        ]);
+        $sucesso_mensagem = true;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -298,31 +332,60 @@ $rodape = $ligacao->query("SELECT * FROM gestao_conteudos_rodape WHERE id = 1")-
                             <?= htmlspecialchars($contactos['titulo_formulario']) ?>
                         </h3>
 
-                        <form>
+                        <?php if ($sucesso_mensagem): ?>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa-solid fa-circle-check me-2"></i>
+                                Mensagem enviada com sucesso! Entraremos em contacto brevemente.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($erros_mensagem)): ?>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Corrige os seguintes erros:</strong>
+                                <ul class="mb-0 mt-1">
+                                    <?php foreach ($erros_mensagem as $erro): ?>
+                                        <li><?= htmlspecialchars($erro) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <form method="POST" action="#contactos">
+                            <input type="hidden" name="acao" value="enviar_mensagem">
+
                             <div class="row g-3">
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Nome</label>
-                                    <input type="text" class="form-control" placeholder="Insira o seu nome">
+                                    <input type="text" name="contacto_nome" class="form-control"
+                                        placeholder="Insira o seu nome"
+                                        value="<?= $sucesso_mensagem ? '' : htmlspecialchars($_POST['contacto_nome'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Email</label>
-                                    <input type="email" class="form-control" placeholder="Insira o seu email">
+                                    <input type="text" name="contacto_email" class="form-control"
+                                        placeholder="Insira o seu email"
+                                        value="<?= $sucesso_mensagem ? '' : htmlspecialchars($_POST['contacto_email'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold">Assunto</label>
-                                    <input type="text" class="form-control" placeholder="Indique o assunto da mensagem">
+                                    <input type="text" name="contacto_assunto" class="form-control"
+                                        placeholder="Indique o assunto da mensagem"
+                                        value="<?= $sucesso_mensagem ? '' : htmlspecialchars($_POST['contacto_assunto'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label fw-semibold">Mensagem</label>
-                                    <textarea class="form-control" rows="5" placeholder="Escreva aqui a sua mensagem"></textarea>
+                                    <textarea name="contacto_mensagem" class="form-control" rows="5"
+                                        placeholder="Escreva aqui a sua mensagem"><?= $sucesso_mensagem ? '' : htmlspecialchars($_POST['contacto_mensagem'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="col-12 text-center mt-4">
-                                    <button type="button" class="btn btn-primary-custom px-5">
+                                    <button type="submit" class="btn btn-primary-custom px-5">
                                         <?= htmlspecialchars($contactos['texto_botao']) ?>
                                     </button>
                                 </div>

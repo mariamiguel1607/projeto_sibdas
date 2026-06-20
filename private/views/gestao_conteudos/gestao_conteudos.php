@@ -68,8 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'adicion
     $titulo_s = trim($_POST['novo_titulo']    ?? '');
     $icone_s  = trim($_POST['novo_icone']     ?? '');
     $desc_s   = trim($_POST['novo_descricao'] ?? '');
-    $estado_s = trim($_POST['novo_estado']    ?? 'Ativo');
-    $ordem_s  = intval($_POST['novo_ordem']   ?? 0);
+
 
     if (empty($titulo_s)) $erros_servico[] = 'O título do serviço é obrigatório.';
     if (empty($icone_s))  $erros_servico[] = 'Seleciona um ícone.';
@@ -77,15 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'adicion
 
     if (empty($erros_servico)) {
         $stmt = $ligacao->prepare("
-            INSERT INTO gestao_conteudos_servicos (titulo, descricao, icone, estado, ordem_apresentacao)
-            VALUES (:titulo, :descricao, :icone, :estado, :ordem)
+            INSERT INTO gestao_conteudos_servicos (titulo, descricao, icone )
+            VALUES (:titulo, :descricao, :icone )
         ");
         $stmt->execute([
             ':titulo' => $titulo_s,
             ':descricao' => $desc_s,
             ':icone'  => $icone_s,
-            ':estado'    => $estado_s,
-            ':ordem'  => $ordem_s ?: null,
         ]);
         $sucesso_servico = true;
     }
@@ -103,16 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'guardar
     $titulos    = $_POST['servico_titulo']    ?? [];
     $descricoes = $_POST['servico_descricao'] ?? [];
     $icones     = $_POST['servico_icone']     ?? [];
-    $estados    = $_POST['servico_estado']    ?? [];
-    $ordens     = $_POST['servico_ordem']     ?? [];
 
     foreach ($ids as $i => $id_s) {
         $id_s   = intval($id_s);
         $tit    = trim($titulos[$i]    ?? '');
         $desc   = trim($descricoes[$i] ?? '');
         $icone  = trim($icones[$i]     ?? '');
-        $estado = trim($estados[$i]    ?? 'Ativo');
-        $ordem  = intval($ordens[$i]   ?? 0);
 
         if (empty($tit) || empty($icone) || empty($desc)) {
             $erros_guardar_servicos[] = "Preenche todos os campos do serviço #" . ($i + 1) . ".";
@@ -121,16 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['acao'] ?? '') === 'guardar
 
         $stmt = $ligacao->prepare("
             UPDATE gestao_conteudos_servicos
-            SET titulo = :titulo, descricao = :descricao, icone = :icone,
-                estado = :estado, ordem_apresentacao = :ordem
+            SET titulo = :titulo, descricao = :descricao, icone = :icone
+
             WHERE id = :id
         ");
         $stmt->execute([
             ':titulo' => $tit,
             ':descricao' => $desc,
             ':icone' => $icone,
-            ':estado' => $estado,
-            ':ordem' => $ordem ?: null,
             ':id' => $id_s,
         ]);
     }
@@ -396,7 +387,7 @@ $inicio = $ligacao->query("SELECT * FROM gestao_conteudos WHERE id = 1")->fetch(
 
 $servicos = $ligacao->query("
     SELECT * FROM gestao_conteudos_servicos
-    ORDER BY ordem_apresentacao ASC, id ASC
+    ORDER BY id ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 $sobre = $ligacao->query("SELECT * FROM gestao_conteudos_sobre WHERE id = 1")->fetch(PDO::FETCH_ASSOC);
@@ -593,9 +584,12 @@ $paginaAtiva = 'gestao_conteudos';
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Link do botão</label>
-                                    <input type="text" name="link_botao" class="form-control"
-                                        placeholder="Ex: #servicos"
-                                        value="<?= htmlspecialchars($inicio['link_botao'] ?? '') ?>">
+                                    <select name="link_botao" class="form-select">
+                                        <option value="#servicos" <?= ($inicio['link_botao'] ?? '') === '#servicos'            ? 'selected' : '' ?>>Serviços</option>
+                                        <option value="#sobre" <?= ($inicio['link_botao'] ?? '') === '#sobre'               ? 'selected' : '' ?>>Sobre Nós</option>
+                                        <option value="#perguntas-frequentes" <?= ($inicio['link_botao'] ?? '') === '#perguntas-frequentes' ? 'selected' : '' ?>>FAQ</option>
+                                        <option value="#contactos" <?= ($inicio['link_botao'] ?? '') === '#contactos'           ? 'selected' : '' ?>>Contactos</option>
+                                    </select>
                                 </div>
 
                                 <div class="col-12">
@@ -606,10 +600,15 @@ $paginaAtiva = 'gestao_conteudos';
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Imagem principal</label>
                                     <?php if (!empty($inicio['imagem_principal'])): ?>
-                                        <p class="text-muted small mb-1">
-                                            <i class="fa-solid fa-image me-1"></i>
-                                            Imagem atual: <code><?= htmlspecialchars(basename($inicio['imagem_principal'])) ?></code>
-                                        </p>
+                                        <div class="mb-2">
+                                            <a href="<?= htmlspecialchars(str_replace('../assets/', '../../../assets/', $inicio['imagem_principal'])) ?>"
+                                                target="_blank" title="Clica para ver em tamanho completo">
+                                                <img src="<?= htmlspecialchars(str_replace('../assets/', '../../../assets/', $inicio['imagem_principal'])) ?>"
+                                                    alt="Imagem atual"
+                                                    style="height: 60px; width: auto; border-radius: 6px; border: 1px solid #dee2e6; cursor: pointer;">
+                                            </a>
+                                            <div class="form-text">Imagem atual. Clica para ver em tamanho completo.</div>
+                                        </div>
                                     <?php endif; ?>
                                     <input type="file" name="imagem_principal" class="form-control" accept="image/*">
                                     <div class="form-text">Deixa em branco para manter a imagem atual. Máx. 5 MB.</div>
@@ -672,7 +671,7 @@ $paginaAtiva = 'gestao_conteudos';
                             </div>
                         <?php endif; ?>
 
-                        <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] === 'eliminado'): ?>
+                        <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] === 'eliminado' && $tab_ativa === 'servicos'): ?>
                             <div class="alert alert-success alert-dismissible fade show">
                                 <i class="fa-solid fa-circle-check me-2"></i> Serviço eliminado com sucesso.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -691,84 +690,86 @@ $paginaAtiva = 'gestao_conteudos';
                             </div>
                         <?php else: ?>
 
-                            <form method="POST">
+                            <form method="POST" id="form-guardar-servicos">
                                 <input type="hidden" name="acao" value="guardar_servicos">
 
-                                <?php foreach ($servicos as $i => $servico): ?>
-                                    <div class="border rounded-4 p-4 mb-4 bg-light">
-                                        <input type="hidden" name="servico_id[]" value="<?= $servico['id'] ?>">
+                                <div class="accordion" id="accordionServicos">
+                                    <?php foreach ($servicos as $i => $servico): ?>
+                                        <div class="accordion-item border rounded-4 mb-3 overflow-hidden">
+                                            <input type="hidden" name="servico_id[]" value="<?= $servico['id'] ?>">
 
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="fw-bold mb-0">Serviço <?= $i + 1 ?></h6>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="badge <?= $servico['estado'] === 'Ativo' ? 'text-bg-success' : 'text-bg-secondary' ?>">
-                                                    <?= htmlspecialchars($servico['estado']) ?>
-                                                </span>
-                                            </div>
-                                        </div>
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#servicoCollapse<?= $servico['id'] ?>">
+                                                    <span class="me-3">
+                                                        <i class="<?= htmlspecialchars($servico['icone']) ?> me-2"></i>
+                                                        <?= htmlspecialchars($servico['titulo']) ?>
+                                                    </span>
+                                                </button>
+                                            </h2>
 
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Título do serviço</label>
-                                                <input type="text" name="servico_titulo[]" class="form-control"
-                                                    value="<?= htmlspecialchars($servico['titulo']) ?>">
-                                            </div>
+                                            <div id="servicoCollapse<?= $servico['id'] ?>"
+                                                class="accordion-collapse collapse"
+                                                data-bs-parent="#accordionServicos">
+                                                <div class="accordion-body bg-light">
 
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Ícone</label>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-light border w-100 d-flex justify-content-between align-items-center dropdown-toggle"
-                                                        type="button" data-bs-toggle="dropdown">
-                                                        <span>
-                                                            <i class="<?= htmlspecialchars($servico['icone']) ?> me-2"></i>
-                                                            <?= htmlspecialchars($icones_disponiveis[$servico['icone']] ?? 'Selecionar ícone') ?>
-                                                        </span>
-                                                    </button>
-                                                    <ul class="dropdown-menu w-100">
-                                                        <?php foreach ($icones_disponiveis as $val => $label): ?>
-                                                            <li>
-                                                                <a class="dropdown-item opcao-icone" href="#"
-                                                                    data-valor="<?= $val ?>" data-label="<?= $label ?>">
-                                                                    <i class="<?= $val ?> me-2"></i> <?= $label ?>
-                                                                </a>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    </ul>
-                                                    <input type="hidden" name="servico_icone[]"
-                                                        value="<?= htmlspecialchars($servico['icone']) ?>">
+                                                    <div class="row g-3">
+
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Título do serviço</label>
+                                                            <input type="text" name="servico_titulo[]" class="form-control"
+                                                                value="<?= htmlspecialchars($servico['titulo']) ?>">
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Ícone</label>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-light border w-100 d-flex justify-content-between align-items-center dropdown-toggle"
+                                                                    type="button" data-bs-toggle="dropdown">
+                                                                    <span>
+                                                                        <i class="<?= htmlspecialchars($servico['icone']) ?> me-2"></i>
+                                                                        <?= htmlspecialchars($icones_disponiveis[$servico['icone']] ?? 'Selecionar ícone') ?>
+                                                                    </span>
+                                                                </button>
+                                                                <ul class="dropdown-menu w-100">
+                                                                    <?php foreach ($icones_disponiveis as $val => $label): ?>
+                                                                        <li>
+                                                                            <a class="dropdown-item opcao-icone" href="#"
+                                                                                data-valor="<?= $val ?>" data-label="<?= $label ?>">
+                                                                                <i class="<?= $val ?> me-2"></i> <?= $label ?>
+                                                                            </a>
+                                                                        </li>
+                                                                    <?php endforeach; ?>
+                                                                </ul>
+                                                                <input type="hidden" name="servico_icone[]"
+                                                                    value="<?= htmlspecialchars($servico['icone']) ?>">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-semibold">Descrição</label>
+                                                            <textarea name="servico_descricao[]" class="form-control" rows="3"><?= htmlspecialchars($servico['descricao']) ?></textarea>
+                                                        </div>
+
+                                                        <div class="col-12 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-outline-danger"
+                                                                onclick="if(confirm('Tens a certeza que queres eliminar este serviço?')) document.getElementById('form-eliminar-<?= $servico['id'] ?>').submit();">
+                                                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
                                                 </div>
                                             </div>
-
-                                            <div class="col-12">
-                                                <label class="form-label fw-semibold">Descrição</label>
-                                                <textarea name="servico_descricao[]" class="form-control" rows="3"><?= htmlspecialchars($servico['descricao']) ?></textarea>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Estado</label>
-                                                <select name="servico_estado[]" class="form-select">
-                                                    <option value="Ativo" <?= $servico['estado'] === 'Ativo'   ? 'selected' : '' ?>>Ativo</option>
-                                                    <option value="Inativo" <?= $servico['estado'] === 'Inativo' ? 'selected' : '' ?>>Inativo</option>
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-semibold">Ordem de apresentação</label>
-                                                <input type="number" name="servico_ordem[]" class="form-control"
-                                                    value="<?= htmlspecialchars($servico['ordem_apresentacao'] ?? '') ?>">
-                                            </div>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
-
-                                <div class="d-flex justify-content-end mb-4">
-                                    <button type="submit" class="btn btn-primary-custom">
-                                        <i class="fa-solid fa-floppy-disk me-2"></i> Guardar Alterações
-                                    </button>
+                                    <?php endforeach; ?>
                                 </div>
+
                             </form>
 
-                            <!-- Formulários de eliminar (fora do form de guardar para não aninhar) -->
+                            <!-- Formulários de eliminar -->
                             <?php foreach ($servicos as $servico): ?>
                                 <form method="POST" id="form-eliminar-<?= $servico['id'] ?>" class="d-none">
                                     <input type="hidden" name="acao" value="eliminar_servico">
@@ -779,7 +780,7 @@ $paginaAtiva = 'gestao_conteudos';
                         <?php endif; ?>
 
                         <!-- ADICIONAR NOVO SERVIÇO -->
-                        <div class="card border-0 shadow-sm rounded-4 mt-2">
+                        <div class="card border-0 shadow-sm rounded-4 mt-4">
                             <div class="card-body p-4">
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -828,14 +829,6 @@ $paginaAtiva = 'gestao_conteudos';
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Estado</label>
-                                            <select name="novo_estado" class="form-select">
-                                                <option value="Ativo">Ativo</option>
-                                                <option value="Inativo">Inativo</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-6">
                                             <label class="form-label fw-semibold">Ordem de apresentação</label>
                                             <input type="number" name="novo_ordem" class="form-control"
                                                 placeholder="Ex.: <?= count($servicos) + 1 ?>">
@@ -852,6 +845,15 @@ $paginaAtiva = 'gestao_conteudos';
 
                             </div>
                         </div>
+
+                        <!-- BOTÃO GUARDAR -->
+                        <?php if (!empty($servicos)): ?>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" form="form-guardar-servicos" class="btn btn-primary-custom">
+                                    <i class="fa-solid fa-floppy-disk me-2"></i> Guardar Alterações
+                                </button>
+                            </div>
+                        <?php endif; ?>
 
                     </div>
 
@@ -1051,6 +1053,10 @@ $paginaAtiva = 'gestao_conteudos';
                             </div>
                         <?php endif; ?>
 
+                        <div class="mb-3">
+                            <p class="text-muted mb-0">Edita as perguntas existentes e respostas visíveis na página pública.</p>
+                        </div>
+
                         <?php if (empty($faqs)): ?>
                             <div class="alert alert-info mb-4">
                                 <i class="fa-solid fa-circle-info me-2"></i>
@@ -1058,46 +1064,65 @@ $paginaAtiva = 'gestao_conteudos';
                             </div>
                         <?php else: ?>
 
-                            <!-- FORM DE GUARDAR (sem botão aqui) -->
                             <form method="POST" id="form-guardar-faq">
                                 <input type="hidden" name="acao" value="guardar_faq">
 
-                                <?php foreach ($faqs as $i => $faq): ?>
-                                    <div class="border rounded-4 p-4 mb-4 bg-light">
-                                        <input type="hidden" name="faq_id[]" value="<?= $faq['id'] ?>">
+                                <div class="accordion" id="accordionFaq">
+                                    <?php foreach ($faqs as $i => $faq): ?>
+                                        <div class="accordion-item border rounded-4 mb-3 overflow-hidden">
+                                            <input type="hidden" name="faq_id[]" value="<?= $faq['id'] ?>">
 
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6 class="fw-bold mb-0">Pergunta <?= $i + 1 ?></h6>
-                                            <button type="button"
-                                                class="btn btn-outline-danger btn-sm"
-                                                onclick="if(confirm('Tens a certeza que queres eliminar esta pergunta?')) document.getElementById('form-eliminar-faq-<?= $faq['id'] ?>').submit();">
-                                                <i class="fa-solid fa-trash me-1"></i> Eliminar
-                                            </button>
-                                        </div>
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-semibold" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#faqCollapse<?= $faq['id'] ?>">
+                                                    <?= htmlspecialchars($faq['pergunta']) ?>
+                                                </button>
+                                            </h2>
 
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <label class="form-label fw-semibold">Pergunta</label>
-                                                <input type="text" name="faq_pergunta[]" class="form-control"
-                                                    value="<?= htmlspecialchars($faq['pergunta']) ?>">
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label fw-semibold">Resposta</label>
-                                                <textarea name="faq_resposta[]" class="form-control"
-                                                    rows="3"><?= htmlspecialchars($faq['resposta']) ?></textarea>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label fw-semibold">Ordem de apresentação</label>
-                                                <input type="number" name="faq_ordem[]" class="form-control" min="1"
-                                                    value="<?= htmlspecialchars($faq['ordem_apresentacao'] ?? '') ?>">
+                                            <div id="faqCollapse<?= $faq['id'] ?>"
+                                                class="accordion-collapse collapse"
+                                                data-bs-parent="#accordionFaq">
+                                                <div class="accordion-body bg-light">
+
+                                                    <div class="row g-3">
+
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-semibold">Pergunta</label>
+                                                            <input type="text" name="faq_pergunta[]" class="form-control"
+                                                                value="<?= htmlspecialchars($faq['pergunta']) ?>">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-semibold">Resposta</label>
+                                                            <textarea name="faq_resposta[]" class="form-control"
+                                                                rows="4"><?= htmlspecialchars($faq['resposta']) ?></textarea>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-semibold">Ordem de apresentação</label>
+                                                            <input type="number" name="faq_ordem[]" class="form-control" min="1"
+                                                                value="<?= htmlspecialchars($faq['ordem_apresentacao'] ?? '') ?>">
+                                                        </div>
+
+                                                        <div class="col-md-6 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-outline-danger w-100"
+                                                                onclick="if(confirm('Tens a certeza que queres eliminar esta pergunta?')) document.getElementById('form-eliminar-faq-<?= $faq['id'] ?>').submit();">
+                                                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                                                            </button>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                </div>
 
                             </form>
 
-                            <!-- FORMS DE ELIMINAR (fora do form principal) -->
+                            <!-- FORMS DE ELIMINAR -->
                             <?php foreach ($faqs as $faq): ?>
                                 <form method="POST" id="form-eliminar-faq-<?= $faq['id'] ?>" class="d-none">
                                     <input type="hidden" name="acao" value="eliminar_faq">
@@ -1108,7 +1133,7 @@ $paginaAtiva = 'gestao_conteudos';
                         <?php endif; ?>
 
                         <!-- ADICIONAR NOVA PERGUNTA -->
-                        <div class="card border-0 shadow-sm rounded-4 mt-2">
+                        <div class="card border-0 shadow-sm rounded-4 mt-4">
                             <div class="card-body p-4">
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -1133,7 +1158,7 @@ $paginaAtiva = 'gestao_conteudos';
                                             <textarea name="nova_resposta" class="form-control" rows="3"
                                                 placeholder="Escreve a resposta à pergunta."></textarea>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <label class="form-label fw-semibold">Ordem de apresentação</label>
                                             <input type="number" name="nova_ordem" class="form-control" min="1"
                                                 placeholder="Ex.: <?= count($faqs) + 1 ?>">
@@ -1151,7 +1176,7 @@ $paginaAtiva = 'gestao_conteudos';
                             </div>
                         </div>
 
-                        <!-- BOTÃO GUARDAR ALTERAÇÕES (associado ao form-guardar-faq via atributo form=) -->
+                        <!-- BOTÃO GUARDAR -->
                         <?php if (!empty($faqs)): ?>
                             <div class="d-flex justify-content-end mt-4">
                                 <button type="submit" form="form-guardar-faq" class="btn btn-primary-custom">
@@ -1199,10 +1224,15 @@ $paginaAtiva = 'gestao_conteudos';
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Logo do rodapé</label>
                                     <?php if (!empty($rodape['logo'])): ?>
-                                        <p class="text-muted small mb-1">
-                                            <i class="fa-solid fa-image me-1"></i>
-                                            Logo atual: <code><?= htmlspecialchars(basename($rodape['logo'])) ?></code>
-                                        </p>
+                                        <div class="mb-2">
+                                            <a href="<?= htmlspecialchars(str_replace('../assets/', '../../../assets/', $rodape['logo'])) ?>"
+                                                target="_blank" title="Clica para ver em tamanho completo">
+                                                <img src="<?= htmlspecialchars(str_replace('../assets/', '../../../assets/', $rodape['logo'])) ?>"
+                                                    alt="Logo atual"
+                                                    style="height: 60px; width: auto; border-radius: 6px; border: 1px solid #dee2e6; cursor: pointer;">
+                                            </a>
+                                            <div class="form-text">Imagem atual. Clica para ver em tamanho completo.</div>
+                                        </div>
                                     <?php endif; ?>
                                     <input type="file" name="rodape_logo" class="form-control" accept="image/*">
                                     <div class="form-text">Deixa em branco para manter o logo atual. Máx. 5 MB.</div>

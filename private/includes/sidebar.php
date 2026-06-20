@@ -14,7 +14,36 @@ if (!isset($_SESSION['utilizador'])) {
 $nome = $_SESSION['utilizador'];
 ?>
 <!-- SIDEBAR -->
+<!-- SIDEBAR -->
 <aside class="sidebar d-flex flex-column p-3">
+
+    <!-- ÍCONE MENSAGENS -->
+    <div class="d-flex justify-content-start mb-2 px-2">
+        <button class="btn position-relative rounded-circle d-flex align-items-center justify-content-center"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasMensagens"
+            title="Mensagens recebidas"
+            style="width: 42px; height: 42px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);">
+            <i class="fa-solid fa-envelope text-white"></i>
+            <?php
+            try {
+                $ligacao_msg_count = ligar_bd();
+                $stmt_count = $ligacao_msg_count->query("SELECT COUNT(*) FROM mensagens_contacto WHERE lida = 0");
+                $nao_lidas = $stmt_count->fetchColumn();
+                $ligacao_msg_count = null;
+            } catch (PDOException $e) {
+                $nao_lidas = 0;
+            }
+            ?>
+            <?php if ($nao_lidas > 0): ?>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size: 0.6rem;">
+                    <?= $nao_lidas ?>
+                </span>
+            <?php endif; ?>
+        </button>
+    </div>
 
     <div class="sidebar-logo text-center mb-4">
         <img src="/projeto_sibdas/assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
@@ -202,6 +231,97 @@ $nome = $_SESSION['utilizador'];
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
+    </div>
+
+</div>
+<!-- OFFCANVAS MENSAGENS -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMensagens"
+    aria-labelledby="offcanvasMensagensLabel"
+    style="width: 380px;">
+
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title fw-bold" id="offcanvasMensagensLabel">
+            <i class="fa-solid fa-envelope me-2"></i>
+            Mensagens Recebidas
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body p-0">
+        <?php
+        try {
+            $ligacao_msg = ligar_bd();
+            $stmt_msg = $ligacao_msg->query("
+                SELECT * FROM mensagens_contacto
+                ORDER BY data_envio DESC
+                LIMIT 30
+            ");
+            $mensagens = $stmt_msg->fetchAll(PDO::FETCH_ASSOC);
+
+            // Marcar todas como lidas ao abrir
+            $ligacao_msg = null;
+        } catch (PDOException $e) {
+            $mensagens = [];
+        }
+        ?>
+
+        <?php if (empty($mensagens)): ?>
+            <div class="p-4 text-center text-muted">
+                <i class="fa-solid fa-envelope-open fa-2x mb-3"></i>
+                <p>Nenhuma mensagem recebida.</p>
+            </div>
+        <?php else: ?>
+            <div class="list-group list-group-flush">
+                <?php foreach ($mensagens as $msg): ?>
+                    <div class="list-group-item px-3 py-3 <?= $msg['lida'] == 0 ? 'bg-light' : '' ?>">
+
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <span class="fw-semibold small">
+                                <?= htmlspecialchars($msg['nome']) ?>
+                                <?php if ($msg['lida'] == 0): ?>
+                                    <span class="badge text-bg-danger ms-1" style="font-size:0.6rem;">Nova</span>
+                                <?php endif; ?>
+                            </span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="text-muted" style="font-size: 0.7rem;">
+                                    <?= (new DateTime($msg['data_envio'], new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Europe/Lisbon'))->format('d/m/Y H:i') ?>
+                                </span>
+                                <?php if ($msg['lida'] == 0): ?>
+                                    <form method="POST" action="/projeto_sibdas/private/marcar_mensagens_lidas.php" class="d-inline">
+                                        <input type="hidden" name="id" value="<?= $msg['id'] ?>">
+                                        <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-success p-0 px-1"
+                                            title="Marcar como lida" style="font-size: 0.7rem;">
+                                            <i class="fa-solid fa-check"></i>
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <i class="fa-solid fa-check text-success" style="font-size: 0.7rem;" title="Lida"></i>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div class="text-muted small mb-1">
+                            <i class="fa-solid fa-envelope me-1"></i>
+                            <?= htmlspecialchars($msg['email']) ?>
+                        </div>
+
+                        <?php if (!empty($msg['assunto'])): ?>
+                            <div class="small fw-semibold mb-1">
+                                <?= htmlspecialchars($msg['assunto']) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="small text-muted">
+                            <?= htmlspecialchars(mb_substr($msg['mensagem'], 0, 100)) ?>
+                            <?= mb_strlen($msg['mensagem']) > 100 ? '...' : '' ?>
+                        </div>
+
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
     </div>
 
 </div>
