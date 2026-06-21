@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../config/config.php';
     <title><?php echo APP_NAME; ?></title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="/projeto_sibdas/assets/images/imagem_logo1-semfundo.png" type="image/png">
+    <link rel="shortcut icon" href="<?= BASE_URL ?>/assets/images/imagem_logo1-semfundo.png" type="image/png">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,24 +19,24 @@ require_once __DIR__ . '/../../config/config.php';
         rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link href="/projeto_sibdas/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/assets/bootstrap/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="/projeto_sibdas/assets/fontawesome/all.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/fontawesome/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/projeto_sibdas/assets/css/1241375.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/1241375.css">
 
     <!-- jQuery -->
-    <script src="/projeto_sibdas/assets/jquery/jquery-3.6.0.min.js"></script>
+    <script src="<?= BASE_URL ?>/assets/jquery/jquery-3.6.0.min.js"></script>
     <!-- DataTables CSS + JS -->
-    <link rel="stylesheet" href="/projeto_sibdas/assets/datatables/datatables.min.css">
-    <script src="/projeto_sibdas/assets/datatables/datatables.min.js"></script>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/datatables/datatables.min.css">
+    <script src="<?= BASE_URL ?>/assets/datatables/datatables.min.js"></script>
 
     <!-- CSS do Flatpickr -->
-    <link rel="stylesheet" href="/projeto_sibdas/assets/flatpickr/flatpickr.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/flatpickr/flatpickr.min.css">
     <!-- JS do Flatpickr -->
-    <script src="/projeto_sibdas/assets/flatpickr/flatpickr.js"></script>
+    <script src="<?= BASE_URL ?>/assets/flatpickr/flatpickr.js"></script>
     
 </head>
 

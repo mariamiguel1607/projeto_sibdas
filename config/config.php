@@ -1,5 +1,5 @@
 <?php
-define('BASE_URL', '/projeto_sibdas');
+define('BASE_URL', '/sibdas/1241375/projeto_sibdas');
 // Configurações globais da aplicação
 define('APP_NAME', 'TechMed Solutions');
 define('APP_VERSION', '1.0.0');

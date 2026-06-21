@@ -54,7 +54,7 @@ try {
     ]);
     $utilizador = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$utilizador || $utilizador['password'] !== $password) {
+    if (!$utilizador || !password_verify($password, $utilizador['password'])) {
         $_SESSION['server_error'] = 'Email ou password incorretos.';
         header('Location: login/login.php');
         exit;

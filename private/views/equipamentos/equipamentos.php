@@ -12,16 +12,7 @@ $estado = trim($_GET['estado'] ?? '');
 
 try {
 
-    $ligacao = new PDO(
-        "mysql:host=" . MYSQL_HOST .
-            ";port=" . MYSQL_PORT .
-            ";dbname=" . MYSQL_DATABASE .
-            ";charset=utf8",
-        MYSQL_USERNAME,
-        MYSQL_PASSWORD
-    );
-
-    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $ligacao = ligar_bd();
 
     $sql = "
     SELECT
@@ -43,37 +34,40 @@ try {
 
     WHERE 1=1
     ";
+    // Array que irá conter os valores dos filtros de forma segura,
+    // passados separadamente à query para evitar SQL Injection
+    $params = [];
 
     if (!empty($pesquisa)) {
-
         $sql .= "
-        AND (
-            equipamentos.codigo_interno LIKE '%$pesquisa%'
-            OR equipamentos.designacao LIKE '%$pesquisa%'
-            OR equipamentos.marca LIKE '%$pesquisa%'
-            OR equipamentos.modelo LIKE '%$pesquisa%'
-        )
-        ";
+    AND (
+        equipamentos.codigo_interno LIKE ?
+        OR equipamentos.designacao LIKE ?
+        OR equipamentos.marca LIKE ?
+        OR equipamentos.modelo LIKE ?
+    )
+    ";
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
     }
     if (!empty($categoria) && $categoria != 'Todas') {
-
-        $sql .= "
-    AND categorias.nome_categoria = '$categoria'
-    ";
+        $sql .= "AND categorias.nome_categoria = ? ";
+        $params[] = $categoria;
     }
     if (!empty($estado) && $estado != 'Todos') {
-
-        $sql .= "
-    AND estados.nome_estado = '$estado'
-    ";
+        $sql .= "AND estados.nome_estado = ? ";
+        $params[] = $estado;
     }
 
     $sql .= "
-    ORDER BY equipamentos.codigo_interno ASC
-    ";
+ORDER BY equipamentos.codigo_interno ASC
+";
 
-    $resultados = $ligacao->query($sql)
-        ->fetchAll(PDO::FETCH_OBJ);
+    $stmt = $ligacao->prepare($sql);
+    $stmt->execute($params);
+    $resultados = $stmt->fetchAll(PDO::FETCH_OBJ);
 
     $erro = '';
 } catch (PDOException $err) {

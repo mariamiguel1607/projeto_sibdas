@@ -48,7 +48,7 @@ $nome = $_SESSION['utilizador'];
     <?php endif; ?>
 
     <div class="sidebar-logo text-center mb-4">
-        <img src="/projeto_sibdas/assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
+        <img src="<?= BASE_URL ?>/assets/images/imagem_logo1-semfundo.png" alt="Logo TechMed Solutions"
             class="img-fluid">
     </div>
 
@@ -107,7 +107,7 @@ $nome = $_SESSION['utilizador'];
             </li>
 
             <li>
-                <a class="dropdown-item text-danger" href="/projeto_sibdas/private/login/logout.php">
+                <a class="dropdown-item text-danger" href="<?= BASE_URL ?>/private/login/logout.php">
                     <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
                     Sair
                 </a>
@@ -121,28 +121,28 @@ $nome = $_SESSION['utilizador'];
     <nav class="sidebar-menu nav nav-pills flex-column gap-2">
 
         <!-- DASHBOARD — todos os perfis -->
-        <a href="/projeto_sibdas/private/views/dashboard/dashboard.php"
+        <a href="<?= BASE_URL ?>/private/views/dashboard/dashboard.php"
             class="nav-link <?= ($paginaAtiva == 'dashboard') ? 'active' : '' ?>">
             <i class="fa-solid fa-chart-line"></i>
             Dashboard
         </a>
 
         <!-- EQUIPAMENTOS — todos os perfis -->
-        <a href="/projeto_sibdas/private/views/equipamentos/equipamentos.php"
+        <a href="<?= BASE_URL ?>/private/views/equipamentos/equipamentos.php"
             class="nav-link <?= ($paginaAtiva == 'equipamentos') ? 'active' : '' ?>">
             <i class="fa-solid fa-screwdriver-wrench"></i>
             Equipamentos
         </a>
 
         <!-- LOCALIZAÇÕES — todos os perfis -->
-        <a href="/projeto_sibdas/private/views/localizacao/localizacao.php"
+        <a href="<?= BASE_URL ?>/private/views/localizacao/localizacao.php"
             class="nav-link <?= ($paginaAtiva == 'localizacao') ? 'active' : '' ?>">
             <i class="fa-solid fa-location-dot"></i>
             Localizações
         </a>
 
         <!-- FORNECEDORES — todos os perfis -->
-        <a href="/projeto_sibdas/private/views/fornecedores/fornecedores.php"
+        <a href="<?= BASE_URL ?>/private/views/fornecedores/fornecedores.php"
             class="nav-link <?= ($paginaAtiva == 'fornecedores') ? 'active' : '' ?>">
             <i class="fa-solid fa-truck-medical"></i>
             Fornecedores
@@ -150,7 +150,7 @@ $nome = $_SESSION['utilizador'];
 
         <!-- GESTÃO DE CONTEÚDOS — só Administrador -->
         <?php if (($_SESSION['perfil'] ?? '') === 'Administrador'): ?>
-            <a href="/projeto_sibdas/private/views/gestao_conteudos/gestao_conteudos.php"
+            <a href="<?= BASE_URL ?>/private/views/gestao_conteudos/gestao_conteudos.php"
                 class="nav-link <?= ($paginaAtiva == 'gestao_conteudos') ? 'active' : '' ?>">
                 <i class="fa-solid fa-pen-to-square"></i>
                 Gestão de Conteúdos
@@ -306,7 +306,7 @@ $nome = $_SESSION['utilizador'];
                                     <?= (new DateTime($msg['data_envio'], new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Europe/Lisbon'))->format('d/m/Y H:i') ?>
                                 </span>
                                 <?php if ($msg['lida'] == 0): ?>
-                                    <form method="POST" action="/projeto_sibdas/private/marcar_mensagens_lidas.php" class="d-inline">
+                                    <form method="POST" action="<?= BASE_URL ?>/private/marcar_mensagens_lidas.php" class="d-inline">
                                         <input type="hidden" name="id" value="<?= $msg['id'] ?>">
                                         <input type="hidden" name="redirect" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
                                         <button type="submit" class="btn btn-sm btn-outline-success p-0 px-1"

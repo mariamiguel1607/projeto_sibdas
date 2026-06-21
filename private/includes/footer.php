@@ -1,7 +1,7 @@
 <!-- Bootstrap JS -->
-<script src="/projeto_sibdas/assets/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>/assets/bootstrap/bootstrap.bundle.min.js"></script>
 <!-- Javascript -->
-<script src="/projeto_sibdas/assets/js/1241375.js"></script>
+<script src="<?= BASE_URL ?>/assets/js/1241375.js"></script>
 </body>
 
 </html>

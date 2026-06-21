@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged();
 if (($_SESSION['perfil'] ?? '') !== 'Administrador') {
-    header('Location: /projeto_sibdas/private/views/dashboard/dashboard.php');
+    header('Location: ' . BASE_URL . '/private/views/dashboard/dashboard.php');
     exit;
 }
 

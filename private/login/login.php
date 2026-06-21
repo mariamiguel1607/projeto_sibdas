@@ -24,8 +24,8 @@ if (!empty($_SESSION['server_error'])) {
 
         <!-- Logo e título -->
         <div class="text-center mb-4">
-            <a href="/projeto_sibdas/public/index.php">
-                <img src="/projeto_sibdas/assets/images/imagem_logo1.png" alt="Logo TechMed Solutions" class="login-logo">
+            <a href="<?= BASE_URL ?>/public/index.php">
+                <img src="<?= BASE_URL ?>/assets/images/imagem_logo1.png" alt="Logo TechMed Solutions" class="login-logo">
             </a>
 
             <h1 class="fw-bold mt-4 mb-2">Início de Sessão</h1>
