@@ -14,3 +14,4 @@ define('MYSQL_PASSWORD', 'ferreira_375');
 define('OPENSSL_METHOD', 'AES-256-CBC');
 define('OPENSSL_KEY', 'H0SDRQzIGqclX2kbYBk9xspdn9U5f3Wa'); // 32 caracteres
 define('OPENSSL_IV', 'BzKAbjuREsHgnw56');                  // 16 caracteres
+define('MYSQL_AES_KEY', 'H0SDRQzIGqclX2kbYBk9xspdn9U5f3Wa');

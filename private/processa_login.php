@@ -44,14 +44,16 @@ try {
     $ligacao = ligar_bd();
 
     $stmt = $ligacao->prepare("
-        SELECT id, nome, email, password, perfil
-        FROM utilizadores
-        WHERE email = :email
-    ");
-    $stmt->execute([':email' => $username]);
+    SELECT id, nome, CAST(AES_DECRYPT(email, :chave) AS CHAR) AS email, password, perfil
+    FROM utilizadores
+    WHERE CAST(AES_DECRYPT(email, :chave) AS CHAR) = :email
+");
+    $stmt->execute([
+        ':chave' => MYSQL_AES_KEY,
+        ':email' => $username,
+    ]);
     $utilizador = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verificar se existe e se a password está correta
     if (!$utilizador || $utilizador['password'] !== $password) {
         $_SESSION['server_error'] = 'Email ou password incorretos.';
         header('Location: login/login.php');
