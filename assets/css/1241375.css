@@ -811,8 +811,7 @@ section {
     font-size: 1.4rem;
 }
 
-/* RESPONSIVO */
-
+/* RESPONSIVO PRIVADO — TABLET */
 @media (max-width: 992px) {
 
     .private-layout {
@@ -820,18 +819,191 @@ section {
     }
 
     .sidebar {
+        position: fixed;
+        left: -280px !important;
+        width: 260px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1060;
+    }
+
+    .sidebar.show {
+        left: 0 !important;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        min-width: 100%;
-        min-height: auto;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
     }
 
     .private-main {
-        padding: 24px;
+        margin-left: 0 !important;
+        padding: 60px 20px 20px 20px;
     }
 
     .private-topbar {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .filter-card .row {
+        gap: 10px;
+    }
+
+    .table {
+        font-size: 0.75rem;
+    }
+
+    .sidebar-logo {
+        margin-bottom: 10px !important;
+        padding: 8px !important;
+        margin: 5px !important;
+    }
+
+    .sidebar-logo img {
+        width: 80px !important;
+    }
+
+    .utilizador-sidebar {
+        margin: 0 8px 10px 8px !important;
+    }
+
+    .utilizador-btn {
+        padding: 8px !important;
+    }
+
+    .sidebar .nav-link {
+        padding: 8px 12px !important;
+        font-size: 0.9rem;
+    }
+
+    .sidebar {
+        overflow-y: auto;
+    }
+
+    .btn-sidebar-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        font-size: 0.85rem !important;
+    }
+}
+
+
+
+/* RESPONSIVO PRIVADO — TELEMÓVEL */
+@media (max-width: 576px) {
+
+    .private-main {
+        margin-left: 0 !important;
+        padding: 50px 14px 14px 14px;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -280px !important;
+        width: 260px;
+        height: 100vh;
+        transition: left 0.3s ease;
+        z-index: 1060;
+    }
+
+    .sidebar.show {
+        left: 0 !important;
+    }
+
+    .private-topbar h1 {
+        font-size: 1.4rem;
+    }
+
+    .private-topbar p {
+        font-size: 0.85rem;
+    }
+
+    .btn-primary-custom {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 10px 18px;
+    }
+
+    .private-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .stats-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.25rem 0.2rem;
+        font-size: 0.7rem;
+    }
+
+    .btn-sm {
+        padding: 0.1rem 0.25rem;
+        font-size: 0.65rem;
+    }
+
+    .conteudos-tabs .nav-link {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+    }
+
+    .sidebar-logo {
+        margin-bottom: 10px !important;
+        padding: 8px !important;
+        margin: 5px !important;
+    }
+
+    .sidebar-logo img {
+        width: 80px !important;
+    }
+
+    .utilizador-sidebar {
+        margin: 0 8px 10px 8px !important;
+    }
+
+    .utilizador-btn {
+        padding: 8px !important;
+    }
+
+    .sidebar .nav-link {
+        padding: 8px 12px !important;
+        font-size: 0.9rem;
+    }
+
+    .sidebar {
+        overflow-y: auto;
+    }
+
+    .btn-sidebar-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 30px !important;
+        height: 30px !important;
+        min-width: 30px;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        font-size: 0.85rem !important;
     }
 }
 
@@ -988,4 +1160,63 @@ section {
 .acoes-nowrap {
     white-space: nowrap;
     width: 1%;
+}
+
+/* ============================================================
+   ESTILOS DE IMPRESSÃO — Exportar PDF
+   ============================================================ */
+@media print {
+
+    /* Esconder tudo o que não é conteúdo */
+    .sidebar,
+    .private-topbar,
+    .toast-container,
+    .offcanvas,
+    .dropdown-menu,
+    .btn,
+    .modal,
+    .modal-backdrop,
+    nav,
+    footer {
+        display: none !important;
+    }
+
+    /* Layout sem sidebar */
+    .private-layout {
+        display: block !important;
+    }
+
+    .private-main {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Mostrar todos os tabs ao imprimir */
+    .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+
+    /* Esconder a navegação dos tabs */
+    .nav-tabs,
+    .nav-pills {
+        display: none !important;
+    }
+
+    /* Cards sem sombra */
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+
+    /* Badges visíveis na impressão */
+    .badge {
+        border: 1px solid #333 !important;
+        color: #333 !important;
+        background: #fff !important;
+    }
 }

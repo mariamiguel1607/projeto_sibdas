@@ -13,9 +13,27 @@ if (!isset($_SESSION['utilizador'])) {
 // Podemos usar livremente os dados da sessão
 $nome = $_SESSION['utilizador'];
 ?>
+<!-- BOTÃO HAMBURGER (só visível em mobile) -->
+<button id="btnHamburger" class="btn btn-sidebar-toggle position-fixed d-none"
+    style="top: 8px; left: 8px; z-index: 1055; background: linear-gradient(135deg, #8E6CF1, #6C3FE0); color: white; border: none;"
+    onclick="document.querySelector('.sidebar').classList.add('show'); document.querySelector('.sidebar-overlay').classList.add('show'); this.style.display='none';">
+    <i class="fa-solid fa-bars"></i>
+</button>
 
+<!-- OVERLAY -->
+<div class="sidebar-overlay"
+    onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show'); document.getElementById('btnHamburger').style.display='';">
+</div>
 <!-- SIDEBAR -->
+
 <aside class="sidebar d-flex flex-column p-3">
+
+    <!-- BOTÃO FECHAR SIDEBAR (só visível em mobile) -->
+    <button class="btn d-none btn-sidebar-toggle position-absolute text-white border-0"
+        style="top: 10px; right: 10px; font-size: 1.3rem;"
+        onclick="document.querySelector('.sidebar').classList.remove('show'); document.querySelector('.sidebar-overlay').classList.remove('show'); document.getElementById('btnHamburger').style.display='';">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
 
     <?php if (($_SESSION['perfil'] ?? '') === 'Administrador'): ?>
         <!-- ÍCONE MENSAGENS -->
@@ -96,7 +114,7 @@ $nome = $_SESSION['utilizador'];
             </li>
 
             <li>
-                <a class="dropdown-item" href="#">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalAlterarPassword">
                     <i class="fa-solid fa-key me-2"></i>
                     Alterar Palavra-passe
                 </a>
@@ -343,4 +361,53 @@ $nome = $_SESSION['utilizador'];
 
     </div>
 
+</div>
+<!-- MODAL ALTERAR PALAVRA-PASSE -->
+<div class="modal fade" id="modalAlterarPassword" tabindex="-1" aria-labelledby="modalAlterarPasswordLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAlterarPasswordLabel">
+                    <i class="fa-solid fa-key me-2"></i>
+                    Alterar Palavra-passe
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="<?= BASE_URL ?>/private/alterar_password.php">
+                <div class="modal-body">
+
+                    <?php if (!empty($_SESSION['password_erro'])): ?>
+                        <div class="alert alert-danger p-2 small">
+                            <?= htmlspecialchars($_SESSION['password_erro']) ?>
+                        </div>
+                        <?php unset($_SESSION['password_erro']); ?>
+                    <?php endif; ?>
+
+                    <?php if (!empty($_SESSION['password_sucesso'])): ?>
+                        <div class="alert alert-success p-2 small">
+                            <?= htmlspecialchars($_SESSION['password_sucesso']) ?>
+                        </div>
+                        <?php unset($_SESSION['password_sucesso']); ?>
+                    <?php endif; ?>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Palavra-passe atual</label>
+                        <input type="password" class="form-control" name="password_atual" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nova palavra-passe</label>
+                        <input type="password" class="form-control" name="password_nova" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Confirmar nova palavra-passe</label>
+                        <input type="password" class="form-control" name="password_confirmar" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary-custom">Alterar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

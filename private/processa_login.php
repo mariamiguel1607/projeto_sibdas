@@ -55,10 +55,25 @@ try {
     $utilizador = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$utilizador || !password_verify($password, $utilizador['password'])) {
+
+        // Registar tentativa de login falhada
+        $stmtLog = $ligacao->prepare("
+            INSERT INTO log_acessos (email, tipo, descricao, ip)
+            VALUES (?, 'falha', 'Tentativa de login falhada — email ou password incorretos', ?)
+        ");
+        $stmtLog->execute([$username, $_SERVER['REMOTE_ADDR']]);
+
         $_SESSION['server_error'] = 'Email ou password incorretos.';
         header('Location: login/login.php');
         exit;
     }
+
+    // Registar login bem sucedido
+    $stmtLog = $ligacao->prepare("
+        INSERT INTO log_acessos (email, tipo, descricao, ip)
+        VALUES (?, 'sucesso', 'Login efetuado com sucesso', ?)
+    ");
+    $stmtLog->execute([$username, $_SERVER['REMOTE_ADDR']]);
 } catch (PDOException $e) {
     $_SESSION['server_error'] = 'Erro ao ligar à base de dados.';
     header('Location: login/login.php');

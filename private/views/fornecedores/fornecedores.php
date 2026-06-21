@@ -12,16 +12,7 @@ $tipo = trim($_GET['tipo'] ?? '');
 
 try {
 
-    $ligacao = new PDO(
-        "mysql:host=" . MYSQL_HOST .
-            ";port=" . MYSQL_PORT .
-            ";dbname=" . MYSQL_DATABASE .
-            ";charset=utf8",
-        MYSQL_USERNAME,
-        MYSQL_PASSWORD
-    );
-
-    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $ligacao = ligar_bd();
 
     $sql = "
     SELECT
@@ -36,33 +27,38 @@ try {
     WHERE 1=1
     ";
 
-    if (!empty($pesquisa)) {
+    // Array que irá conter os valores dos filtros de forma segura,
+    // passados separadamente à query para evitar SQL Injection
+    $params = [];
 
+    if (!empty($pesquisa)) {
         $sql .= "
         AND (
-            fornecedores.codigo_fornecedor LIKE '%$pesquisa%'
-            OR fornecedores.nome_empresa LIKE '%$pesquisa%'
-            OR fornecedores.email LIKE '%$pesquisa%'
-            OR fornecedores.telefone LIKE '%$pesquisa%'
+            fornecedores.codigo_fornecedor LIKE ?
+            OR fornecedores.nome_empresa LIKE ?
+            OR fornecedores.email LIKE ?
+            OR fornecedores.telefone LIKE ?
         )
         ";
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
     }
 
     if (!empty($tipo) && $tipo != 'Todos') {
-
-        $sql .= "
-        AND fornecedores.tipo_fornecedor = '$tipo'
-        ";
+        $sql .= "AND fornecedores.tipo_fornecedor = ? ";
+        $params[] = $tipo;
     }
 
     $sql .= "
     GROUP BY fornecedores.id
-
     ORDER BY fornecedores.codigo_fornecedor ASC
     ";
 
-    $resultados = $ligacao->query($sql)
-        ->fetchAll(PDO::FETCH_OBJ);
+    $stmt = $ligacao->prepare($sql);
+    $stmt->execute($params);
+    $resultados = $stmt->fetchAll(PDO::FETCH_OBJ);
 
     $erro = '';
 } catch (PDOException $err) {
@@ -72,7 +68,6 @@ try {
 }
 
 $ligacao = null;
-
 ?>
 <?php include '../../includes/header.php';
 $paginaAtiva = 'fornecedores';

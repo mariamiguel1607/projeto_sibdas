@@ -6,9 +6,13 @@
 // --------------------------------------------------------------------
 require_once __DIR__ . '/../../includes/funcoes.php';
 redirect_if_not_logged(); // Inicia a sessão (se necessário) e verifica se o utilizador está autenticado
+
 $pesquisa = trim($_GET['pesquisa'] ?? '');
 $categoria = trim($_GET['categoria'] ?? '');
 $estado = trim($_GET['estado'] ?? '');
+$criticidade = trim($_GET['criticidade'] ?? '');
+$servico = trim($_GET['servico'] ?? '');
+$fornecedor = trim($_GET['fornecedor'] ?? '');
 
 try {
 
@@ -34,6 +38,7 @@ try {
 
     WHERE 1=1
     ";
+
     // Array que irá conter os valores dos filtros de forma segura,
     // passados separadamente à query para evitar SQL Injection
     $params = [];
@@ -60,10 +65,26 @@ try {
         $sql .= "AND estados.nome_estado = ? ";
         $params[] = $estado;
     }
+    if (!empty($criticidade) && $criticidade != 'Todas') {
+        $sql .= "AND equipamentos.criticidade = ? ";
+        $params[] = $criticidade;
+    }
+    if (!empty($servico) && $servico != 'Todos') {
+        $sql .= "AND localizacoes.servico_departamento = ? ";
+        $params[] = $servico;
+    }
+    if (!empty($fornecedor) && $fornecedor != 'Todos') {
+        $sql .= "AND equipamentos.id IN (
+            SELECT id_equipamento FROM equipamentos_fornecedores
+            INNER JOIN fornecedores ON equipamentos_fornecedores.id_fornecedor = fornecedores.id
+            WHERE fornecedores.nome_empresa = ?
+        ) ";
+        $params[] = $fornecedor;
+    }
 
     $sql .= "
-ORDER BY equipamentos.codigo_interno ASC
-";
+    ORDER BY equipamentos.codigo_interno ASC
+    ";
 
     $stmt = $ligacao->prepare($sql);
     $stmt->execute($params);
@@ -77,6 +98,22 @@ ORDER BY equipamentos.codigo_interno ASC
 }
 
 $ligacao = null;
+
+// Buscar serviços e fornecedores para os filtros dinâmicos
+try {
+    $ligacao2 = ligar_bd();
+
+    $stmtServicos = $ligacao2->query("SELECT DISTINCT servico_departamento FROM localizacoes ORDER BY servico_departamento ASC");
+    $servicos = $stmtServicos->fetchAll(PDO::FETCH_COLUMN);
+
+    $stmtFornecedores = $ligacao2->query("SELECT DISTINCT nome_empresa FROM fornecedores WHERE ativo = 1 ORDER BY nome_empresa ASC");
+    $fornecedoresLista = $stmtFornecedores->fetchAll(PDO::FETCH_COLUMN);
+
+    $ligacao2 = null;
+} catch (PDOException $e) {
+    $servicos = [];
+    $fornecedoresLista = [];
+}
 ?>
 
 <?php include '../../includes/header.php';
@@ -106,11 +143,13 @@ $paginaAtiva = 'equipamentos';
 
 
         <!-- FILTROS -->
+        <!-- FILTROS -->
         <section class="card filter-card mb-4">
             <div class="card-body">
                 <form method="GET">
                     <div class="row g-3 align-items-end">
 
+                        <!-- Pesquisa -->
                         <div class="col-md-4">
                             <label for="pesquisa" class="form-label">Pesquisar equipamento</label>
                             <input
@@ -122,39 +161,22 @@ $paginaAtiva = 'equipamentos';
                                 value="<?= htmlspecialchars($_GET['pesquisa'] ?? '') ?>">
                         </div>
 
-                        <div class="col-md-3">
+                        <!-- Categoria -->
+                        <div class="col-md-2">
                             <label for="categoria" class="form-label">Categoria</label>
                             <select id="categoria" name="categoria" class="form-select">
-
-                                <option <?= ($categoria == '' || $categoria == 'Todas') ? 'selected' : '' ?>>
-                                    Todas
-                                </option>
-
-                                <option <?= ($categoria == 'Monitorização') ? 'selected' : '' ?>>
-                                    Monitorização
-                                </option>
-
-                                <option <?= ($categoria == 'Suporte de Vida') ? 'selected' : '' ?>>
-                                    Suporte de Vida
-                                </option>
-
-                                <option <?= ($categoria == 'Diagnóstico') ? 'selected' : '' ?>>
-                                    Diagnóstico
-                                </option>
-
-                                <option <?= ($categoria == 'Terapia') ? 'selected' : '' ?>>
-                                    Terapia
-                                </option>
-
-                                <option <?= ($categoria == 'Laboratório') ? 'selected' : '' ?>>
-                                    Laboratório
-                                </option>
-
+                                <option <?= ($categoria == '' || $categoria == 'Todas') ? 'selected' : '' ?>>Todas</option>
+                                <option <?= ($categoria == 'Monitorização') ? 'selected' : '' ?>>Monitorização</option>
+                                <option <?= ($categoria == 'Suporte de Vida') ? 'selected' : '' ?>>Suporte de Vida</option>
+                                <option <?= ($categoria == 'Diagnóstico') ? 'selected' : '' ?>>Diagnóstico</option>
+                                <option <?= ($categoria == 'Terapia') ? 'selected' : '' ?>>Terapia</option>
+                                <option <?= ($categoria == 'Laboratório') ? 'selected' : '' ?>>Laboratório</option>
                             </select>
                         </div>
 
-                        <div class="col-md-3">
-                            <label for="estado" class="form-label">Estado atual
+                        <!-- Estado -->
+                        <div class="col-md-2">
+                            <label for="estado" class="form-label">Estado
                                 <button
                                     type="button"
                                     class="btn btn-sm border-0 p-0 ms-1"
@@ -163,45 +185,67 @@ $paginaAtiva = 'equipamentos';
                                     data-bs-html="true"
                                     title="Estados dos Equipamentos"
                                     data-bs-content="
-            <b>Ativo</b> - Disponível e operacional.<br>
-            <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
-            <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
-            <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
-
+                                <b>Ativo</b> - Disponível e operacional.<br>
+                                <b>Em manutenção</b> - Em intervenção técnica programada ou corretiva.<br>
+                                <b>Inativo</b> - Temporariamente indisponível para utilização.<br>
+                                <b>Em calibração</b> - Em processo de calibração ou validação metrológica.">
                                     <i class="fa-solid fa-circle-question text-primary"></i>
-
                                 </button>
                             </label>
                             <select id="estado" name="estado" class="form-select">
-
-                                <option <?= ($estado == '' || $estado == 'Todos') ? 'selected' : '' ?>>
-                                    Todos
-                                </option>
-
-                                <option <?= ($estado == 'Ativo') ? 'selected' : '' ?>>
-                                    Ativo
-                                </option>
-
-                                <option <?= ($estado == 'Em manutenção') ? 'selected' : '' ?>>
-                                    Em manutenção
-                                </option>
-
-                                <option <?= ($estado == 'Inativo') ? 'selected' : '' ?>>
-                                    Inativo
-                                </option>
-
-                                <option <?= ($estado == 'Em calibração') ? 'selected' : '' ?>>
-                                    Em calibração
-                                </option>
-
+                                <option <?= ($estado == '' || $estado == 'Todos') ? 'selected' : '' ?>>Todos</option>
+                                <option <?= ($estado == 'Ativo') ? 'selected' : '' ?>>Ativo</option>
+                                <option <?= ($estado == 'Em manutenção') ? 'selected' : '' ?>>Em manutenção</option>
+                                <option <?= ($estado == 'Inativo') ? 'selected' : '' ?>>Inativo</option>
+                                <option <?= ($estado == 'Em calibração') ? 'selected' : '' ?>>Em calibração</option>
                             </select>
                         </div>
 
+                        <!-- Criticidade -->
+                        <div class="col-md-2">
+                            <label for="criticidade" class="form-label">Criticidade</label>
+                            <select id="criticidade" name="criticidade" class="form-select">
+                                <option <?= ($criticidade == '' || $criticidade == 'Todas') ? 'selected' : '' ?>>Todas</option>
+                                <option <?= ($criticidade == 'Baixa') ? 'selected' : '' ?>>Baixa</option>
+                                <option <?= ($criticidade == 'Média') ? 'selected' : '' ?>>Média</option>
+                                <option <?= ($criticidade == 'Alta') ? 'selected' : '' ?>>Alta</option>
+                                <option <?= ($criticidade == 'Suporte de Vida') ? 'selected' : '' ?>>Suporte de Vida</option>
+                            </select>
+                        </div>
+
+                        <!-- Botão Filtrar -->
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-outline-secondary w-100">
                                 <i class="fa-solid fa-filter me-2"></i>
                                 Filtrar
                             </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Segunda linha de filtros -->
+                    <div class="row g-3 align-items-end mt-1">
+
+                        <!-- Serviço -->
+                        <div class="col-md-4">
+                            <label for="servico" class="form-label">Serviço / Departamento</label>
+                            <select id="servico" name="servico" class="form-select">
+                                <option <?= ($servico == '' || $servico == 'Todos') ? 'selected' : '' ?>>Todos</option>
+                                <?php foreach ($servicos as $s): ?>
+                                    <option <?= ($servico == $s) ? 'selected' : '' ?>><?= htmlspecialchars($s) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Fornecedor -->
+                        <div class="col-md-4">
+                            <label for="fornecedor" class="form-label">Fornecedor</label>
+                            <select id="fornecedor" name="fornecedor" class="form-select">
+                                <option <?= ($fornecedor == '' || $fornecedor == 'Todos') ? 'selected' : '' ?>>Todos</option>
+                                <?php foreach ($fornecedoresLista as $f): ?>
+                                    <option <?= ($fornecedor == $f) ? 'selected' : '' ?>><?= htmlspecialchars($f) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                     </div>

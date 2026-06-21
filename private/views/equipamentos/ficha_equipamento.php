@@ -188,7 +188,7 @@ $paginaAtiva = 'equipamentos';
 
                     <div class="col-lg-4">
 
-                        <div class="d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0">
+                        <div class="d-flex gap-2 justify-content-lg-end mt-3 mt-lg-0 flex-wrap">
 
                             <?php
                             $nomeEstado = $equipamento['nome_estado'];
@@ -205,6 +205,7 @@ $paginaAtiva = 'equipamentos';
                             elseif ($criticidade == 'Média') echo '<span class="badge bg-primary">Média</span>';
                             elseif ($criticidade == 'Baixa') echo '<span class="badge bg-secondary">Baixa</span>';
                             ?>
+
                             <span class="badge bg-primary">
                                 <?= htmlspecialchars($equipamento['servico_departamento']) ?>
                             </span>
@@ -216,6 +217,44 @@ $paginaAtiva = 'equipamentos';
                                 </span>
                             <?php endif; ?>
 
+                        </div>
+
+                        <!-- BOTÃO EXPORTAR -->
+                        <div class="d-flex justify-content-lg-end mt-3">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-download me-1"></i>
+                                    Exportar
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="exportar_equipamento.php?id=<?= aes_encrypt($equipamento['id']) ?>&formato=csv"
+                                            onclick="mostrarToastExportar('CSV')">
+                                            <i class="fa-solid fa-file-csv me-2 text-success"></i>
+                                            Exportar CSV
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="exportar_equipamento.php?id=<?= aes_encrypt($equipamento['id']) ?>&formato=json"
+                                            onclick="mostrarToastExportar('JSON')">
+                                            <i class="fa-solid fa-file-code me-2 text-primary"></i>
+                                            Exportar JSON
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="exportar_equipamento.php?id=<?= aes_encrypt($equipamento['id']) ?>&formato=pdf"
+                                            target="_blank"
+                                            onclick="mostrarToastExportar('PDF')">
+                                            <i class="fa-solid fa-file-pdf me-2 text-danger"></i>
+                                            Exportar PDF
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
                     </div>
@@ -1317,5 +1356,30 @@ $paginaAtiva = 'equipamentos';
     </main>
 
 </div>
+
+<!-- TOAST DE EXPORTAÇÃO -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toastExportar" class="toast align-items-center text-white bg-success border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fa-solid fa-download me-2"></i>
+                <span id="toastExportarTexto">A preparar download...</span>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mostrarToastExportar(formato) {
+        document.getElementById('toastExportarTexto').textContent = 'A preparar download em ' + formato + '...';
+        const toast = new bootstrap.Toast(document.getElementById('toastExportar'), {
+            delay: 3000
+        });
+        toast.show();
+    }
+</script>
 
 <?php include '../../includes/footer.php'; ?>
