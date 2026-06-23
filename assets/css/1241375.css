@@ -1220,3 +1220,9 @@ section {
         background: #fff !important;
     }
 }
+
+.obrigatorio::after {
+    content: " *";
+    color: #dc3545;
+    font-weight: bold;
+}

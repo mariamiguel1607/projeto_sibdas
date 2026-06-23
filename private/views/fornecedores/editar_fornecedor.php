@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/validacoes.php';
 redirect_if_not_logged();
 if (!in_array($_SESSION['perfil'] ?? '', ['Administrador', 'Técnico'])) {
-    header('Location: fornecedores.php'); 
+    header('Location: fornecedores.php');
     exit;
 }
 
@@ -156,7 +156,7 @@ $paginaAtiva = 'fornecedores';
                     <div class="row g-4">
 
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Código</label>
+                            <label class="form-label fw-bold obrigatorio">Código</label>
                             <input type="text" class="form-control"
                                 value="<?= htmlspecialchars($fornecedor['codigo_fornecedor']) ?>"
                                 disabled>
@@ -164,7 +164,7 @@ $paginaAtiva = 'fornecedores';
                         </div>
 
                         <div class="col-md-8">
-                            <label for="nomeFornecedor" class="form-label fw-bold">Nome da empresa</label>
+                            <label for="nomeFornecedor" class="form-label fw-bold obrigatorio">Nome da empresa</label>
                             <input type="text" id="nomeFornecedor" class="form-control"
                                 name="nome_empresa"
                                 placeholder="Ex: Dräger"
@@ -172,18 +172,18 @@ $paginaAtiva = 'fornecedores';
                         </div>
 
                         <div class="col-md-6">
-                            <label for="tipoFornecedor" class="form-label fw-bold">Tipo de fornecedor</label>
+                            <label for="tipoFornecedor" class="form-label fw-bold obrigatorio">Tipo de fornecedor</label>
                             <select id="tipoFornecedor" class="form-select" name="tipo_fornecedor">
                                 <option value="" disabled <?= empty($dados['tipo_fornecedor']) ? 'selected' : '' ?>>Selecionar tipo</option>
                                 <option value="Fabricante" <?= ($dados['tipo_fornecedor'] ?? '') == 'Fabricante' ? 'selected' : '' ?>>Fabricante</option>
-                                <option value="Distribuidor / Fornecedor Comercial" <?= ($dados['tipo_fornecedor'] ?? '') == 'Distribuidor / Fornecedor Comercial' ? 'selected' : '' ?>>Distribuidor / Fornecedor Comercial</option>
+                                <option value="Distribuidor" <?= ($dados['tipo_fornecedor'] ?? '') == 'Distribuidor' ? 'selected' : '' ?>>Distribuidor</option>
                                 <option value="Assistência Técnica" <?= ($dados['tipo_fornecedor'] ?? '') == 'Assistência Técnica' ? 'selected' : '' ?>>Assistência Técnica</option>
                                 <option value="Consumíveis / Acessórios" <?= ($dados['tipo_fornecedor'] ?? '') == 'Consumíveis / Acessórios' ? 'selected' : '' ?>>Consumíveis / Acessórios</option>
                             </select>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="nifFornecedor" class="form-label fw-bold">NIF</label>
+                            <label for="nifFornecedor" class="form-label fw-bold obrigatorio">NIF</label>
                             <input type="text" id="nifFornecedor" class="form-control"
                                 name="nif"
                                 placeholder="Ex: 509123456"
@@ -192,7 +192,7 @@ $paginaAtiva = 'fornecedores';
                         </div>
 
                         <div class="col-md-4">
-                            <label for="telefoneFornecedor" class="form-label fw-bold">Contacto telefónico</label>
+                            <label for="telefoneFornecedor" class="form-label fw-bold obrigatorio">Contacto telefónico</label>
                             <input type="text" id="telefoneFornecedor" class="form-control"
                                 name="telefone"
                                 placeholder="Ex: +351 220 000 000"
@@ -200,7 +200,7 @@ $paginaAtiva = 'fornecedores';
                         </div>
 
                         <div class="col-md-4">
-                            <label for="emailFornecedor" class="form-label fw-bold">Email</label>
+                            <label for="emailFornecedor" class="form-label fw-bold obrigatorio">Email</label>
                             <input type="text" id="emailFornecedor" class="form-control"
                                 name="email"
                                 placeholder="Ex: geral@empresa.pt"
@@ -235,7 +235,7 @@ $paginaAtiva = 'fornecedores';
                     <div class="row g-4">
 
                         <div class="col-md-6">
-                            <label for="pessoaContacto" class="form-label fw-bold">Nome da pessoa de contacto</label>
+                            <label for="pessoaContacto" class="form-label fw-bold obrigatorio">Nome da pessoa de contacto</label>
                             <input type="text" id="pessoaContacto" class="form-control"
                                 name="pessoa_contacto"
                                 placeholder="Ex: João Silva"
@@ -243,7 +243,7 @@ $paginaAtiva = 'fornecedores';
                         </div>
 
                         <div class="col-md-6">
-                            <label for="telefoneContacto" class="form-label fw-bold">Telefone da pessoa de contacto</label>
+                            <label for="telefoneContacto" class="form-label fw-bold obrigatorio">Telefone da pessoa de contacto</label>
                             <input type="text" id="telefoneContacto" class="form-control"
                                 name="telefone_contacto"
                                 placeholder="Ex: +351 912 000 000"

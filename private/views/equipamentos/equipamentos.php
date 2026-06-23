@@ -141,8 +141,6 @@ $paginaAtiva = 'equipamentos';
             <?php endif; ?>
         </header>
 
-
-        <!-- FILTROS -->
         <!-- FILTROS -->
         <section class="card filter-card mb-4">
             <div class="card-body">

@@ -81,26 +81,6 @@ if (isset($_POST['submeter_step1'])) {
         []
     );
 
-    // Número de série duplicado
-    if (!empty($num_serie)) {
-
-        $ligacao = ligar_bd();
-
-        $stmt = $ligacao->prepare("
-        SELECT COUNT(*)
-        FROM equipamentos
-        WHERE num_serie = ?
-    ");
-
-        $stmt->execute([$num_serie]);
-
-        if ($stmt->fetchColumn() > 0) {
-            $erros_dados_gerais[] =
-                "Já existe um equipamento com este número de série.";
-        }
-
-        $ligacao = null;
-    }
 
     // 3. SE OK: NORMALIZAR, UPLOAD, GUARDAR EM SESSÃO, AVANÇAR
     if (empty($erros_dados_gerais)) {
@@ -209,7 +189,6 @@ if (isset($_POST['submeter_step2'])) {
         $_SESSION['equipamento']['custo_aquisicao'] = $custo_aquisicao;
         $_SESSION['equipamento']['tipo_entrada']    = $tipo_entrada;
         $_SESSION['equipamento']['id_estado']       = $id_estado;
-
         $_SESSION['equipamento']['doc_fatura_aquisicao'] = [
             'nome' => $nome_fatura,
             'caminho' => $caminho_fatura,
@@ -568,7 +547,7 @@ if (isset($_POST['submeter_step8'])) {
                 $_SESSION['equipamento']['num_serie'],
                 $_SESSION['equipamento']['ano_fabrico'],
                 $_SESSION['equipamento']['data_aquisicao'],
-                $_SESSION['equipamento']['custo_aquisicao'],
+                !empty($_SESSION['equipamento']['custo_aquisicao']) ? $_SESSION['equipamento']['custo_aquisicao'] : null,
                 $_SESSION['equipamento']['tipo_entrada'],
                 $_SESSION['equipamento']['criticidade'],
                 $_SESSION['equipamento']['observacoes'],
@@ -887,19 +866,19 @@ $paginaAtiva = 'equipamentos';
                             <div class="row g-4">
 
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold">Código Interno</label>
+                                    <label class="form-label fw-bold obrigatorio">Código Interno</label>
                                     <input type="text" class="form-control" name="codigo_interno"
                                         value="<?= htmlspecialchars($proximo_codigo ?? '') ?>"
                                         readonly>
                                 </div>
 
                                 <div class="col-md-8">
-                                    <label class="form-label fw-bold">Designação</label>
+                                    <label class="form-label fw-bold obrigatorio">Designação</label>
                                     <input type="text" class="form-control" name="designacao" value="<?= htmlspecialchars($_SESSION['equipamento']['designacao'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Categoria</label>
+                                    <label class="form-label fw-bold obrigatorio">Categoria</label>
                                     <select class="form-select" name="id_categoria">
                                         <option value="">Selecione uma categoria</option>
                                         <?php foreach ($categorias as $categoria): ?>
@@ -917,12 +896,12 @@ $paginaAtiva = 'equipamentos';
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Marca</label>
+                                    <label class="form-label fw-bold obrigatorio">Marca</label>
                                     <input type="text" class="form-control" name="marca" value="<?= htmlspecialchars($_SESSION['equipamento']['marca'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Modelo</label>
+                                    <label class="form-label fw-bold obrigatorio">Modelo</label>
                                     <input type="text" class="form-control" name="modelo" value="<?= htmlspecialchars($_SESSION['equipamento']['modelo'] ?? '') ?>">
                                 </div>
 
@@ -932,13 +911,13 @@ $paginaAtiva = 'equipamentos';
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Ano de Fabrico</label>
+                                    <label class="form-label fw-bold obrigatorio">Ano de Fabrico</label>
                                     <input type="number" class="form-control" min="1900"
                                         max="<?= date('Y') ?>" name="ano_fabrico" value="<?= htmlspecialchars($_SESSION['equipamento']['ano_fabrico'] ?? '') ?>">
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Criticidade</label>
+                                    <label class="form-label fw-bold obrigatorio">Criticidade</label>
                                     <select class="form-select" name="criticidade">
 
                                         <option value="">Selecione a criticidade</option>
@@ -1049,7 +1028,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -1059,7 +1038,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -1067,7 +1046,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1076,7 +1055,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1115,7 +1094,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -1125,7 +1104,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -1133,7 +1112,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1142,7 +1121,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1185,7 +1164,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
                                         Data de Aquisição
                                     </label>
 
@@ -1195,8 +1174,8 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
-                                        Custo de Aquisição (€)
+                                    <label class="form-label fw-bold">Custo de Aquisição (€) <small class="text-muted fw-normal">(obrigatório para compra/aluguer)</small></label>
+
                                     </label>
 
                                     <input type="number" class="form-control" name="custo_aquisicao" placeholder="0.00" value="<?= htmlspecialchars($_SESSION['equipamento']['custo_aquisicao'] ?? '') ?>">
@@ -1205,7 +1184,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-3">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
                                         Tipo de Entrada
                                     </label>
 
@@ -1236,7 +1215,7 @@ $paginaAtiva = 'equipamentos';
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
 
                                         Estado
 
@@ -1357,7 +1336,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -1367,7 +1346,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -1375,7 +1354,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1384,7 +1363,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1422,7 +1401,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -1432,7 +1411,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -1440,7 +1419,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1449,7 +1428,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -1593,7 +1572,7 @@ $paginaAtiva = 'equipamentos';
 
                                         <div class="col-md-6">
 
-                                            <label class="form-label fw-bold">
+                                            <label class="form-label fw-bold obrigatorio">
                                                 Nome do Acessório
                                             </label>
 
@@ -1605,7 +1584,7 @@ $paginaAtiva = 'equipamentos';
 
                                         <div class="col-md-3">
 
-                                            <label class="form-label fw-bold">
+                                            <label class="form-label fw-bold obrigatorio">
                                                 Quantidade
                                             </label>
 
@@ -1616,7 +1595,7 @@ $paginaAtiva = 'equipamentos';
 
                                         <div class="col-md-3">
 
-                                            <label class="form-label fw-bold">
+                                            <label class="form-label fw-bold obrigatorio">
                                                 Estado
                                                 <button
                                                     type="button"
@@ -1680,7 +1659,7 @@ $paginaAtiva = 'equipamentos';
 
                                         <div class="col-md-8">
 
-                                            <label class="form-label fw-bold">
+                                            <label class="form-label fw-bold obrigatorio">
                                                 Nome do Consumível
                                             </label>
 
@@ -1692,7 +1671,7 @@ $paginaAtiva = 'equipamentos';
 
                                         <div class="col-md-4">
 
-                                            <label class="form-label fw-bold">
+                                            <label class="form-label fw-bold obrigatorio">
                                                 Quantidade
                                             </label>
 
@@ -1733,7 +1712,7 @@ $paginaAtiva = 'equipamentos';
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
-                            <label class="form-label fw-bold">
+                            <label class="form-label fw-bold obrigatorio">
                                 Localização Associada
                             </label>
 
@@ -1742,7 +1721,7 @@ $paginaAtiva = 'equipamentos';
                                 <?php foreach ($localizacoes as $loc): ?>
                                     <option value="<?= $loc->id ?>"
                                         <?= (($_SESSION['equipamento']['id_localizacao'] ?? '') == $loc->id) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($loc->edificio . ' - Piso ' . $loc->piso . ' - ' . $loc->sala_gabinete) ?>
+                                        <?= htmlspecialchars($loc->edificio . ' - ' . $loc->piso . ' - ' . $loc->sala_gabinete) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -1777,6 +1756,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="row g-2 mb-2 linha-fornecedor">
                                     <div class="col-md-7">
+                                        <label class="form-label fw-bold obrigatorio">Fornecedor</label>
                                         <select class="form-select" name="id_fornecedor[]">
                                             <option value="">Selecionar fornecedor</option>
                                             <?php foreach ($fornecedores as $f): ?>
@@ -1788,8 +1768,9 @@ $paginaAtiva = 'equipamentos';
                                         </select>
                                     </div>
                                     <div class="col-md-5">
+                                        <label class="form-label fw-bold obrigatorio">Tipo de relação</label>
                                         <select class="form-select" name="tipo_relacao[]">
-                                            <option value="">Tipo de relação</option>
+                                            <option value="">Selecione tipo de relação</option>
                                             <option value="Fabricante" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Fabricante') ? 'selected' : '' ?>>Fabricante</option>
                                             <option value="Distribuidor" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Distribuidor') ? 'selected' : '' ?>>Distribuidor</option>
                                             <option value="Assistência Técnica" <?= (($_SESSION['equipamento']['fornecedores'][0]['tipo_relacao'] ?? '') == 'Assistência Técnica') ? 'selected' : '' ?>>Assistência Técnica</option>
@@ -1833,7 +1814,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
                                         Garantia Associada
                                     </label>
 
@@ -1865,7 +1846,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
                                         Contrato de Manutenção Associado
                                     </label>
 
@@ -1897,7 +1878,7 @@ $paginaAtiva = 'equipamentos';
 
                                     <div class="col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-bold obrigatorio">
                                             Tipo de Contrato
                                         </label>
 
@@ -1911,7 +1892,7 @@ $paginaAtiva = 'equipamentos';
 
                                     <div class="col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-bold obrigatorio">
                                             Entidade Responsável
                                         </label>
 
@@ -1922,7 +1903,7 @@ $paginaAtiva = 'equipamentos';
 
                                     <div class=" col-md-4">
 
-                                        <label class="form-label fw-bold">
+                                        <label class="form-label fw-bold obrigatorio">
                                             Periodicidade
                                         </label>
 
@@ -2058,7 +2039,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -2068,7 +2049,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -2076,7 +2057,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2085,7 +2066,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2122,7 +2103,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -2132,7 +2113,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -2140,7 +2121,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2149,7 +2130,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2186,7 +2167,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -2196,7 +2177,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -2204,7 +2185,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2213,7 +2194,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2250,7 +2231,7 @@ $paginaAtiva = 'equipamentos';
                                         <div class="modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Nome do Documento
                                                 </label>
                                                 <input type="text" class="form-control"
@@ -2260,7 +2241,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
                                                 <input type="file" class="form-control"
@@ -2268,7 +2249,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data do Documento
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2277,7 +2258,7 @@ $paginaAtiva = 'equipamentos';
                                             </div>
 
                                             <div>
-                                                <label class="form-label fw-bold">
+                                                <label class="form-label fw-bold obrigatorio">
                                                     Data de Validade
                                                 </label>
                                                 <input type="date" class="form-control"
@@ -2396,7 +2377,7 @@ $paginaAtiva = 'equipamentos';
 
                                 <div class="col-md-6">
 
-                                    <label class="form-label fw-bold">
+                                    <label class="form-label fw-bold obrigatorio">
                                         Documentação Adicional Associada
                                     </label>
 
@@ -2438,7 +2419,7 @@ $paginaAtiva = 'equipamentos';
 
                                             <div class="col-md-6">
 
-                                                <label class="form-label">
+                                                <label class="form-label obrigatorio">
                                                     Nome do Documento
                                                 </label>
 
@@ -2450,7 +2431,7 @@ $paginaAtiva = 'equipamentos';
 
                                             <div class="col-md-6">
 
-                                                <label class="form-label">
+                                                <label class="form-label obrigatorio">
                                                     Ficheiro PDF
                                                 </label>
 
@@ -2461,7 +2442,7 @@ $paginaAtiva = 'equipamentos';
 
                                             <div class="col-md-6">
 
-                                                <label class="form-label">
+                                                <label class="form-label obrigatorio">
                                                     Data do Documento
                                                 </label>
 
@@ -2473,7 +2454,7 @@ $paginaAtiva = 'equipamentos';
 
                                             <div class="col-md-6">
 
-                                                <label class="form-label">
+                                                <label class="form-label obrigatorio">
                                                     Data de Validade
                                                 </label>
 
@@ -2506,9 +2487,13 @@ $paginaAtiva = 'equipamentos';
                         <!-- Observações -->
                         <div class="tab-pane fade <?= ($step_atual == 8) ? 'show active' : '' ?>" id="observacoesNovo">
                             <!-- ALERTAS -->
-                            <div class="alert alert-danger mb-4" id="alertas-observacoes" style="display:none;">
+                            <div class="alert alert-danger mb-4" id="alertas-observacoes" <?= empty($erros_observacoes) ? 'style="display:none;"' : '' ?>>
                                 <h6 class="alert-heading mb-2"><i class="fa-solid fa-circle-exclamation me-2"></i>Foram encontrados erros</h6>
-                                <ul class="mb-0"></ul>
+                                <ul class="mb-0">
+                                    <?php foreach ($erros_observacoes as $erro): ?>
+                                        <li><?= htmlspecialchars($erro) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
                             </div>
 
                             <label class="form-label fw-bold">

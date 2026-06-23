@@ -158,7 +158,7 @@ $paginaAtiva = 'localizacao';
                         <!-- Código -->
                         <div class="col-md-4">
 
-                            <label for="codigo" class="form-label fw-bold">
+                            <label for="codigo" class="form-label fw-bold obrigatorio">
                                 Código da localização
                             </label>
 
@@ -172,7 +172,7 @@ $paginaAtiva = 'localizacao';
                         <!-- Edifício -->
                         <div class="col-md-8">
 
-                            <label for="edificio" class="form-label fw-bold">
+                            <label for="edificio" class="form-label fw-bold obrigatorio">
                                 Edifício
                             </label>
 
@@ -184,7 +184,7 @@ $paginaAtiva = 'localizacao';
                         <!-- Piso -->
                         <div class=" col-md-4">
 
-                            <label for="piso" class="form-label fw-bold">
+                            <label for="piso" class="form-label fw-bold obrigatorio">
                                 Piso
                             </label>
 
@@ -195,7 +195,7 @@ $paginaAtiva = 'localizacao';
                         <!-- Departamento -->
                         <div class="col-md-4">
 
-                            <label for="departamento" class="form-label fw-bold">
+                            <label for="departamento" class="form-label fw-bold obrigatorio">
                                 Departamento / Serviço
                             </label>
 

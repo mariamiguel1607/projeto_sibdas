@@ -131,6 +131,40 @@ function validar_documento_completo(
 
     return $erros;
 }
+function validar_num_serie_duplicado(string $num_serie, ?int $id_excluir = null): array
+{
+    $erros = [];
+
+    if (empty($num_serie)) return $erros;
+
+    try {
+        $ligacao = ligar_bd();
+
+        if ($id_excluir) {
+            $stmt = $ligacao->prepare("
+                SELECT COUNT(*) FROM equipamentos
+                WHERE num_serie = ? AND id != ?
+            ");
+            $stmt->execute([$num_serie, $id_excluir]);
+        } else {
+            $stmt = $ligacao->prepare("
+                SELECT COUNT(*) FROM equipamentos
+                WHERE num_serie = ?
+            ");
+            $stmt->execute([$num_serie]);
+        }
+
+        if ($stmt->fetchColumn() > 0) {
+            $erros[] = "Já existe um equipamento com este número de série.";
+        }
+
+        $ligacao = null;
+    } catch (PDOException $e) {
+        $erros[] = "Erro ao verificar número de série.";
+    }
+
+    return $erros;
+}
 
 
 // ============================================================
@@ -141,14 +175,21 @@ function validar_documento_completo(
 //                          (passar [] no inserir caso ainda não existam documentos)
 // ============================================================
 
-function validar_step_dados_gerais(array $dados, array $files, array $caminhos_existentes = []): array
+function validar_step_dados_gerais(array $dados, array $files, array $caminhos_existentes = [], ?int $id_excluir = null): array
 {
     $erros = [];
 
     if (empty(trim($dados['designacao'] ?? '')))   $erros[] = "A designação é obrigatória.";
     if (empty($dados['id_categoria'] ?? ''))       $erros[] = "A categoria é obrigatória.";
+    if (empty(trim($dados['marca'] ?? '')))        $erros[] = "A marca é obrigatória.";
+    if (empty(trim($dados['modelo'] ?? '')))       $erros[] = "O modelo é obrigatório.";
+    if (empty($dados['ano_fabrico'] ?? ''))        $erros[] = "O ano de fabrico é obrigatório.";
+    if (empty($dados['criticidade'] ?? ''))        $erros[] = "A criticidade é obrigatória.";
 
     $erros = array_merge($erros, validar_ano($dados['ano_fabrico'] ?? ''));
+
+    // Verificação de número de série duplicado
+    $erros = array_merge($erros, validar_num_serie_duplicado($dados['num_serie'] ?? '', $id_excluir));
 
     $erros = array_merge($erros, validar_documento_completo(
         $dados['nome_documento_manual_utilizacao'] ?? '',
@@ -176,6 +217,15 @@ function validar_step_aquisicao(array $dados, array $files, array $caminhos_exis
     $erros = [];
 
     if (empty($dados['id_estado'] ?? '')) $erros[] = "O estado é obrigatório.";
+    if (empty($dados['data_aquisicao'] ?? '')) $erros[] = "A data de aquisição é obrigatória.";
+    if (empty($dados['tipo_entrada'] ?? '')) $erros[] = "O tipo de entrada é obrigatório.";
+
+    // Custo obrigatório apenas para Compra ou Aluguer
+    if (in_array($dados['tipo_entrada'] ?? '', ['Compra', 'Aluguer'])) {
+        if (empty($dados['custo_aquisicao'] ?? '')) {
+            $erros[] = "O custo de aquisição é obrigatório para compra ou aluguer.";
+        }
+    }
 
     $erros = array_merge($erros, validar_data($dados['data_aquisicao'] ?? '', "A data de aquisição"));
     $erros = array_merge($erros, validar_preco($dados['custo_aquisicao'] ?? '', "O custo de aquisição"));
@@ -222,30 +272,37 @@ function validar_step_acessorios_consumiveis(
 
     if (($dados['tem_acessorios'] ?? '') === 'sim') {
 
+        $tem_acessorio_valido = false;
+
         foreach ($acessorios as $acessorio) {
 
-            if (empty(trim($acessorio['nome'] ?? ''))) {
+            // Se todos os campos estão vazios, ignora esta linha
+            if (empty(trim($acessorio['nome'] ?? '')) && empty($acessorio['quantidade']) && empty($acessorio['id_estado'])) {
                 continue;
+            }
+
+            if (empty(trim($acessorio['nome'] ?? ''))) {
+                $erros[] = "O nome do acessório é obrigatório.";
             }
 
             if (
                 empty($acessorio['quantidade'])
                 || !is_numeric($acessorio['quantidade'])
             ) {
-
-                $erros[] =
-                    "A quantidade do acessório é obrigatória.";
+                $erros[] = "A quantidade do acessório é obrigatória.";
             } elseif ($acessorio['quantidade'] < 0) {
-
-                $erros[] =
-                    "A quantidade do acessório não pode ser negativa.";
+                $erros[] = "A quantidade do acessório não pode ser negativa.";
             }
 
             if (empty($acessorio['id_estado'])) {
-
-                $erros[] =
-                    "O estado do acessório é obrigatório.";
+                $erros[] = "O estado do acessório é obrigatório.";
             }
+
+            $tem_acessorio_valido = true;
+        }
+
+        if (!$tem_acessorio_valido) {
+            $erros[] = "Deve adicionar pelo menos um acessório.";
         }
     }
 
@@ -256,24 +313,33 @@ function validar_step_acessorios_consumiveis(
 
     if (($dados['tem_consumiveis'] ?? '') === 'sim') {
 
+        $tem_consumivel_valido = false;
+
         foreach ($consumiveis as $consumivel) {
 
-            if (empty(trim($consumivel['nome'] ?? ''))) {
+            // Se todos os campos estão vazios, ignora esta linha
+            if (empty(trim($consumivel['nome'] ?? '')) && empty($consumivel['quantidade'])) {
                 continue;
+            }
+
+            if (empty(trim($consumivel['nome'] ?? ''))) {
+                $erros[] = "O nome do consumível é obrigatório.";
             }
 
             if (
                 empty($consumivel['quantidade'])
                 || !is_numeric($consumivel['quantidade'])
             ) {
-
-                $erros[] =
-                    "A quantidade do consumível é obrigatória.";
+                $erros[] = "A quantidade do consumível é obrigatória.";
             } elseif ($consumivel['quantidade'] < 0) {
-
-                $erros[] =
-                    "A quantidade do consumível não pode ser negativa.";
+                $erros[] = "A quantidade do consumível não pode ser negativa.";
             }
+
+            $tem_consumivel_valido = true;
+        }
+
+        if (!$tem_consumivel_valido) {
+            $erros[] = "Deve adicionar pelo menos um consumível.";
         }
     }
 
@@ -325,6 +391,14 @@ function validar_step_garantias(array $dados, array $files, array $caminhos_exis
 {
     $erros = [];
 
+    // Garantia e contrato — selecionar obrigatório
+    if (empty($dados['tem_garantia'] ?? '')) {
+        $erros[] = "Deve indicar se o equipamento tem garantia associada.";
+    }
+    if (empty($dados['tem_contrato'] ?? '')) {
+        $erros[] = "Deve indicar se o equipamento tem contrato associado.";
+    }
+
     $erros = array_merge($erros, validar_documento_completo(
         $dados['nome_documento_certificado_calibracao'] ?? '',
         $dados['certificado_calibracao_data'] ?? '',
@@ -355,6 +429,16 @@ function validar_step_garantias(array $dados, array $files, array $caminhos_exis
     }
 
     if (($dados['tem_contrato'] ?? '') === 'sim') {
+        if (empty(trim($dados['tipo_contrato'] ?? ''))) {
+            $erros[] = "O tipo de contrato é obrigatório.";
+        }
+        if (empty(trim($dados['periodicidade'] ?? ''))) {
+            $erros[] = "A periodicidade é obrigatória.";
+        }
+        if (empty(trim($dados['entidade_responsavel'] ?? ''))) {
+            $erros[] = "A entidade responsável é obrigatória.";
+        }
+
         $erros = array_merge($erros, validar_documento_completo(
             $dados['nome_documento_contrato_manutencao'] ?? '',
             $dados['contrato_manutencao_data'] ?? '',

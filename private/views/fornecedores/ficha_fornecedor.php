@@ -66,6 +66,12 @@ $paginaAtiva = 'fornecedores';
                     <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill">
                         <?= htmlspecialchars($fornecedor['codigo_fornecedor']) ?>
                     </span>
+                    <?php if (!$fornecedor['ativo']): ?>
+                        <span class="badge bg-dark px-3 py-2 rounded-pill">
+                            <i class="fa-solid fa-ban me-1"></i>
+                            Descontinuado
+                        </span>
+                    <?php endif; ?>
                 </div>
                 <p class="text-muted mb-0">Perfil detalhado do fornecedor e equipamentos associados.</p>
             </div>

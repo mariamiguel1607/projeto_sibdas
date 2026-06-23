@@ -187,7 +187,7 @@ $paginaAtiva = 'localizacao';
 
                         <!-- Código (readonly) -->
                         <div class="col-md-6">
-                            <label for="codigoLocalizacao" class="form-label fw-bold">Código da Localização</label>
+                            <label for="codigoLocalizacao" class="form-label fw-bold obrigatorio">Código da Localização</label>
                             <input type="text" id="codigoLocalizacao" class="form-control"
                                 name="codigo_localizacao"
                                 value="<?= htmlspecialchars($dados['codigo_localizacao']) ?>"
@@ -196,7 +196,7 @@ $paginaAtiva = 'localizacao';
 
                         <!-- Edifício -->
                         <div class="col-md-6">
-                            <label for="edificio" class="form-label fw-bold">Edifício</label>
+                            <label for="edificio" class="form-label fw-bold obrigatorio">Edifício</label>
                             <input type="text" id="edificio" class="form-control"
                                 name="edificio"
                                 placeholder="Ex: Hospital Central"
@@ -205,7 +205,7 @@ $paginaAtiva = 'localizacao';
 
                         <!-- Piso -->
                         <div class="col-md-6">
-                            <label for="piso" class="form-label fw-bold">Piso</label>
+                            <label for="piso" class="form-label fw-bold obrigatorio">Piso</label>
                             <input type="text" id="piso" class="form-control"
                                 name="piso"
                                 placeholder="Ex: Piso 2"
@@ -214,7 +214,7 @@ $paginaAtiva = 'localizacao';
 
                         <!-- Departamento -->
                         <div class="col-md-6">
-                            <label for="departamento" class="form-label fw-bold">Departamento / Serviço</label>
+                            <label for="departamento" class="form-label fw-bold obrigatorio">Departamento / Serviço</label>
                             <input type="text" id="departamento" class="form-control"
                                 name="servico_departamento"
                                 placeholder="Ex: Cardiologia"

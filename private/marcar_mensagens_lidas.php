@@ -11,6 +11,6 @@ if ($id > 0) {
     $stmt->execute([':id' => $id]);
 }
 
-$redirect = $_POST['redirect'] ?? '/projeto_sibdas/private/views/dashboard/dashboard.php';
+$redirect = $_POST['redirect'] ?? '/techmedsolutions/private/views/dashboard/dashboard.php';
 header('Location: ' . $redirect);
 exit;

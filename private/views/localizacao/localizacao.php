@@ -10,61 +10,55 @@ $edificio = trim($_GET['edificio'] ?? '');
 
 try {
 
-    $ligacao = new PDO(
-        "mysql:host=" . MYSQL_HOST .
-            ";port=" . MYSQL_PORT .
-            ";dbname=" . MYSQL_DATABASE .
-            ";charset=utf8",
-        MYSQL_USERNAME,
-        MYSQL_PASSWORD
-    );
-
-    $ligacao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $ligacao = ligar_bd();
 
     $sql = "
     SELECT
         localizacoes.*,
         COUNT(equipamentos.id) AS total_equipamentos
-
     FROM localizacoes
-
-    LEFT JOIN equipamentos
-        ON equipamentos.id_localizacao = localizacoes.id
-
+    LEFT JOIN equipamentos ON equipamentos.id_localizacao = localizacoes.id
     WHERE 1=1
     ";
 
-    if (!empty($pesquisa)) {
+    // Array que irá conter os valores dos filtros de forma segura,
+    // passados separadamente à query para evitar SQL Injection
+    $params = [];
 
+    if (!empty($pesquisa)) {
         $sql .= "
         AND (
-            localizacoes.codigo_localizacao LIKE '%$pesquisa%'
-            OR localizacoes.edificio LIKE '%$pesquisa%'
-            OR localizacoes.piso LIKE '%$pesquisa%'
-            OR localizacoes.servico_departamento LIKE '%$pesquisa%'
-            OR localizacoes.sala_gabinete LIKE '%$pesquisa%'
+            localizacoes.codigo_localizacao LIKE ?
+            OR localizacoes.edificio LIKE ?
+            OR localizacoes.piso LIKE ?
+            OR localizacoes.servico_departamento LIKE ?
+            OR localizacoes.sala_gabinete LIKE ?
         )
         ";
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
+        $params[] = '%' . $pesquisa . '%';
     }
-    if (!empty($edificio) && $edificio != 'Todos') {
 
-        $sql .= "
-    AND localizacoes.edificio = '$edificio'
-    ";
+    if (!empty($edificio) && $edificio != 'Todos') {
+        $sql .= "AND localizacoes.edificio = ? ";
+        $params[] = $edificio;
     }
 
     $sql .= "
     GROUP BY localizacoes.id
-
     ORDER BY localizacoes.codigo_localizacao ASC
     ";
 
-    $resultados = $ligacao->query($sql)
-        ->fetchAll(PDO::FETCH_OBJ);
+    $stmt = $ligacao->prepare($sql);
+    $stmt->execute($params);
+    $resultados = $stmt->fetchAll(PDO::FETCH_OBJ);
 
     // Buscar equipamentos por localização
     $stmtEqs = $ligacao->prepare("
-        SELECT 
+        SELECT
             equipamentos.id,
             equipamentos.codigo_interno,
             equipamentos.designacao,
@@ -83,12 +77,16 @@ try {
         $equipamentosPorLocalizacao[$eq['id_localizacao']][] = $eq;
     }
 
+    // Buscar edifícios distintos para o filtro dinâmico
+    $stmtEdificios = $ligacao->query("SELECT DISTINCT edificio FROM localizacoes ORDER BY edificio ASC");
+    $edificiosLista = $stmtEdificios->fetchAll(PDO::FETCH_COLUMN);
+
     $erro = '';
 } catch (PDOException $err) {
-
     $erro = "Aconteceu um erro na ligação à base de dados.";
     $resultados = [];
     $equipamentosPorLocalizacao = [];
+    $edificiosLista = [];
 }
 
 $ligacao = null;
@@ -142,7 +140,7 @@ $paginaAtiva = 'localizacao';
                                 id="pesquisa"
                                 name="pesquisa"
                                 class="form-control"
-                                placeholder="Edifício, piso, departamento ou sala"
+                                placeholder="Piso, departamento ou sala"
                                 value="<?= htmlspecialchars($pesquisa) ?>">
 
                         </div>
@@ -155,23 +153,12 @@ $paginaAtiva = 'localizacao';
                             </label>
 
                             <select id="edificio" name="edificio" class="form-select">
-
-                                <option <?= ($edificio == '' || $edificio == 'Todos') ? 'selected' : '' ?>>
-                                    Todos
-                                </option>
-
-                                <option <?= ($edificio == 'Hospital Central') ? 'selected' : '' ?>>
-                                    Hospital Central
-                                </option>
-
-                                <option <?= ($edificio == 'Clínica Norte') ? 'selected' : '' ?>>
-                                    Clínica Norte
-                                </option>
-
-                                <option <?= ($edificio == 'Centro de Reabilitação') ? 'selected' : '' ?>>
-                                    Centro de Reabilitação
-                                </option>
-
+                                <option <?= ($edificio == '' || $edificio == 'Todos') ? 'selected' : '' ?>>Todos</option>
+                                <?php foreach ($edificiosLista as $e): ?>
+                                    <option <?= ($edificio == $e) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($e) ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
 
                         </div>

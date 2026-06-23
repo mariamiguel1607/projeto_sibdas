@@ -213,7 +213,7 @@ $paginaAtiva = 'equipamentos';
                             <?php if (!$equipamento['ativo']): ?>
                                 <span class="badge bg-dark">
                                     <i class="fa-solid fa-ban me-1"></i>
-                                    Desativado
+                                    Descontinuado
                                 </span>
                             <?php endif; ?>
 
